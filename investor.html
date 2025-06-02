@@ -1,0 +1,807 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Social: Investor Presentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-blue: #2c7da0;
+            --secondary-blue: #468faf;
+            --primary-green: #2a9d8f;
+            --secondary-green: #57cc99;
+            --light-blue: #a9d6e5;
+            --light-green: #c7f9cc;
+            --dark-text: #2c3e50;
+            --light-text: #f8f9fa;
+            --background: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark-text);
+            background-color: var(--background);
+            line-height: 1.6;
+        }
+        
+        .section {
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        
+        .section-title {
+            color: var(--primary-blue);
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .gradient-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            height: 100%;
+            transition: transform 0.3s ease;
+            border-top: 4px solid var(--primary-blue);
+        }
+
+        .card.green {
+            border-top: 4px solid var(--primary-green);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--light-blue);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-card.green {
+            background-color: var(--light-green);
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card.green .stat-number {
+            color: var(--primary-green);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+        
+        .chart-container {
+            position: relative;
+            margin: 2rem auto;
+            height: 400px;
+            width: 100%;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--primary-green);
+            border: 2px solid white;
+            z-index: 1;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 16px;
+            height: calc(100% + 2rem);
+            width: 2px;
+            background-color: var(--light-green);
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        .timeline-date {
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+        
+        .risk-item {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-blue);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .mitigation-item {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-green);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .tier-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background-color: white;
+        }
+        
+        .tier-header {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-blue);
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+        
+        .tier-price {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+        }
+        
+        .tier-feature {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .tier-feature i {
+            color: var(--primary-green);
+            margin-right: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body class="container mx-auto px-4 py-8">
+    <div class="gradient-header">
+        <h1 class="text-4xl font-bold mb-4">Curriculum Social</h1>
+        <p class="text-xl mb-6">Revolutionizing homeschooling through AI-enhanced, community-based education</p>
+        <div class="flex items-center">
+            <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center mr-4">
+                <i class="fas fa-graduation-cap text-2xl" style="color: var(--primary-blue);"></i>
+            </div>
+            <div>
+                <p class="text-sm opacity-80">Investor Presentation | 2025</p>
+                <p class="text-xs opacity-70">CONFIDENTIAL</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Executive Summary -->
+    <section id="executive-summary" class="section">
+        <h2 class="section-title text-2xl">Executive Summary & Vision</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <p class="mb-4">
+                    <strong>Curriculum Social</strong> is a hybrid educational platform that bridges the gap between traditional homeschooling and formal education by combining:
+                </p>
+                <ul class="list-disc pl-6 mb-4">
+                    <li class="mb-2"><strong>AI-powered personalized learning</strong> that adapts to each student's needs and interests</li>
+                    <li class="mb-2"><strong>Human teaching expertise</strong> from qualified educators and knowledgeable parents</li>
+                    <li class="mb-2"><strong>Community-based social learning</strong> that connects like-minded families</li>
+                </ul>
+                <p class="mb-4">
+                    Our mission is to provide high-quality, flexible education for globally mobile families and digital nomads who are underserved by traditional educational systems.
+                </p>
+            </div>
+            <div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="stat-card">
+                        <div class="stat-number">$1.4M</div>
+                        <div class="stat-label">Investment Needed</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-number">32</div>
+                        <div class="stat-label">Months to Breakeven</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-number">1.8-3.2x</div>
+                        <div class="stat-label">5-Year ROI</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">$1.5M+</div>
+                        <div class="stat-label">Annual Revenue Year 5</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Opportunity -->
+    <section id="market-opportunity" class="section">
+        <h2 class="section-title text-2xl">Market Opportunity</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <h3 class="text-xl font-semibold mb-3" style="color: var(--primary-green);">Growing Digital Nomad Family Segment</h3>
+                <p class="mb-4">
+                    The digital nomad population has grown by over 130% since 2019, with 35 million worldwide. Of these, approximately 15-20% are families with school-aged children seeking flexible, high-quality education.
+                </p>
+                <p class="mb-4">
+                    Traditional options are limited to:
+                </p>
+                <ul class="list-disc pl-6 mb-4">
+                    <li class="mb-2"><strong>International schools</strong> ($15,000-30,000 annually) - fixed location, inflexible</li>
+                    <li class="mb-2"><strong>Online schools</strong> - lack social interaction and local integration</li>
+                    <li class="mb-2"><strong>Self-directed homeschooling</strong> - high parent burden, inconsistent quality</li>
+                </ul>
+                <p>This creates a significant gap for a solution that offers quality, flexibility, and affordability.</p>
+            </div>
+            <div>
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-3" style="color: var(--primary-blue);">Koh Samui: Initial Target Market</h3>
+                    <ul class="list-disc pl-6 mb-4">
+                        <li class="mb-2">500-800 expatriate/digital nomad families with children</li>
+                        <li class="mb-2">High turnover rate (40-60% annually) creating need for flexible education</li>
+                        <li class="mb-2">Limited international school options (3 schools, $10,000+ annually)</li>
+                        <li class="mb-2">Growing homeschool community lacking structured resources</li>
+                    </ul>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$14B</div>
+                    <div class="stat-label">Global Homeschooling Market Size</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-number">16.8%</div>
+                    <div class="stat-label">Annual Growth Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Unique Value Proposition -->
+    <section id="value-proposition" class="section">
+        <h2 class="section-title text-2xl">Unique Value Proposition</h2>
+        <div class="grid md:grid-cols-3 gap-6 mb-6">
+            <div class="card">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">AI-Powered Learning</h3>
+                <ul class="list-disc pl-6">
+                    <li>Personalized learning pathways</li>
+                    <li>Adaptive curriculum difficulty</li>
+                    <li>Progress monitoring and analytics</li>
+                    <li>24/7 AI assistance and tutoring</li>
+                </ul>
+            </div>
+            <div class="card green">
+                <div class="feature-icon" style="color: var(--primary-green);">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Human Teaching</h3>
+                <ul class="list-disc pl-6">
+                    <li>Qualified teachers and parent-teachers</li>
+                    <li>1:1 and small group instruction</li>
+                    <li>Expert guidance for complex concepts</li>
+                    <li>Social-emotional development focus</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Social Learning</h3>
+                <ul class="list-disc pl-6">
+                    <li>Location-based family matching</li>
+                    <li>Flexible in-person activities</li>
+                    <li>Community-vetted learning venues</li>
+                    <li>Cultural integration opportunities</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="text-lg font-semibold mb-2" style="color: var(--primary-blue);">Key Differentiators</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <p class="mb-2"><i class="fas fa-check-circle mr-2" style="color: var(--primary-green);"></i> <strong>True Hybrid Model</strong> - Seamlessly integrates digital and physical learning</p>
+                    <p class="mb-2"><i class="fas fa-check-circle mr-2" style="color: var(--primary-green);"></i> <strong>Mobile-First Design</strong> - Adapts to transient family lifestyles</p>
+                </div>
+                <div>
+                    <p class="mb-2"><i class="fas fa-check-circle mr-2" style="color: var(--primary-green);"></i> <strong>Parent Participation</strong> - Enables qualified parents as teachers</p>
+                    <p class="mb-2"><i class="fas fa-check-circle mr-2" style="color: var(--primary-green);"></i> <strong>Dual Recognition</strong> - Progressive pedagogy with global standards compliance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Business Model -->
+    <section id="business-model" class="section">
+        <h2 class="section-title text-2xl">Business Model</h2>
+        <div class="grid md:grid-cols-3 gap-6 mb-6">
+            <div class="tier-card">
+                <div class="tier-header">Basic Membership</div>
+                <div class="tier-price">$100-150<span class="text-base font-normal">/month</span></div>
+                <div class="tier-feature"><i class="fas fa-check"></i> AI learning platform access</div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Limited in-person activities (2-4/month)</div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Basic progress tracking</div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Community matching</div>
+            </div>
+            <div class="tier-card" style="border: 2px solid var(--primary-green);">
+                <div class="tier-header" style="color: var(--primary-green);">Standard Membership</div>
+                <div class="tier-price">$200-300<span class="text-base font-normal">/month</span></div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Full AI platform access</div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Regular activities (8-12/month)</div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Comprehensive tracking</div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Limited teacher 1:1 sessions</div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Priority matching</div>
+            </div>
+            <div class="tier-card">
+                <div class="tier-header">Premium Membership</div>
+                <div class="tier-price">$350-500<span class="text-base font-normal">/month</span></div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Priority platform access</div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Unlimited in-person activities</div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Regular 1:1 teacher sessions</div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Advanced customization</div>
+                <div class="tier-feature"><i class="fas fa-check"></i> Specialized modules included</div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <h3 class="text-lg font-semibold mb-3" style="color: var(--primary-blue);">Additional Revenue Streams</h3>
+                <ul class="list-disc pl-6 mb-4">
+                    <li class="mb-2"><strong>Specialized Module Packages:</strong> $30-50 per module</li>
+                    <li class="mb-2"><strong>Additional 1:1 Teacher Sessions:</strong> $25-40 per session</li>
+                    <li class="mb-2"><strong>Host Venue Certification:</strong> $100-200 per venue</li>
+                    <li class="mb-2"><strong>Teacher Training Programs:</strong> $200-500 per program</li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold mb-3" style="color: var(--primary-green);">Parent-Teacher Model</h3>
+                <ul class="list-disc pl-6 mb-4">
+                    <li class="mb-2"><strong>Tuition Credit System:</strong> 100% tuition waiver for 8 hours teaching/week</li>
+                    <li class="mb-2"><strong>Additional Compensation:</strong> $15-20/hour beyond tuition offset</li>
+                    <li class="mb-2"><strong>Performance Bonuses:</strong> Based on student outcomes and ratings</li>
+                    <li class="mb-2"><strong>Community Recognition:</strong> Status tiers for continued engagement</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Financial Projections -->
+    <section id="financial-projections" class="section">
+        <h2 class="section-title text-2xl">Financial Projections</h2>
+        <div class="chart-container mb-8">
+            <canvas id="financialChart"></canvas>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <h3 class="text-xl font-semibold mb-3" style="color: var(--primary-blue);">Key Financial Metrics</h3>
+                <ul class="list-disc pl-6">
+                    <li class="mb-2"><strong>Breakeven Point:</strong> Month 32 (~2.5 years)</li>
+                    <li class="mb-2"><strong>Required User Base:</strong> ~2,400 active students</li>
+                    <li class="mb-2"><strong>Average Revenue Per User:</strong> $260/month</li>
+                    <li class="mb-2"><strong>Initial Funding Need:</strong> $1.4 million</li>
+                    <li class="mb-2"><strong>Monthly Recurring Revenue at Year 5:</strong> $1.5-2M</li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-xl font-semibold mb-3" style="color: var(--primary-green);">Cost Structure (At Scale)</h3>
+                <div class="mb-6">
+                    <div class="flex justify-between mb-1">
+                        <span>Teacher Compensation</span>
+                        <span>60-65%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 65%; background-color: var(--primary-blue);"></div>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <div class="flex justify-between mb-1">
+                        <span>Tech Costs</span>
+                        <span>20-22%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-green-600 h-2.5 rounded-full" style="width: 22%; background-color: var(--primary-green);"></div>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <div class="flex justify-between mb-1">
+                        <span>Fixed Costs</span>
+                        <span>5-8%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-300 h-2.5 rounded-full" style="width: 8%; background-color: var(--light-blue);"></div>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <div class="flex justify-between mb-1">
+                        <span>Net Margin</span>
+                        <span>10-15%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-green-300 h-2.5 rounded-full" style="width: 15%; background-color: var(--light-green);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Investment Opportunity -->
+    <section id="investment-opportunity" class="section">
+        <h2 class="section-title text-2xl">Investment Opportunity</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <h3 class="text-xl font-semibold mb-3" style="color: var(--primary-blue);">Capital Requirements</h3>
+                <p class="mb-4">We're seeking $1.4 million in initial funding to support:</p>
+                <div class="mb-6">
+                    <div class="flex justify-between mb-1">
+                        <span>Platform Development</span>
+                        <span>30% ($420,000)</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 30%; background-color: var(--primary-blue);"></div>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <div class="flex justify-between mb-1">
+                        <span>Operations & Staffing</span>
+                        <span>40% ($560,000)</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 40%; background-color: var(--primary-green);"></div>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <div class="flex justify-between mb-1">
+                        <span>Marketing & Growth</span>
+                        <span>20% ($280,000)</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-300 h-2.5 rounded-full" style="width: 20%; background-color: var(--light-blue);"></div>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <div class="flex justify-between mb-1">
+                        <span>Contingency</span>
+                        <span>10% ($140,000)</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-green-300 h-2.5 rounded-full" style="width: 10%; background-color: var(--light-green);"></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xl font-semibold mb-3" style="color: var(--primary-green);">Return on Investment</h3>
+                <div class="mb-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="stat-card">
+                            <div class="stat-number">1.8x</div>
+                            <div class="stat-label">5-Year ROI (Moderate)</div>
+                        </div>
+                        <div class="stat-card green">
+                            <div class="stat-number">3.2x</div>
+                            <div class="stat-label">5-Year ROI (Aggressive)</div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="text-xl font-semibold mb-3" style="color: var(--primary-blue);">Exit Strategies</h3>
+                <ul class="list-disc pl-6 mb-4">
+                    <li class="mb-2"><strong>Strategic Acquisition</strong> by established education technology company</li>
+                    <li class="mb-2"><strong>Private Equity Investment</strong> for accelerated global expansion</li>
+                    <li class="mb-2"><strong>Management Buyout</strong> as sustainable cash flow develops</li>
+                </ul>
+                <p class="mb-4">
+                    Investor recovery begins month 54-60 with potential for accelerated returns through strategic partnerships and expansion to additional expatriate hubs.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Risk Analysis -->
+    <section id="risk-analysis" class="section">
+        <h2 class="section-title text-2xl">Risk Analysis & Mitigation</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <h3 class="text-lg font-semibold mb-3" style="color: var(--primary-blue);">Key Risks</h3>
+                <div class="risk-item">
+                    <p><strong>Slower Student Acquisition</strong></p>
+                    <p class="text-sm">Extended cash burn period if growth metrics fall below projections.</p>
+                </div>
+                <div class="risk-item">
+                    <p><strong>Higher Tech Costs</strong></p>
+                    <p class="text-sm">AI and data storage costs could exceed estimates, reducing margins.</p>
+                </div>
+                <div class="risk-item">
+                    <p><strong>Teacher Retention Issues</strong></p>
+                    <p class="text-sm">Quality inconsistency, increased recruitment costs if turnover is high.</p>
+                </div>
+                <div class="risk-item">
+                    <p><strong>Competition from Traditional Schools</strong></p>
+                    <p class="text-sm">Price pressure and user acquisition challenges from established institutions.</p>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold mb-3" style="color: var(--primary-green);">Mitigation Strategies</h3>
+                <div class="mitigation-item">
+                    <p><strong>Phased Launch Approach</strong></p>
+                    <p class="text-sm">Focus on smaller geographic areas with tiered feature rollout to control costs.</p>
+                </div>
+                <div class="mitigation-item">
+                    <p><strong>Intelligent Resource Allocation</strong></p>
+                    <p class="text-sm">Data retention policies and usage-based resource scaling to control costs.</p>
+                </div>
+                <div class="mitigation-item">
+                    <p><strong>Strong Parent-Teacher Model</strong></p>
+                    <p class="text-sm">Create community ownership and competitive compensation to retain talent.</p>
+                </div>
+                <div class="mitigation-item">
+                    <p><strong>Unique Positioning Strategy</strong></p>
+                    <p class="text-sm">Focus on transient populations underserved by traditional education options.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Implementation Roadmap -->
+    <section id="implementation-roadmap" class="section">
+        <h2 class="section-title text-2xl">Implementation Roadmap</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">Months 1-4: Foundation</div>
+                <div class="timeline-content">
+                    <p><strong>Key Milestones:</strong></p>
+                    <ul class="list-disc pl-6 mb-2">
+                        <li>US-based corporation establishment</li>
+                        <li>Core platform development</li>
+                        <li>Initial team assembly</li>
+                        <li>Koh Samui partnerships secured</li>
+                    </ul>
+                    <p><strong>KPIs:</strong> 15-60 students, platform MVP completion</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">Months 5-12: Beta Validation</div>
+                <div class="timeline-content">
+                    <p><strong>Key Milestones:</strong></p>
+                    <ul class="list-disc pl-6 mb-2">
+                        <li>Full platform launch</li>
+                        <li>Community building initiatives</li>
+                        <li>Teacher network development</li>
+                        <li>AI learning system refinement</li>
+                    </ul>
+                    <p><strong>KPIs:</strong> 85-400 students, 20% monthly growth rate</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">Months 13-24: Growth Phase</div>
+                <div class="timeline-content">
+                    <p><strong>Key Milestones:</strong></p>
+                    <ul class="list-disc pl-6 mb-2">
+                        <li>Expansion to additional Thai locations</li>
+                        <li>Advanced feature development</li>
+                        <li>Operational optimization</li>
+                        <li>Strategic partnerships with educational providers</li>
+                    </ul>
+                    <p><strong>KPIs:</strong> 475-1500 students, positive cash flow trajectory</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">Months 25-36: Scale & Optimize</div>
+                <div class="timeline-content">
+                    <p><strong>Key Milestones:</strong></p>
+                    <ul class="list-disc pl-6 mb-2">
+                        <li>Expansion to Bali, Indonesia</li>
+                        <li>Enterprise platform features</li>
+                        <li>Operational breakeven achieved</li>
+                        <li>Preparation for Series A funding</li>
+                    </ul>
+                    <p><strong>KPIs:</strong> 1700-2800 students, breakeven at month 32</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">Months 37-48: Expansion</div>
+                <div class="timeline-content">
+                    <p><strong>Key Milestones:</strong></p>
+                    <ul class="list-disc pl-6 mb-2">
+                        <li>Global digital nomad hub expansion</li>
+                        <li>Advanced AI capabilities</li>
+                        <li>Consistent profitability</li>
+                        <li>Initial investor recovery begins</li>
+                    </ul>
+                    <p><strong>KPIs:</strong> 2900-4000+ students, $70-120K monthly profit</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Curriculum Social | Investor Presentation | Confidential 2025</p>
+        <p>Contact: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="761f18101936150304041f15031a031b0519151f171a5815191b">[email&#160;protected]</a></p>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Financial data for the chart
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('financialChart').getContext('2d');
+            
+            // Data for the chart
+            const months = Array.from({length: 48}, (_, i) => i + 1);
+            const revenue = [
+                3750, 6250, 10000, 15000, 21250, 27500, 35000, 45000, 56250, 68750, 82500, 100000,
+                118750, 137500, 156250, 175000, 193750, 212500, 231250, 250000, 275000, 300000, 331250, 375000,
+                425000, 450000, 480000, 512000, 544000, 575000, 600000, 625000, 650000, 675000, 700000, 725000,
+                750000, 775000, 800000, 825000, 850000, 875000, 900000, 925000, 950000, 975000, 1000000, 1025000
+            ];
+            
+            const costs = [
+                38900, 41500, 45400, 51600, 58100, 64600, 73400, 83800, 95500, 109500, 123800, 142000,
+                163500, 183000, 202500, 224000, 243500, 263000, 285500, 305000, 331000, 360000, 392500, 438000,
+                475000, 500000, 530000, 560000, 586000, 601000, 606000, 625000, 645000, 665000, 685000, 700000,
+                710000, 730000, 750000, 765000, 780000, 795000, 815000, 825000, 845000, 865000, 880000, 905000
+            ];
+            
+            const cumulative = [
+                -35150, -70400, -105800, -142400, -179250, -216350, -254750, -293550, -332800, 
+                -373550, -414850, -456850, -501600, -547100, -593350, -642350, -692100, -742600, 
+                -796850, -851850, -907850, -967850, -1029100, -1092100, -1142100, -1192100, -1242100, 
+                -1290100, -1332100, -1358100, -1364100, -1364100, -1359100, -1349100, -1334100, -1309100, 
+                -1269100, -1224100, -1174100, -1114100, -1044100, -964100, -879100, -779100, -674100, -564100, -444100, -324100
+            ];
+
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Monthly Revenue ($)',
+                            data: revenue,
+                            borderColor: 'rgba(42, 157, 143, 1)',
+                            backgroundColor: 'rgba(42, 157, 143, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Monthly Costs ($)',
+                            data: costs,
+                            borderColor: 'rgba(44, 125, 160, 1)',
+                            backgroundColor: 'rgba(44, 125, 160, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Cumulative P&L ($)',
+                            data: cumulative,
+                            borderColor: 'rgba(231, 111, 81, 1)',
+                            backgroundColor: 'rgba(0, 0, 0, 0)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Month'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Amount ($)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.raw.toLocaleString();
+                                }
+                            }
+                        },
+                        annotation: {
+                            annotations: {
+                                breakeven: {
+                                    type: 'line',
+                                    mode: 'vertical',
+                                    scaleID: 'x',
+                                    value: 32,
+                                    borderColor: 'rgba(42, 157, 143, 0.5)',
+                                    borderWidth: 2,
+                                    label: {
+                                        content: 'Breakeven',
+                                        enabled: true,
+                                        position: 'top'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDgArCiwvDlw7dwO89RM8OqAIubQ36H06fHTODvwTM9%2B60gVuWHkSjtbXzq5w56cALpO67KRtfLKA%2Fs%2F8RnxiaAN%2FHPacGQej5uuVXClnycEMpBFYU7ma3mEO%2BYIXFeY0QEzWkCeTqQyhVrJkEw1bb6%2BHtyDMYLMPt2Xc1SGVMqHEOk6WhL2skPMIbfODNvMyWjFBbWtB0gDFlMJ%2Faopu%2Fae6BI7KBfI2PUXYGber9N3O0TCIxHKxVz%2B40L0%2BSFeGAasOrNKfxV9WgxY7K6Y2sJqLJL4JynWJiLwLkcazlkYXC%2BDP7Uvi%2BeCuaCJSYQPBn9TfuaC4DbX%2BnjtER9uAvcWTAJloWoLKxGUn%2FIy7T4Q8qf52yrlf9CktY43lVmaHgu9HPc%2FgiT0z2uv8ncW4g4E3jMqaGIcMhb3RedWsCeGFUfOI8q5gkHrM4OmCfDouYqzBLy9QcQLvQz209N1BTzKHfSovXs%2F4mHLrST8iylHDU5gBy9ye81xf2vATu9MonbH%2F3TGM5IiSgo6kc16MK6k%3D";
+        window.__genspark_locale = "en-US";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDgArCiwvDlw7dwO89RM8OqAIubQ36H06fHTODvwTM9+60gVuWHkSjtbXzq5w56cALpO67KRtfLKA/s/8RnxiaAN/HPacGQej5uuVXClnycEMpBFYU7ma3mEO+YIXFeY0QEzWkCeTqQyhVrJkEw1bb6+HtyDMYLMPt2Xc1SGVMqHEOk6WhL2skPMIbfODNvMyWjFBbWtB0gDFlMJ/aopu/ae6BI7KBfI2PUXYGber9N3O0TCIxHKxVz+40L0+SFeGAasOrNKfxV9WgxY7K6Y2sJqLJL4JynWJiLwLkcazlkYXC+DP7Uvi+eCuaCJSYQPBn9TfuaC4DbX+njtER9uAvcWTAJloWoLKxGUn/Iy7T4Q8qf52yrlf9CktY43lVmaHgu9HPc/giT0z2uv8ncW4g4E3jMqaGIcMhb3RedWsCeGFUfOI8q5gkHrM4OmCfDouYqzBLy9QcQLvQz209N1BTzKHfSovXs/4mHLrST8iylHDU5gBy9ye81xf2vATu9MonbH/3TGM5IiSgo6kc16MK6k=";
+    </script>
+    
+    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
+    

@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Social - Family Matching System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --secondary-blue: #3b82f6;
+            --primary-green: #059669;
+            --secondary-green: #10b981;
+            --light-blue: #dbeafe;
+            --light-green: #d1fae5;
+        }
+        
+        .bg-primary-blue { background-color: var(--primary-blue); }
+        .bg-secondary-blue { background-color: var(--secondary-blue); }
+        .bg-primary-green { background-color: var(--primary-green); }
+        .bg-secondary-green { background-color: var(--secondary-green); }
+        .bg-light-blue { background-color: var(--light-blue); }
+        .bg-light-green { background-color: var(--light-green); }
+        .text-primary-blue { color: var(--primary-blue); }
+        .text-primary-green { color: var(--primary-green); }
+        .border-primary-blue { border-color: var(--primary-blue); }
+        .border-primary-green { border-color: var(--primary-green); }
+        
+        .swipe-card {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .swipe-card.swiped-left {
+            transform: translateX(-100%) rotate(-15deg);
+            opacity: 0;
+        }
+        
+        .swipe-card.swiped-right {
+            transform: translateX(100%) rotate(15deg);
+            opacity: 0;
+        }
+        
+        .compatibility-bar {
+            background: linear-gradient(90deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+        }
+        
+        .nav-tab.active {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+        
+        .nav-tab {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tab:hover {
+            background-color: var(--light-blue);
+        }
+        
+        .family-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .family-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-primary-blue rounded-lg flex items-center justify-center">
+                        <i class="fas fa-users text-white text-lg"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-900">Curriculum Social</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-bell text-lg"></i>
+                    </button>
+                    <div class="w-8 h-8 bg-primary-green rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex space-x-1">
+                <button onclick="showTab('preferences')" class="nav-tab active px-4 py-3 text-sm font-medium rounded-t-lg" id="preferences-tab">
+                    <i class="fas fa-cog mr-2"></i>Preferences
+                </button>
+                <button onclick="showTab('suggestions')" class="nav-tab px-4 py-3 text-sm font-medium rounded-t-lg text-gray-500" id="suggestions-tab">
+                    <i class="fas fa-lightbulb mr-2"></i>Smart Suggestions
+                </button>
+                <button onclick="showTab('browse')" class="nav-tab px-4 py-3 text-sm font-medium rounded-t-lg text-gray-500" id="browse-tab">
+                    <i class="fas fa-search mr-2"></i>Browse & Connect
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Preferences Tab -->
+        <div id="preferences-content" class="tab-content">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Set Your Family Preferences</h2>
+                
+                <form class="space-y-8">
+                    <!-- Educational Approaches -->
+                    <div>
+                        <label class="block text-lg font-semibold text-gray-900 mb-4">Educational Approaches</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue" checked>
+                                <span class="text-sm font-medium">Montessori</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue" checked>
+                                <span class="text-sm font-medium">Charlotte Mason</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm font-medium">Waldorf</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm font-medium">Classical</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm font-medium">STEM-Heavy</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm font-medium">Unschooling</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm font-medium">Faith-Based</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm font-medium">Eclectic</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Location & Distance -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-lg font-semibold text-gray-900 mb-3">Search Radius</label>
+                            <div class="space-y-3">
+                                <input type="range" min="5" max="50" value="25" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" id="radius-slider">
+                                <div class="flex justify-between text-sm text-gray-500">
+                                    <span>5 km</span>
+                                    <span id="radius-value" class="font-semibold text-primary-blue">25 km</span>
+                                    <span>50 km</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-lg font-semibold text-gray-900 mb-3">Current Location</label>
+                            <div class="relative">
+                                <input type="text" value="Koh Samui, Thailand" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent" readonly>
+                                <i class="fas fa-map-marker-alt absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-green"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Children's Ages -->
+                    <div>
+                        <label class="block text-lg font-semibold text-gray-900 mb-4">Children's Age Groups</label>
+                        <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue" checked>
+                                <span class="text-sm">0-2</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue" checked>
+                                <span class="text-sm">3-5</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm">6-8</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm">9-11</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm">12-14</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm">15+</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Activity Interests -->
+                    <div>
+                        <label class="block text-lg font-semibold text-gray-900 mb-4">Activity Interests</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue" checked>
+                                <span class="text-sm">Nature Studies</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue" checked>
+                                <span class="text-sm">Arts & Crafts</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm">Sports</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue" checked>
+                                <span class="text-sm">Music</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm">Cooking</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue" checked>
+                                <span class="text-sm">Science Experiments</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm">Drama</span>
+                            </label>
+                            <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox text-primary-blue">
+                                <span class="text-sm">Field Trips</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full md:w-auto bg-primary-blue text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
+                        Save Preferences
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Smart Suggestions Tab -->
+        <div id="suggestions-content" class="tab-content hidden">
+            <div class="space-y-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Smart Suggestions</h2>
+                    <p class="text-gray-600 mb-6">Based on your preferences, we found these compatible families nearby</p>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Family Card 1 -->
+                        <div class="family-card bg-white border border-gray-200 rounded-lg p-6">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 bg-primary-green rounded-full flex items-center justify-center">
+                                        <span class="text-white font-semibold">TJ</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-900">The Johnson Family</h3>
+                                        <p class="text-sm text-gray-500">2.3 km away</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i class="fas fa-shield-alt text-primary-green text-sm"></i>
+                                    <span class="text-xs text-gray-500">Verified</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium text-gray-900">Compatibility</span>
+                                    <span class="text-sm font-semibold text-primary-green">92%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="compatibility-bar h-2 rounded-full" style="width: 92%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3 mb-4">
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-graduation-cap w-4 text-primary-blue mr-2"></i>
+                                    <span class="text-gray-600">Montessori, Charlotte Mason</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-child w-4 text-primary-blue mr-2"></i>
+                                    <span class="text-gray-600">Ages: 3, 6</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-heart w-4 text-primary-blue mr-2"></i>
+                                    <span class="text-gray-600">Nature studies, Arts</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button class="flex-1 bg-primary-blue text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-700 transition duration-200">
+                                    Connect
+                                </button>
+                                <button class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200">
+                                    View Profile
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Family Card 2 -->
+                        <div class="family-card bg-white border border-gray-200 rounded-lg p-6">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 bg-secondary-green rounded-full flex items-center justify-center">
+                                        <span class="text-white font-semibold">LM</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-900">The Martinez Family</h3>
+                                        <p class="text-sm text-gray-500">1.8 km away</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i class="fas fa-shield-alt text-primary-green text-sm"></i>
+                                    <span class="text-xs text-gray-500">Verified</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium text-gray-900">Compatibility</span>
+                                    <span class="text-sm font-semibold text-primary-green">88%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="compatibility-bar h-2 rounded-full" style="width: 88%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3 mb-4">
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-graduation-cap w-4 text-primary-blue mr-2"></i>
+                                    <span class="text-gray-600">Montessori, Waldorf</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-child w-4 text-primary-blue mr-2"></i>
+                                    <span class="text-gray-600">Ages: 2, 5</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-heart w-4 text-primary-blue mr-2"></i>
+                                    <span class="text-gray-600">Music, Arts, Nature</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button class="flex-1 bg-primary-blue text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-700 transition duration-200">
+                                    Connect
+                                </button>
+                                <button class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200">
+                                    View Profile
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Family Card 3 -->
+                        <div class="family-card bg-white border border-gray-200 rounded-lg p-6">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-semibold">AK</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-900">The Kumar Family</h3>
+                                        <p class="text-sm text-gray-500">3.1 km away</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i class="fas fa-shield-alt text-primary-green text-sm"></i>
+                                    <span class="text-xs text-gray-500">Verified</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium text-gray-900">Compatibility</span>
+                                    <span class="text-sm font-semibold text-primary-green">85%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="compatibility-bar h-2 rounded-full" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3 mb-4">
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-graduation-cap w-4 text-primary-blue mr-2"></i>
+                                    <span class="text-gray-600">Charlotte Mason, Classical</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-child w-4 text-primary-blue mr-2"></i>
+                                    <span class="text-gray-600">Ages: 4, 7</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-heart w-4 text-primary-blue mr-2"></i>
+                                    <span class="text-gray-600">Science, Arts, Music</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button class="flex-1 bg-primary-blue text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-700 transition duration-200">
+                                    Connect
+                                </button>
+                                <button class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200">
+                                    View Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compatibility Insights -->
+                <div class="bg-light-blue rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                        <i class="fas fa-lightbulb text-primary-blue mr-2"></i>
+                        Compatibility Insights
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4 text-sm">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-check text-primary-green"></i>
+                            <span>Strong alignment on Montessori approach</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-check text-primary-green"></i>
+                            <span>Similar age groups for social connection</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-check text-primary-green"></i>
+                            <span>Shared interest in nature-based learning</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-check text-primary-green"></i>
+                            <span>All families within preferred radius</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Browse Tab -->
+        <div id="browse-content" class="tab-content hidden">
+            <div class="space-y-6">
+                <!-- Filters -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Browse & Connect</h2>
+                    
+                    <div class="grid md:grid-cols-4 gap-4 mb-6">
+                        <select class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent">
+                            <option>All Approaches</option>
+                            <option>Montessori</option>
+                            <option>Charlotte Mason</option>
+                            <option>Waldorf</option>
+                            <option>Classical</option>
+                        </select>
+                        
+                        <select class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent">
+                            <option>All Ages</option>
+                            <option>0-2 years</option>
+                            <option>3-5 years</option>
+                            <option>6-8 years</option>
+                            <option>9+ years</option>
+                        </select>
+                        
+                        <select class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-transparent">
+                            <option>Distance: Any</option>
+                            <option>Within 5km</option>
+                            <option>Within 10km</option>
+                            <option>Within 25km</option>
+                        </select>
+                        
+                        <button class="bg-primary-blue text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition duration-200">
+                            <i class="fas fa-filter mr-2"></i>Apply Filters
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Swipe Interface -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">Discover Families</h3>
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-arrow-left text-red-500"></i>
+                                <span>Pass</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-arrow-right text-primary-green"></i>
+                                <span>Connect</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Swipe Card Stack -->
+                    <div class="relative h-96 max-w-md mx-auto">
+                        <div class="swipe-card absolute inset-0 bg-white border-2 border-gray-200 rounded-xl p-6 cursor-pointer" id="swipe-card-1">
+                            <div class="h-full flex flex-col">
+                                <div class="flex items-center space-x-3 mb-4">
+                                    <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-bold text-lg">SW</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-900">The Williams Family</h3>
+                                        <p class="text-gray-500">1.5 km away • Verified</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex-1 space-y-4">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900 mb-2">Education Philosophy</h4>
+                                        <div class="flex flex-wrap gap-2">
+                                            <span class="px-3 py-1 bg-light-blue text-primary-blue rounded-full text-sm">Montessori</span>
+                                            <span class="px-3 py-1 bg-light-green text-primary-green rounded-full text-sm">Nature-Based</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900 mb-2">Children</h4>
+                                        <p class="text-gray-600">Twin boys, age 4 • Girl, age 7</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900 mb-2">Interests</h4>
+                                        <p class="text-gray-600">Outdoor exploration, hands-on science, creative arts</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900 mb-2">About</h4>
+                                        <p class="text-gray-600 text-sm">Digital nomad family from Australia. Love child-led learning and creating beautiful memories through education.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex space-x-3 mt-4">
+                                    <button onclick="swipeCard('left', 1)" class="flex-1 bg-red-500 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition duration-200">
+                                        <i class="fas fa-times mr-2"></i>Pass
+                                    </button>
+                                    <button onclick="swipeCard('right', 1)" class="flex-1 bg-primary-green text-white py-3 rounded-lg font-medium hover:bg-green-600 transition duration-200">
+                                        <i class="fas fa-heart mr-2"></i>Connect
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Next card (preview) -->
+                        <div class="swipe-card absolute inset-0 bg-white border-2 border-gray-200 rounded-xl p-6 transform scale-95 -z-10" style="transform: scale(0.95) translateY(10px);" id="swipe-card-2">
+                            <div class="h-full flex flex-col">
+                                <div class="flex items-center space-x-3 mb-4">
+                                    <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-bold text-lg">BT</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-900">The Thompson Family</h3>
+                                        <p class="text-gray-500">2.8 km away • Verified</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex-1 space-y-4">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900 mb-2">Education Philosophy</h4>
+                                        <div class="flex flex-wrap gap-2">
+                                            <span class="px-3 py-1 bg-light-blue text-primary-blue rounded-full text-sm">Charlotte Mason</span>
+                                            <span class="px-3 py-1 bg-light-green text-primary-green rounded-full text-sm">Classical</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900 mb-2">Children</h4>
+                                        <p class="text-gray-600">Boy, age 6 • Girl, age 9</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900 mb-2">Interests</h4>
+                                        <p class="text-gray-600">Literature, history, music, outdoor adventures</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900 mb-2">About</h4>
+                                        <p class="text-gray-600 text-sm">UK expat family focused on living books and rich experiences. Love organizing group learning activities.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex space-x-3 mt-4">
+                                    <button onclick="swipeCard('left', 2)" class="flex-1 bg-red-500 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition duration-200">
+                                        <i class="fas fa-times mr-2"></i>Pass
+                                    </button>
+                                    <button onclick="swipeCard('right', 2)" class="flex-1 bg-primary-green text-white py-3 rounded-lg font-medium hover:bg-green-600 transition duration-200">
+                                        <i class="fas fa-heart mr-2"></i>Connect
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-6 text-sm text-gray-500">
+                        <p>Swipe right to connect • Swipe left to pass</p>
+                    </div>
+                </div>
+
+                <!-- Connections -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Connections</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-primary-green rounded-full flex items-center justify-center">
+                                    <span class="text-white font-semibold text-sm">TJ</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-900">The Johnson Family</p>
+                                    <p class="text-sm text-gray-500">Connected 2 hours ago</p>
+                                </div>
+                            </div>
+                            <button class="bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition duration-200">
+                                Message
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-secondary-green rounded-full flex items-center justify-center">
+                                    <span class="text-white font-semibold text-sm">LM</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-900">The Martinez Family</p>
+                                    <p class="text-sm text-gray-500">Connected yesterday</p>
+                                </div>
+                            </div>
+                            <button class="bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition duration-200">
+                                Message
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Tab switching functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active', 'bg-primary-blue', 'text-white');
+                tab.classList.add('text-gray-500');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-content').classList.remove('hidden');
+            
+            // Add active class to selected tab
+            const activeTab = document.getElementById(tabName + '-tab');
+            activeTab.classList.add('active');
+            activeTab.classList.remove('text-gray-500');
+        }
+
+        // Radius slider functionality
+        const radiusSlider = document.getElementById('radius-slider');
+        const radiusValue = document.getElementById('radius-value');
+        
+        radiusSlider.addEventListener('input', function() {
+            radiusValue.textContent = this.value + ' km';
+        });
+
+        // Swipe card functionality
+        function swipeCard(direction, cardNumber) {
+            const card = document.getElementById('swipe-card-' + cardNumber);
+            
+            if (direction === 'left') {
+                card.classList.add('swiped-left');
+            } else {
+                card.classList.add('swiped-right');
+            }
+            
+            setTimeout(() => {
+                card.style.display = 'none';
+                // Bring next card to front
+                const nextCard = document.getElementById('swipe-card-' + (cardNumber + 1));
+                if (nextCard) {
+                    nextCard.style.transform = 'scale(1) translateY(0)';
+                    nextCard.style.zIndex = '10';
+                }
+            }, 300);
+            
+            // Show connection message for right swipe
+            if (direction === 'right') {
+                setTimeout(() => {
+                    alert('Connection request sent! You\'ll be notified when they respond.');
+                }, 400);
+            }
+        }
+
+        // Add touch/mouse swipe functionality
+        let startX = 0;
+        let currentX = 0;
+        let cardBeingDragged = null;
+
+        document.querySelectorAll('.swipe-card').forEach(card => {
+            card.addEventListener('mousedown', startDrag);
+            card.addEventListener('touchstart', startDrag);
+        });
+
+        function startDrag(e) {
+            startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+            cardBeingDragged = e.currentTarget;
+            
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchend', endDrag);
+        }
+
+        function drag(e) {
+            if (!cardBeingDragged) return;
+            
+            currentX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+            const deltaX = currentX - startX;
+            
+            cardBeingDragged.style.transform = `translateX(${deltaX}px) rotate(${deltaX * 0.1}deg)`;
+            cardBeingDragged.style.opacity = 1 - Math.abs(deltaX) / 300;
+        }
+
+        function endDrag() {
+            if (!cardBeingDragged) return;
+            
+            const deltaX = currentX - startX;
+            const threshold = 100;
+            
+            if (Math.abs(deltaX) > threshold) {
+                const direction = deltaX > 0 ? 'right' : 'left';
+                const cardNumber = cardBeingDragged.id.split('-')[2];
+                swipeCard(direction, parseInt(cardNumber));
+            } else {
+                // Snap back to center
+                cardBeingDragged.style.transform = 'translateX(0) rotate(0deg)';
+                cardBeingDragged.style.opacity = '1';
+            }
+            
+            cardBeingDragged = null;
+            
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('touchmove', drag);
+            document.removeEventListener('mouseup', endDrag);
+            document.removeEventListener('touchend', endDrag);
+        }
+    </script>
+</body>
+</html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDpd6t%2Bz%2B8JGzOhciWhw9sFZbquoGD7tiGJBE9Q25dvtkO9zSApv%2BiR%2FmcXTy952jAGvoKjjDaMlITbRybAKAtvO8owaktiPShjDAnmplaKyJBBbR8KycTSt63qm4boic4Y23atEq09uy2jJbCOaJ0QNkSt6lC%2FMYPftG%2B%2BencXWFybwBUaPhAVwvKlpXqy1PKELMMz7A%2F4ut4vKDyHJwxAWzEVpknqioiv44X0z2B8mMpO15E%2B0hjI4tJZeoDoKnbF560m9cHovi4%2BZh8xrtkDE4DRcFrMLq6AWrO%2BVMA%2FsgsnJ0sTl3Kox4ni8BpeQdZ707eVbhXgn%2BqSGxuxo4eGCCfu5Th%2BCT40FrIPdh2j14MvEiL1QcTvojWftuxmpazlZ8hsNvSijbcB%2FHB9PMst%2BZzmc9h7hO0%2FZBr3g3FVDlfiTuakPOfg8j5UjtKxpqkZjJFmPdeJaHP5dUJSFtmHgGOMpPZf7rJJMfxkH3sPYcH9xpDUbIFuuC7T4uZ0onQNetbLPVkgOrb49atiGF334%3D";
+        window.__genspark_locale = "en-US";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDpd6t+z+8JGzOhciWhw9sFZbquoGD7tiGJBE9Q25dvtkO9zSApv+iR/mcXTy952jAGvoKjjDaMlITbRybAKAtvO8owaktiPShjDAnmplaKyJBBbR8KycTSt63qm4boic4Y23atEq09uy2jJbCOaJ0QNkSt6lC/MYPftG++encXWFybwBUaPhAVwvKlpXqy1PKELMMz7A/4ut4vKDyHJwxAWzEVpknqioiv44X0z2B8mMpO15E+0hjI4tJZeoDoKnbF560m9cHovi4+Zh8xrtkDE4DRcFrMLq6AWrO+VMA/sgsnJ0sTl3Kox4ni8BpeQdZ707eVbhXgn+qSGxuxo4eGCCfu5Th+CT40FrIPdh2j14MvEiL1QcTvojWftuxmpazlZ8hsNvSijbcB/HB9PMst+Zzmc9h7hO0/ZBr3g3FVDlfiTuakPOfg8j5UjtKxpqkZjJFmPdeJaHP5dUJSFtmHgGOMpPZf7rJJMfxkH3sPYcH9xpDUbIFuuC7T4uZ0onQNetbLPVkgOrb49atiGF334=";
+    </script>
+    
+    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
+    

@@ -1,0 +1,613 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Social - Lead Research Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-blue: #1e88e5;
+            --primary-green: #43a047;
+            --secondary-blue: #bbdefb;
+            --secondary-green: #c8e6c9;
+            --dark-blue: #0d47a1;
+            --dark-green: #2e7d32;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f9fafb;
+        }
+        .cs-blue-bg {
+            background-color: var(--primary-blue);
+        }
+        .cs-green-bg {
+            background-color: var(--primary-green);
+        }
+        .cs-blue-light-bg {
+            background-color: var(--secondary-blue);
+        }
+        .cs-green-light-bg {
+            background-color: var(--secondary-green);
+        }
+        .cs-blue-text {
+            color: var(--primary-blue);
+        }
+        .cs-green-text {
+            color: var(--primary-green);
+        }
+        .cs-dark-blue-text {
+            color: var(--dark-blue);
+        }
+        .cs-dark-green-text {
+            color: var(--dark-green);
+        }
+        .cs-border-blue {
+            border-color: var(--primary-blue);
+        }
+        .cs-border-green {
+            border-color: var(--primary-green);
+        }
+        .form-section {
+            border-left: 4px solid transparent;
+        }
+        .form-section.active {
+            border-left: 4px solid var(--primary-green);
+        }
+        .custom-checkbox:checked {
+            background-color: var(--primary-green);
+        }
+        .score-indicator {
+            height: 10px;
+            transition: all 0.3s ease;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+        }
+        .tooltip-icon {
+            cursor: pointer;
+            position: relative;
+        }
+        .tooltip-text {
+            visibility: hidden;
+            position: absolute;
+            z-index: 100;
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            left: 100%;
+            top: -5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip-icon:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .custom-input:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px var(--secondary-green);
+        }
+        .star-rating > label:hover ~ input:not(:checked) ~ label,
+        .star-rating > label:hover,
+        .star-rating > input:checked ~ label {
+            color: var(--primary-green);
+        }
+        .animated-progress {
+            transition: width 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="py-4 px-6 text-white shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="mr-4 font-bold text-xl">Curriculum Social</div>
+                <div class="text-sm">Lead Research Tool</div>
+            </div>
+            <div>
+                <button type="button" class="bg-white text-blue-600 hover:bg-blue-50 py-2 px-4 rounded shadow" id="save-btn">
+                    <i class="fas fa-save mr-2"></i> Save Lead
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container mx-auto py-8 px-4 md:px-6">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <div class="p-6 border-b border-gray-200">
+                <h1 class="text-2xl font-bold cs-dark-blue-text mb-2">Lead Research Form</h1>
+                <p class="text-gray-600">Identify and track potential high-value stakeholders for Curriculum Social</p>
+            </div>
+            
+            <form id="lead-form" class="p-6">
+                <!-- Basic Information Section -->
+                <div class="form-section active mb-8 pl-4">
+                    <h2 class="text-xl font-semibold cs-blue-text mb-4 flex items-center">
+                        <span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">1</span>
+                        Basic Information
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="stakeholderType" class="block text-sm font-medium text-gray-700 mb-1">Stakeholder Type</label>
+                            <select id="stakeholderType" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none custom-input">
+                                <option value="">Select type...</option>
+                                <option value="investor">Investor</option>
+                                <option value="parent">Parent</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="parentTeacher">Parent-Teacher</option>
+                                <option value="venue">Venue Partner</option>
+                                <option value="consultant">Education Consultant</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="leadName" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="leadName" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none custom-input" placeholder="Enter full name">
+                        </div>
+                        
+                        <div>
+                            <label for="organization" class="block text-sm font-medium text-gray-700 mb-1">Organization/Company</label>
+                            <input type="text" id="organization" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none custom-input" placeholder="Enter organization">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="email" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none custom-input" placeholder="Enter email address">
+                        </div>
+                        
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                            <input type="tel" id="phone" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none custom-input" placeholder="Enter phone number">
+                        </div>
+                        
+                        <div>
+                            <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                            <input type="text" id="location" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none custom-input" placeholder="City, Country">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Prospect Evaluation Section -->
+                <div class="form-section mb-8 pl-4" id="prospect-criteria-section">
+                    <h2 class="text-xl font-semibold cs-blue-text mb-4 flex items-center">
+                        <span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">2</span>
+                        Prospect Evaluation
+                        <i class="fas fa-info-circle ml-2 tooltip-icon text-blue-400">
+                            <span class="tooltip-text text-xs">This section will adapt based on stakeholder type selection</span>
+                        </i>
+                    </h2>
+                    
+                    <div id="criteria-container" class="bg-blue-50 p-4 rounded-lg mb-6">
+                        <p class="text-gray-500 italic">Please select a stakeholder type to see relevant criteria</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Potential Value to Platform (1-5)</label>
+                        <div class="flex items-center star-rating">
+                            <input type="radio" id="value-1" name="value-rating" value="1" class="hidden">
+                            <label for="value-1" class="text-2xl cursor-pointer text-gray-300">★</label>
+                            
+                            <input type="radio" id="value-2" name="value-rating" value="2" class="hidden">
+                            <label for="value-2" class="text-2xl cursor-pointer text-gray-300">★</label>
+                            
+                            <input type="radio" id="value-3" name="value-rating" value="3" class="hidden">
+                            <label for="value-3" class="text-2xl cursor-pointer text-gray-300">★</label>
+                            
+                            <input type="radio" id="value-4" name="value-rating" value="4" class="hidden">
+                            <label for="value-4" class="text-2xl cursor-pointer text-gray-300">★</label>
+                            
+                            <input type="radio" id="value-5" name="value-rating" value="5" class="hidden">
+                            <label for="value-5" class="text-2xl cursor-pointer text-gray-300">★</label>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="valueNotes" class="block text-sm font-medium text-gray-700 mb-1">Why this prospect is valuable (Notes)</label>
+                        <textarea id="valueNotes" rows="3" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none custom-input" placeholder="Describe potential value and alignment with Curriculum Social's goals..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Relationship Tracking Section -->
+                <div class="form-section mb-8 pl-4">
+                    <h2 class="text-xl font-semibold cs-blue-text mb-4 flex items-center">
+                        <span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">3</span>
+                        Relationship Tracking
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="relationshipStatus" class="block text-sm font-medium text-gray-700 mb-1">Relationship Status</label>
+                            <select id="relationshipStatus" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none custom-input">
+                                <option value="new">New Lead (No Contact)</option>
+                                <option value="initial">Initial Contact Made</option>
+                                <option value="engaged">Engaged in Discussion</option>
+                                <option value="interested">Expressed Interest</option>
+                                <option value="committed">Committed</option>
+                                <option value="declined">Declined</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="followUpDate" class="block text-sm font-medium text-gray-700 mb-1">Next Follow-up Date</label>
+                            <input type="date" id="followUpDate" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none custom-input">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="personalNotes" class="block text-sm font-medium text-gray-700 mb-1">Personal Background & Interest Notes</label>
+                        <textarea id="personalNotes" rows="4" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none custom-input" placeholder="Add notes about personal interests, motivations, conversation points..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Prospect Score Section -->
+                <div class="form-section mb-4 pl-4">
+                    <h2 class="text-xl font-semibold cs-blue-text mb-4 flex items-center">
+                        <span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">4</span>
+                        Prospect Score
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div>
+                                <p class="text-sm font-medium text-gray-700 mb-1">Alignment Score</p>
+                                <div class="h-4 w-full bg-gray-200 rounded-full overflow-hidden">
+                                    <div id="alignment-score" class="h-full cs-blue-bg animated-progress" style="width: 0%"></div>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1"><span id="alignment-score-value">0</span>/100</p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-sm font-medium text-gray-700 mb-1">Value Potential</p>
+                                <div class="h-4 w-full bg-gray-200 rounded-full overflow-hidden">
+                                    <div id="value-score" class="h-full cs-green-bg animated-progress" style="width: 0%"></div>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1"><span id="value-score-value">0</span>/100</p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-sm font-medium text-gray-700 mb-1">Engagement Readiness</p>
+                                <div class="h-4 w-full bg-gray-200 rounded-full overflow-hidden">
+                                    <div id="engagement-score" class="h-full bg-purple-500 animated-progress" style="width: 0%"></div>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1"><span id="engagement-score-value">0</span>/100</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 p-4 rounded-lg" id="score-summary-container">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-bold text-lg">Overall Score</h3>
+                                    <p class="text-gray-600">Lead quality assessment</p>
+                                </div>
+                                <div class="text-3xl font-bold" id="overall-score">0%</div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                                    <div id="overall-score-bar" class="h-full animated-progress" style="width: 0%; background: linear-gradient(90deg, var(--primary-blue), var(--primary-green))"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 text-sm" id="score-recommendation">
+                                <p class="italic text-gray-500">Complete the form to generate a lead quality assessment</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex justify-end">
+                    <button type="button" class="bg-gray-200 text-gray-700 hover:bg-gray-300 py-2 px-6 rounded-l-lg border-r border-white" id="reset-btn">
+                        Reset Form
+                    </button>
+                    <button type="button" class="bg-gradient-to-r from-blue-500 to-green-500 text-white hover:from-blue-600 hover:to-green-600 py-2 px-6 rounded-r-lg" id="calculate-btn">
+                        Calculate Score
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <footer class="bg-gray-100 py-6 mt-8">
+        <div class="container mx-auto px-6 text-center text-gray-600 text-sm">
+            <p>© 2025 Curriculum Social. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Define stakeholder-specific criteria
+            const stakeholderCriteria = {
+                investor: [
+                    { id: 'prior-edtech', label: 'Prior EdTech investment experience' },
+                    { id: 'social-platforms', label: 'Interest in community/social platforms' },
+                    { id: 'global-perspective', label: 'Global education perspective' },
+                    { id: 'patient-capital', label: 'Patience for education market development' },
+                    { id: 'mission-alignment', label: 'Value alignment with educational mission' },
+                ],
+                parent: [
+                    { id: 'school-age', label: 'Has school-age children' },
+                    { id: 'dissatisfaction', label: 'Dissatisfaction with current school options' },
+                    { id: 'alternative-interest', label: 'Interest in alternative education approaches' },
+                    { id: 'community-minded', label: 'Community-minded approach to education' },
+                    { id: 'global-standards', label: 'Values global educational standards' },
+                ],
+                teacher: [
+                    { id: 'montessori-cert', label: 'Montessori certification or training' },
+                    { id: 'mixed-age', label: 'Experience with mixed-age groups' },
+                    { id: 'innovation-interest', label: 'Interest in educational innovation' },
+                    { id: 'tech-comfort', label: 'Comfort with technology integration' },
+                    { id: 'flexible-work', label: 'Desire for flexible work arrangements' },
+                ],
+                parentTeacher: [
+                    { id: 'specialized-knowledge', label: 'Has specialized knowledge/skills' },
+                    { id: 'community-interest', label: 'Interest in educational community building' },
+                    { id: 'teaching-experience', label: 'Some teaching experience (formal or informal)' },
+                    { id: 'schedule-availability', label: 'Reliable schedule availability' },
+                    { id: 'communication-skills', label: 'Strong communication skills' },
+                ],
+                venue: [
+                    { id: 'physical-space', label: 'Appropriate physical space for learning' },
+                    { id: 'community-approach', label: 'Community-minded business approach' },
+                    { id: 'consistent-availability', label: 'Consistent availability of space' },
+                    { id: 'child-safe', label: 'Child-safe environment' },
+                    { id: 'education-positioning', label: 'Interest in educational positioning' },
+                ],
+                consultant: [
+                    { id: 'international-focus', label: 'Focus on international/expatriate education' },
+                    { id: 'progressive-philosophy', label: 'Progressive educational philosophy' },
+                    { id: 'diverse-clients', label: 'Multiple client types (not just traditional)' },
+                    { id: 'innovative-interest', label: 'Interest in innovative approaches' },
+                    { id: 'global-network', label: 'Has global professional network' },
+                ]
+            };
+            
+            // Form sections and navigation
+            const formSections = document.querySelectorAll('.form-section');
+            
+            // Update criteria display based on stakeholder type
+            const stakeholderTypeSelect = document.getElementById('stakeholderType');
+            const criteriaContainer = document.getElementById('criteria-container');
+            
+            stakeholderTypeSelect.addEventListener('change', function() {
+                const selectedType = this.value;
+                if (!selectedType) {
+                    criteriaContainer.innerHTML = `<p class="text-gray-500 italic">Please select a stakeholder type to see relevant criteria</p>`;
+                    return;
+                }
+                
+                const criteria = stakeholderCriteria[selectedType];
+                if (!criteria) {
+                    criteriaContainer.innerHTML = `<p class="text-gray-500 italic">No specific criteria available for this type</p>`;
+                    return;
+                }
+                
+                let criteriaHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                criteria.forEach(item => {
+                    criteriaHTML += `
+                        <div class="flex items-center">
+                            <input type="checkbox" id="${item.id}" class="form-checkbox h-5 w-5 text-green-500 rounded custom-checkbox mr-2" data-criteria="${item.id}">
+                            <label for="${item.id}" class="text-gray-700">${item.label}</label>
+                        </div>
+                    `;
+                });
+                criteriaHTML += `</div>`;
+                criteriaContainer.innerHTML = criteriaHTML;
+            });
+            
+            // Star rating behavior
+            const starLabels = document.querySelectorAll('.star-rating label');
+            starLabels.forEach((label, index) => {
+                label.addEventListener('mouseover', () => {
+                    for (let i = 0; i <= index; i++) {
+                        starLabels[i].classList.remove('text-gray-300');
+                        starLabels[i].classList.add('text-green-500');
+                    }
+                });
+                
+                label.addEventListener('mouseout', () => {
+                    starLabels.forEach(star => {
+                        if (!star.previousElementSibling.checked) {
+                            star.classList.remove('text-green-500');
+                            star.classList.add('text-gray-300');
+                        }
+                    });
+                });
+                
+                label.addEventListener('click', () => {
+                    const radioInput = label.previousElementSibling;
+                    radioInput.checked = true;
+                    
+                    starLabels.forEach((star, i) => {
+                        if (i <= index) {
+                            star.classList.remove('text-gray-300');
+                            star.classList.add('text-green-500');
+                        } else {
+                            star.classList.remove('text-green-500');
+                            star.classList.add('text-gray-300');
+                        }
+                    });
+                });
+            });
+            
+            // Calculate score functionality
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const saveBtn = document.getElementById('save-btn');
+            
+            calculateBtn.addEventListener('click', calculateScores);
+            resetBtn.addEventListener('click', resetForm);
+            saveBtn.addEventListener('click', saveLeadData);
+            
+            function calculateScores() {
+                const stakeholderType = stakeholderTypeSelect.value;
+                if (!stakeholderType) {
+                    alert('Please select a stakeholder type');
+                    return;
+                }
+                
+                // Get alignment score based on matched criteria
+                let alignmentScore = 0;
+                const criteriaChecks = document.querySelectorAll('input[data-criteria]:checked');
+                alignmentScore = (criteriaChecks.length / 5) * 100; // 5 criteria per type
+                
+                // Get value score based on star rating
+                let valueScore = 0;
+                const valueRating = document.querySelector('input[name="value-rating"]:checked');
+                if (valueRating) {
+                    valueScore = (parseInt(valueRating.value) / 5) * 100;
+                }
+                
+                // Get engagement score based on relationship status
+                let engagementScore = 0;
+                const relationshipStatus = document.getElementById('relationshipStatus').value;
+                switch(relationshipStatus) {
+                    case 'new': engagementScore = 20; break;
+                    case 'initial': engagementScore = 40; break; 
+                    case 'engaged': engagementScore = 60; break;
+                    case 'interested': engagementScore = 80; break;
+                    case 'committed': engagementScore = 100; break;
+                    case 'declined': engagementScore = 0; break;
+                }
+                
+                // Calculate overall score (weighted average)
+                const overallScore = Math.round((alignmentScore * 0.4) + (valueScore * 0.4) + (engagementScore * 0.2));
+                
+                // Update UI
+                document.getElementById('alignment-score').style.width = `${alignmentScore}%`;
+                document.getElementById('alignment-score-value').textContent = Math.round(alignmentScore);
+                
+                document.getElementById('value-score').style.width = `${valueScore}%`;
+                document.getElementById('value-score-value').textContent = Math.round(valueScore);
+                
+                document.getElementById('engagement-score').style.width = `${engagementScore}%`;
+                document.getElementById('engagement-score-value').textContent = Math.round(engagementScore);
+                
+                document.getElementById('overall-score').textContent = `${overallScore}%`;
+                document.getElementById('overall-score-bar').style.width = `${overallScore}%`;
+                
+                // Set recommendation based on score
+                const recommendationEl = document.getElementById('score-recommendation');
+                let recommendation, recommendationClass;
+                
+                if (overallScore >= 80) {
+                    recommendation = 'High Priority Lead - Schedule immediate follow-up and prepare personalized outreach.';
+                    recommendationClass = 'text-green-600 font-semibold';
+                    document.getElementById('score-summary-container').className = 'mt-6 p-4 bg-green-50 rounded-lg';
+                } else if (overallScore >= 60) {
+                    recommendation = 'Strong Lead - Worth investing time for detailed outreach and engagement.';
+                    recommendationClass = 'text-blue-600';
+                    document.getElementById('score-summary-container').className = 'mt-6 p-4 bg-blue-50 rounded-lg';
+                } else if (overallScore >= 40) {
+                    recommendation = 'Moderate Potential - Keep on radar and engage with standard outreach.';
+                    recommendationClass = 'text-yellow-600';
+                    document.getElementById('score-summary-container').className = 'mt-6 p-4 bg-yellow-50 rounded-lg';
+                } else {
+                    recommendation = 'Low Current Fit - Maintain in database but prioritize other leads.';
+                    recommendationClass = 'text-gray-500';
+                    document.getElementById('score-summary-container').className = 'mt-6 p-4 bg-gray-50 rounded-lg';
+                }
+                
+                recommendationEl.innerHTML = `<p class="${recommendationClass}">${recommendation}</p>`;
+            }
+            
+            function resetForm() {
+                document.getElementById('lead-form').reset();
+                criteriaContainer.innerHTML = `<p class="text-gray-500 italic">Please select a stakeholder type to see relevant criteria</p>`;
+                
+                // Reset scores
+                document.getElementById('alignment-score').style.width = '0%';
+                document.getElementById('alignment-score-value').textContent = '0';
+                
+                document.getElementById('value-score').style.width = '0%';
+                document.getElementById('value-score-value').textContent = '0';
+                
+                document.getElementById('engagement-score').style.width = '0%';
+                document.getElementById('engagement-score-value').textContent = '0';
+                
+                document.getElementById('overall-score').textContent = '0%';
+                document.getElementById('overall-score-bar').style.width = '0%';
+                
+                document.getElementById('score-recommendation').innerHTML = `<p class="italic text-gray-500">Complete the form to generate a lead quality assessment</p>`;
+                document.getElementById('score-summary-container').className = 'mt-6 p-4 rounded-lg';
+                
+                // Reset star ratings
+                starLabels.forEach(star => {
+                    star.classList.remove('text-green-500');
+                    star.classList.add('text-gray-300');
+                });
+            }
+            
+            function saveLeadData() {
+                // In a real implementation, this would save to a database
+                // For this demo, we'll create a data object and show what would be saved
+                
+                const leadData = {
+                    basic: {
+                        stakeholderType: document.getElementById('stakeholderType').value,
+                        name: document.getElementById('leadName').value,
+                        organization: document.getElementById('organization').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        location: document.getElementById('location').value
+                    },
+                    evaluation: {
+                        criteria: Array.from(document.querySelectorAll('input[data-criteria]:checked'))
+                            .map(el => el.getAttribute('data-criteria')),
+                        valueRating: document.querySelector('input[name="value-rating"]:checked')?.value || 0,
+                        valueNotes: document.getElementById('valueNotes').value
+                    },
+                    relationship: {
+                        status: document.getElementById('relationshipStatus').value,
+                        followUpDate: document.getElementById('followUpDate').value,
+                        personalNotes: document.getElementById('personalNotes').value
+                    },
+                    scores: {
+                        alignment: document.getElementById('alignment-score-value').textContent,
+                        value: document.getElementById('value-score-value').textContent,
+                        engagement: document.getElementById('engagement-score-value').textContent,
+                        overall: document.getElementById('overall-score').textContent
+                    }
+                };
+                
+                // Validate required fields
+                if (!leadData.basic.name || !leadData.basic.stakeholderType) {
+                    alert('Please complete at least the Name and Stakeholder Type fields');
+                    return;
+                }
+                
+                // In a real application, this would save to a database
+                // For this demo, we'll just create an alert with the data that would be saved
+                alert(`Lead data saved!\n\nName: ${leadData.basic.name}\nType: ${leadData.basic.stakeholderType}\nOverall Score: ${leadData.scores.overall}`);
+                
+                // Save to localStorage for demo purposes
+                const savedLeads = JSON.parse(localStorage.getItem('curriculumSocialLeads') || '[]');
+                leadData.id = Date.now(); // Simple unique ID
+                leadData.dateAdded = new Date().toISOString();
+                savedLeads.push(leadData);
+                localStorage.setItem('curriculumSocialLeads', JSON.stringify(savedLeads));
+                
+                console.log('Lead saved:', leadData);
+            }
+        });
+    </script>
+</body>
+</html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDuU2eH4HuJewZr1u4R4tVrxjKZuhhRQRffpTXhomqhmgKh8gYSUopSen0%2FtmBHqQ2T2gxsMeD27uo8OAx9kx4ZwY7s6YywrLGBE6hxIN0lCEoqEdqTcWRvStzlg7qXPdgc6Na21jDGUT61uBXLOWcppmS7Sc7vE%2BlI%2FRWrsn5ojbYb1mEYqnfYP9btmJKd1iSbgZuX2GZMC8wJtH4XdRZm77mGLw9uzZXflbxrVmraST%2F7F60HEc9cmluzGqJfKxPR7dsUWJ3bOqLMzAYXNICYWNd5AG5thDSoirs9%2BS5mG%2BORWmCsJFFe2dSsqECG7%2FXGXrgN1HVYiReBrj4zi3tL1lRzkqNn4iZTHWYiwGB4y6p5ITRCHQf%2B9%2F0ii6dbLP%2BwjeJi%2Fzzc9mZ06esfgWcO4V%2FZFw1fvE93zK5XhVm44U2S6q6%2FBKYuQaf2SF5dx37d3Eku5TISSnWnGICjC8PUP3kuOTnpeypzA3yS%2F2AuGOmQ%2B%2FK2BCWGY2I3Vx%2FmZK1CNku8k4X4uJYmD1OG50EKE%3D";
+        window.__genspark_locale = "en-US";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDuU2eH4HuJewZr1u4R4tVrxjKZuhhRQRffpTXhomqhmgKh8gYSUopSen0/tmBHqQ2T2gxsMeD27uo8OAx9kx4ZwY7s6YywrLGBE6hxIN0lCEoqEdqTcWRvStzlg7qXPdgc6Na21jDGUT61uBXLOWcppmS7Sc7vE+lI/RWrsn5ojbYb1mEYqnfYP9btmJKd1iSbgZuX2GZMC8wJtH4XdRZm77mGLw9uzZXflbxrVmraST/7F60HEc9cmluzGqJfKxPR7dsUWJ3bOqLMzAYXNICYWNd5AG5thDSoirs9+S5mG+ORWmCsJFFe2dSsqECG7/XGXrgN1HVYiReBrj4zi3tL1lRzkqNn4iZTHWYiwGB4y6p5ITRCHQf+9/0ii6dbLP+wjeJi/zzc9mZ06esfgWcO4V/ZFw1fvE93zK5XhVm44U2S6q6/BKYuQaf2SF5dx37d3Eku5TISSnWnGICjC8PUP3kuOTnpeypzA3yS/2AuGOmQ+/K2BCWGY2I3Vx/mZK1CNku8k4X4uJYmD1OG50EKE=";
+    </script>
+    
+    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
+    

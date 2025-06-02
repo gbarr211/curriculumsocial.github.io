@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Social - Express Interest</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2a6cb2;
+            --primary-green: #3ba676;
+            --light-blue: #e6f1ff;
+            --light-green: #e8f5f0;
+            --dark-blue: #1a4b80;
+            --dark-green: #2a7d5a;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9fafb;
+        }
+        .primary-blue {
+            background-color: var(--primary-blue);
+        }
+        .primary-green {
+            background-color: var(--primary-green);
+        }
+        .text-primary-blue {
+            color: var(--primary-blue);
+        }
+        .text-primary-green {
+            color: var(--primary-green);
+        }
+        .border-primary-blue {
+            border-color: var(--primary-blue);
+        }
+        .border-primary-green {
+            border-color: var(--primary-green);
+        }
+        .header-gradient {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+        }
+        .btn-primary {
+            background-color: var(--primary-blue);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(42, 108, 178, 0.25);
+        }
+        .stakeholder-type {
+            transition: all 0.3s ease;
+        }
+        .stakeholder-type:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .stakeholder-type.selected {
+            border-color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+        .animated {
+            animation-duration: 0.5s;
+            animation-fill-mode: both;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fadeIn {
+            animation-name: fadeIn;
+        }
+        /* Custom form styles */
+        input[type="text"], 
+        input[type="email"], 
+        select, 
+        textarea {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            border-width: 1px;
+        }
+        input[type="text"]:focus, 
+        input[type="email"]:focus, 
+        select:focus, 
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(42, 108, 178, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="header-gradient text-white py-6">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <i class="fas fa-book-reader text-4xl mr-3"></i>
+                        <h1 class="text-2xl md:text-3xl font-bold">Curriculum Social</h1>
+                    </div>
+                    <p class="text-sm md:text-base italic">Revolutionizing education through community</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-6 md:p-8 animated fadeIn">
+                <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Express Your Interest</h2>
+                
+                <!-- Form Status Messages -->
+                <div id="form-success" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+                    <div class="flex">
+                        <div class="py-1"><i class="fas fa-check-circle mr-3"></i></div>
+                        <div>
+                            <p class="font-bold">Thank you for your interest!</p>
+                            <p class="text-sm">We've received your information and will be in touch with you shortly.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="form-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                    <div class="flex">
+                        <div class="py-1"><i class="fas fa-exclamation-circle mr-3"></i></div>
+                        <div>
+                            <p class="font-bold">Please check your information</p>
+                            <p class="text-sm">There was an issue with your submission. Please check all required fields.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <form id="interest-form" class="space-y-6">
+                    <!-- Personal Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-2 border rounded-md focus:ring-blue-500" required>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address <span class="text-red-500">*</span></label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-md" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Stakeholder Type Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">I am interested as a <span class="text-red-500">*</span></label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="stakeholder-type cursor-pointer border rounded-lg p-4 text-center" data-value="parent">
+                                <i class="fas fa-users text-2xl text-primary-blue mb-2"></i>
+                                <p class="font-medium">Parent</p>
+                            </div>
+                            <div class="stakeholder-type cursor-pointer border rounded-lg p-4 text-center" data-value="teacher">
+                                <i class="fas fa-chalkboard-teacher text-2xl text-primary-green mb-2"></i>
+                                <p class="font-medium">Teacher</p>
+                            </div>
+                            <div class="stakeholder-type cursor-pointer border rounded-lg p-4 text-center" data-value="venue">
+                                <i class="fas fa-building text-2xl text-primary-blue mb-2"></i>
+                                <p class="font-medium">Venue Host</p>
+                            </div>
+                            <div class="stakeholder-type cursor-pointer border rounded-lg p-4 text-center" data-value="investor">
+                                <i class="fas fa-chart-line text-2xl text-primary-green mb-2"></i>
+                                <p class="font-medium">Investor</p>
+                            </div>
+                        </div>
+                        <input type="hidden" id="stakeholder-type" name="stakeholder-type" required>
+                    </div>
+                    
+                    <!-- Location -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location <span class="text-red-500">*</span></label>
+                            <input type="text" id="location" name="location" placeholder="City, Country" class="w-full px-4 py-2 border rounded-md" required>
+                        </div>
+                        <div>
+                            <label for="timezone" class="block text-sm font-medium text-gray-700 mb-1">Time Zone</label>
+                            <select id="timezone" name="timezone" class="w-full px-4 py-2 border rounded-md">
+                                <option value="">Select Time Zone</option>
+                                <option value="UTC+7">UTC+7 (Bangkok, Hanoi, Jakarta)</option>
+                                <option value="UTC+8">UTC+8 (Singapore, Hong Kong, Kuala Lumpur)</option>
+                                <option value="UTC+9">UTC+9 (Tokyo, Seoul)</option>
+                                <option value="UTC+10">UTC+10 (Sydney, Melbourne)</option>
+                                <option value="UTC+0">UTC+0 (London, Lisbon)</option>
+                                <option value="UTC-5">UTC-5 (New York, Toronto)</option>
+                                <option value="UTC-8">UTC-8 (Los Angeles, Vancouver)</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Interest -->
+                    <div>
+                        <label for="interest" class="block text-sm font-medium text-gray-700 mb-1">Tell us about your interest in Curriculum Social <span class="text-red-500">*</span></label>
+                        <textarea id="interest" name="interest" rows="4" class="w-full px-4 py-2 border rounded-md" required></textarea>
+                    </div>
+                    
+                    <!-- Referral Source -->
+                    <div>
+                        <label for="referral" class="block text-sm font-medium text-gray-700 mb-1">How did you hear about us?</label>
+                        <select id="referral" name="referral" class="w-full px-4 py-2 border rounded-md">
+                            <option value="">Select an option</option>
+                            <option value="search">Search Engine</option>
+                            <option value="social">Social Media</option>
+                            <option value="friend">Friend or Colleague</option>
+                            <option value="event">Event or Conference</option>
+                            <option value="article">Article or Publication</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Communication Preferences -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Communication Preferences</label>
+                        <div class="space-y-2">
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="email-updates" name="email-updates" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="email-updates" class="font-medium text-gray-700">Email Updates</label>
+                                    <p class="text-gray-500">Receive occasional updates about Curriculum Social</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="newsletter" name="newsletter" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="newsletter" class="font-medium text-gray-700">Newsletter</label>
+                                    <p class="text-gray-500">Subscribe to our educational newsletter</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="event-invites" name="event-invites" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="event-invites" class="font-medium text-gray-700">Event Invites</label>
+                                    <p class="text-gray-500">Be notified about upcoming events and webinars</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Privacy Consent -->
+                    <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input id="privacy-consent" name="privacy-consent" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" required>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="privacy-consent" class="font-medium text-gray-700">Privacy Consent <span class="text-red-500">*</span></label>
+                                <p class="text-gray-500">I agree to the processing of my personal data in accordance with Curriculum Social's <a href="#" class="text-primary-blue hover:underline">Privacy Policy</a>. We respect your privacy and will only use your information to respond to your inquiry and provide relevant information about our services. You may unsubscribe at any time.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="flex justify-center">
+                        <button type="submit" class="btn-primary py-3 px-8 rounded-md text-white font-medium text-lg flex items-center">
+                            <span>Submit</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-6">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <p>&copy; 2025 Curriculum Social. All rights reserved.</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Stakeholder Type Selection
+            const stakeholderTypes = document.querySelectorAll('.stakeholder-type');
+            const stakeholderInput = document.getElementById('stakeholder-type');
+            
+            stakeholderTypes.forEach(type => {
+                type.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    stakeholderTypes.forEach(t => t.classList.remove('selected'));
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    // Set the hidden input value
+                    stakeholderInput.value = this.dataset.value;
+                });
+            });
+            
+            // Form Submission
+            const form = document.getElementById('interest-form');
+            const successMessage = document.getElementById('form-success');
+            const errorMessage = document.getElementById('form-error');
+            
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // Basic form validation
+                let isValid = true;
+                const requiredFields = form.querySelectorAll('[required]');
+                
+                requiredFields.forEach(field => {
+                    if (!field.value) {
+                        isValid = false;
+                        field.classList.add('border-red-500');
+                    } else {
+                        field.classList.remove('border-red-500');
+                    }
+                });
+                
+                if (isValid) {
+                    // Hide form and show success message
+                    form.classList.add('hidden');
+                    successMessage.classList.remove('hidden');
+                    successMessage.classList.add('animated', 'fadeIn');
+                    
+                    // Here you would normally send the form data to your server
+                    console.log('Form submitted successfully');
+                    
+                    // For demo purposes, we're just showing a success message
+                    // In a real implementation, you would send this data to your server
+                    const formData = new FormData(form);
+                    const formValues = Object.fromEntries(formData.entries());
+                    console.log('Form values:', formValues);
+                } else {
+                    // Show error message
+                    errorMessage.classList.remove('hidden');
+                    errorMessage.classList.add('animated', 'fadeIn');
+                    
+                    // Hide error message after 3 seconds
+                    setTimeout(() => {
+                        errorMessage.classList.add('hidden');
+                    }, 3000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDiAVN0o2fPLF2k4d557n6aB90xH3I51cl9%2BG0gjLd5Jrfv8kem6Cfp6C1PWJWA1pvPnFuvCXsi2FC706DCmDU3Iw0xcj%2F9LsOlbTZCTJ7uOIY4Izjd7E%2BM5Smyw%2FANb4JN9PJOVh9w9jKDxt2aDkJXbO87jHDTWHCtEgZWWztwUQW0ZAtQ1gyQYOasPqP3wIzcEHrJ%2BLt6qRX2gAUvYZ7EK1SUkoYmBxtnK5QxLhF4HIW%2B%2BcUHKUw9stPfUCJJW2wmmqbbG4S7PghCoScmofukQHb3X5vBCJO%2B6SXQeTUXTL%2Be6KWecMtZyosFliIRot%2F4FYgUTsN8dJngHjaAchxdggToEMCm8i10rjvEGyfCBybU4FwapRjQChURVzR9xDdlGX2VpeYd24qw4XlHyMI5K%2FneZISZVEEOGhJtHPrxvxwUmoXb%2Fv1GoUA77lJ1Peyz%2F923We1vJI5JNd7B26cndkAfYypsLkQWQFywM8A7%2F3j%2BUZcrfLRDTcZqPZyNFfrMy82cW6%2BFl0wbjmrRrbMAo%3D";
+        window.__genspark_locale = "en-US";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDiAVN0o2fPLF2k4d557n6aB90xH3I51cl9+G0gjLd5Jrfv8kem6Cfp6C1PWJWA1pvPnFuvCXsi2FC706DCmDU3Iw0xcj/9LsOlbTZCTJ7uOIY4Izjd7E+M5Smyw/ANb4JN9PJOVh9w9jKDxt2aDkJXbO87jHDTWHCtEgZWWztwUQW0ZAtQ1gyQYOasPqP3wIzcEHrJ+Lt6qRX2gAUvYZ7EK1SUkoYmBxtnK5QxLhF4HIW++cUHKUw9stPfUCJJW2wmmqbbG4S7PghCoScmofukQHb3X5vBCJO+6SXQeTUXTL+e6KWecMtZyosFliIRot/4FYgUTsN8dJngHjaAchxdggToEMCm8i10rjvEGyfCBybU4FwapRjQChURVzR9xDdlGX2VpeYd24qw4XlHyMI5K/neZISZVEEOGhJtHPrxvxwUmoXb/v1GoUA77lJ1Peyz/923We1vJI5JNd7B26cndkAfYypsLkQWQFywM8A7/3j+UZcrfLRDTcZqPZyNFfrMy82cW6+Fl0wbjmrRrbMAo=";
+    </script>
+    
+    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
+    
