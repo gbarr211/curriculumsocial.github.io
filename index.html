@@ -1,1004 +1,512 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Curriculum Social - Revolutionizing Education Through Community</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-blue: #1a73e8;
-            --secondary-blue: #4285f4;
-            --primary-green: #34a853;
-            --secondary-green: #66bb6a;
-            --light-blue: #e8f0fe;
-            --light-green: #e6f4ea;
+            --primary-color: #1a6e97;
+            --secondary-color: #0d8056;
+            --accent-color: #f8f9fa;
+            --text-color: #333;
+            --light-text: #f8f9fa;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            font-family: 'Open Sans', sans-serif;
-            color: #333;
+            font-family: var(--font-main);
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f8f9fa;
+            overflow-x: hidden;
         }
         
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Montserrat', sans-serif;
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
         }
         
-        .btn-primary {
-            background-color: var(--primary-blue);
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .btn-primary:hover {
-            background-color: var(--secondary-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-secondary {
-            background-color: var(--primary-green);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .btn-secondary:hover {
-            background-color: var(--secondary-green);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-outline {
-            border: 2px solid var(--primary-blue);
-            color: var(--primary-blue);
-            background-color: transparent;
-            padding: 10px 22px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .btn-outline:hover {
-            background-color: var(--light-blue);
-        }
-        
-        .card {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .section {
-            padding: 80px 0;
-        }
-        
-        .bg-light-blue {
-            background-color: var(--light-blue);
-        }
-        
-        .bg-light-green {
-            background-color: var(--light-green);
-        }
-        
-        .text-primary {
-            color: var(--primary-blue);
-        }
-        
-        .text-secondary {
-            color: var(--primary-green);
-        }
-        
-        .border-primary {
-            border-color: var(--primary-blue);
-        }
-        
-        .border-secondary {
-            border-color: var(--primary-green);
-        }
-        
-        /* Navigation */
-        .nav-link {
-            position: relative;
-            padding: 8px 16px;
-            margin: 0 8px;
-            font-weight: 500;
-            color: #4a5568;
-            transition: all 0.3s;
-        }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: var(--primary-blue);
-            transition: all 0.3s;
-            transform: translateX(-50%);
-        }
-        
-        .nav-link:hover {
-            color: var(--primary-blue);
-        }
-        
-        .nav-link:hover::after {
-            width: 80%;
-        }
-        
-        /* Hero section */
-        .hero {
-            background: linear-gradient(135deg, #e8f0fe 0%, #e6f4ea 100%);
-            padding: 120px 0 80px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -100px;
-            right: -100px;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background-color: rgba(26, 115, 232, 0.1);
-            z-index: 0;
-        }
-        
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -100px;
-            left: -100px;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background-color: rgba(52, 168, 83, 0.1);
-            z-index: 0;
-        }
-        
-        /* Pathway cards */
-        .pathway-card {
-            height: 100%;
+        .header-container {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .pathway-card-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
         }
         
-        /* Tab system for matching demo */
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            font-weight: 500;
-            transition: all 0.3s;
+        .logo img {
+            height: 50px;
+            margin-right: 10px;
         }
         
-        .tab.active {
-            border-bottom: 2px solid var(--primary-blue);
-            color: var(--primary-blue);
+        nav ul {
+            display: flex;
+            list-style: none;
         }
         
-        .tab-content {
-            display: none;
-            padding: 20px;
-            animation: fadeIn 0.5s;
+        nav ul li {
+            margin-left: 1.5rem;
         }
         
-        .tab-content.active {
-            display: block;
+        nav ul li a {
+            color: white;
+            transition: all 0.3s ease;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        nav ul li a:hover {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
         }
         
-        /* Testimonial carousel */
-        .testimonial-container {
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #0a6644;
+            text-decoration: none;
+        }
+        
+        /* Audience Paths */
+        .audience-paths {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+        }
+        
+        .path-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .path-card {
+            background: white;
+            border-radius: 10px;
             overflow: hidden;
-            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
         }
         
-        .testimonial-slide {
-            display: none;
-            animation: slideIn 0.5s;
+        .path-card:hover {
+            transform: translateY(-5px);
         }
         
-        .testimonial-slide.active {
+        .path-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .path-card-content {
+            padding: 1.5rem;
+        }
+        
+        .path-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        /* Model Overview */
+        .model-overview {
+            background-color: #e9f7fb;
+            padding: 4rem 0;
+        }
+        
+        .model-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .model-img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Matching System */
+        .matching-system {
+            padding: 4rem 0;
+        }
+        
+        .matching-demo {
+            margin-top: 2rem;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Facts */
+        .quick-facts {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+        }
+        
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        
+        .fact-item i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Contact */
+        .contact {
+            padding: 4rem 0;
+        }
+        
+        .contact-btn {
+            display: block;
+            width: 200px;
+            margin: 2rem auto 0;
+            text-align: center;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .social-links {
+            margin: 1rem 0;
+        }
+        
+        .social-links a {
+            color: white;
+            margin: 0 0.5rem;
+            font-size: 1.5rem;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .model-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Added safety section styles */
+        .safety-section {
+            padding: 4rem 0;
+            background-color: #f0f8ff;
+        }
+        
+        .safety-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .safety-icons {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+        }
+        
+        .safety-icon {
+            text-align: center;
+            width: 150px;
+        }
+        
+        .safety-icon i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Koh Samui Map */
+        .samui-map {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            margin: 0 auto;
             display: block;
         }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        /* Facts counters */
-        .fact-counter {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 10px;
-        }
-        
-        .fact-label {
-            font-size: 1.1rem;
-            color: #4a5568;
+
+        #locations-section {
+            padding: 4rem 0;
+            background-color: #f0f9f5;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 </head>
 <body>
-    <!-- Header & Navigation -->
-    <header class="sticky top-0 bg-white z-50 shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center">
-                <h1 class="text-2xl font-bold text-primary">
-                    <span class="text-secondary">Curriculum</span> Social
-                </h1>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="https://via.placeholder.com/50x50/1a6e97/ffffff?text=CS" alt="Curriculum Social Logo">
+                Curriculum Social
             </div>
-            <nav class="hidden md:flex">
-                <a href="#" class="nav-link">Home</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#pathways" class="nav-link">For You</a>
-                <a href="#contact" class="nav-link">Contact</a>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">For Parents</a></li>
+                    <li><a href="#">For Teachers</a></li>
+                    <li><a href="#">For Investors</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
             </nav>
-            <div>
-                <a href="#contact" class="btn-primary hidden md:inline-block">Express Interest</a>
-                <button class="md:hidden text-gray-700">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero relative z-10">
-        <div class="container mx-auto px-4 relative z-20">
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="w-full md:w-1/2 mb-8 md:mb-0">
-                    <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                        Revolutionizing Education Through 
-                        <span class="text-primary">Community</span>
-                    </h1>
-                    <p class="text-lg mb-8 text-gray-700 max-w-lg">
-                        Curriculum Social combines AI-powered learning with human teaching expertise and community-based activities to create a truly personalized education experience for global families.
-                    </p>
-                    <div class="flex flex-wrap gap-4">
-                        <a href="#pathways" class="btn-primary">Explore How It Works</a>
-                        <a href="#contact" class="btn-outline">Join Our Community</a>
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Revolutionizing Education Through Community</h1>
+            <p>Connecting families, educators, and spaces to create meaningful learning experiences that combine AI-powered education, human expertise, and social development.</p>
+            <a href="#" class="btn">Learn More</a>
+        </div>
+    </section>
+
+    <section class="audience-paths">
+        <div class="container">
+            <h2 class="section-title">Discover Your Path</h2>
+            <div class="path-cards">
+                <div class="path-card">
+                    <img src="https://images.unsplash.com/photo-1540479859555-17af45c78602?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Family learning together">
+                    <div class="path-card-content">
+                        <h3>For Parents</h3>
+                        <p>Connect with like-minded families, access quality curriculum, and create enriching social learning experiences for your children.</p>
+                        <a href="#">Learn More &rarr;</a>
                     </div>
                 </div>
-                <div class="w-full md:w-1/2 flex justify-center">
-                    <div class="relative">
-                        <div class="relative z-10 bg-white rounded-xl shadow-lg p-6 max-w-md">
-                            <div class="flex items-center mb-4">
-                                <div class="w-12 h-12 rounded-full bg-light-blue flex items-center justify-center text-primary mr-4">
-                                    <i class="fas fa-robot text-xl"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold">AI Learning</h3>
-                                    <p class="text-sm text-gray-600">Personalized paths & adaptive content</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center mb-4">
-                                <div class="w-12 h-12 rounded-full bg-light-green flex items-center justify-center text-secondary mr-4">
-                                    <i class="fas fa-chalkboard-teacher text-xl"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold">Human Teaching</h3>
-                                    <p class="text-sm text-gray-600">Expert guidance & personal connection</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 mr-4">
-                                    <i class="fas fa-users text-xl"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold">Social Learning</h3>
-                                    <p class="text-sm text-gray-600">Community activities & peer collaboration</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1/3 w-32 h-32 rounded-full bg-blue-100 z-0"></div>
-                        <div class="absolute bottom-0 right-0 transform translate-y-1/3 translate-x-1/4 w-48 h-48 rounded-full bg-green-100 z-0"></div>
+                <div class="path-card">
+                    <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Teacher working with students">
+                    <div class="path-card-content">
+                        <h3>For Teachers</h3>
+                        <p>Share your expertise, join a supportive educational community, and enjoy flexible teaching opportunities with fair compensation.</p>
+                        <a href="#">Learn More &rarr;</a>
+                    </div>
+                </div>
+                <div class="path-card">
+                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Investment growth chart">
+                    <div class="path-card-content">
+                        <h3>For Investors</h3>
+                        <p>Join us in transforming education with a sustainable model that creates value for families, educators, and communities worldwide.</p>
+                        <a href="#">Learn More &rarr;</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Audience Pathways Section -->
-    <section id="pathways" class="section">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Find Your Path</h2>
-                <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-                    Curriculum Social offers tailored solutions for different members of our educational community.
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- For Parents -->
-                <div class="card pathway-card bg-white">
-                    <div class="p-6">
-                        <div class="pathway-card-icon bg-light-blue text-primary">
-                            <i class="fas fa-home text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-4 text-center">For Parents</h3>
-                        <p class="text-gray-700 mb-6">
-                            Connect with like-minded families, access personalized education for your children, and build a supportive community.
-                        </p>
-                        <ul class="mb-8 space-y-2">
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-secondary mr-2"></i>
-                                <span>Flexible learning based on your values</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-secondary mr-2"></i>
-                                <span>Safe, supervised social activities</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-secondary mr-2"></i>
-                                <span>Global standards with local connections</span>
-                            </li>
-                        </ul>
-                        <div class="mt-auto text-center">
-                            <a href="https://yfwvmcqs.gensparkspace.com/" class="btn-primary">Parent Resources</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- For Teachers -->
-                <div class="card pathway-card bg-white">
-                    <div class="p-6">
-                        <div class="pathway-card-icon bg-light-green text-secondary">
-                            <i class="fas fa-chalkboard-teacher text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-4 text-center">For Teachers</h3>
-                        <p class="text-gray-700 mb-6">
-                            Offer your expertise in a flexible environment, with competitive compensation and a supportive teaching community.
-                        </p>
-                        <ul class="mb-8 space-y-2">
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-secondary mr-2"></i>
-                                <span>Flexible teaching opportunities</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-secondary mr-2"></i>
-                                <span>Fair compensation structure</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-secondary mr-2"></i>
-                                <span>Parent-teacher option available</span>
-                            </li>
-                        </ul>
-                        <div class="mt-auto text-center">
-                            <a href="https://srdodzno.gensparkspace.com/" class="btn-primary">Teacher Resources</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- For Investors -->
-                <div class="card pathway-card bg-white">
-                    <div class="p-6">
-                        <div class="pathway-card-icon bg-blue-50 text-blue-500">
-                            <i class="fas fa-chart-line text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-4 text-center">For Investors</h3>
-                        <p class="text-gray-700 mb-6">
-                            Join us in transforming education with a scalable model that combines technology with human connection.
-                        </p>
-                        <ul class="mb-8 space-y-2">
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-secondary mr-2"></i>
-                                <span>Innovative hybrid business model</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-secondary mr-2"></i>
-                                <span>Clear path to profitability</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-secondary mr-2"></i>
-                                <span>Global scalability potential</span>
-                            </li>
-                        </ul>
-                        <div class="mt-auto text-center">
-                            <a href="https://splgdfmm.gensparkspace.com/" class="btn-primary">Investor Deck</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Hybrid Learning Model Section -->
-    <section id="about" class="section bg-light-blue">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Hybrid Learning Approach</h2>
-                <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-                    Curriculum Social combines the best of three educational worlds to create a comprehensive learning experience.
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                <!-- AI-Powered Learning -->
-                <div class="card bg-white">
-                    <div class="p-6">
-                        <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-primary mx-auto mb-6">
-                            <i class="fas fa-robot text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-4 text-center">AI-Powered Learning</h3>
-                        <p class="text-gray-700">
-                            Adaptive curriculum that adjusts to each child's learning style, pace, and interests. Our AI system provides personalized learning paths with immediate feedback and progress tracking.
-                        </p>
-                        <div class="mt-6 pt-6 border-t border-gray-100">
-                            <h4 class="font-semibold mb-2">Key Features:</h4>
-                            <ul class="space-y-2">
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-primary mt-1 mr-2"></i>
-                                    <span>Personalized learning pathways</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-primary mt-1 mr-2"></i>
-                                    <span>Real-time feedback system</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-primary mt-1 mr-2"></i>
-                                    <span>Progress tracking and analytics</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Human Teaching -->
-                <div class="card bg-white">
-                    <div class="p-6">
-                        <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-secondary mx-auto mb-6">
-                            <i class="fas fa-chalkboard-teacher text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-4 text-center">Human Teaching</h3>
-                        <p class="text-gray-700">
-                            Expert teachers provide guidance, motivation, and specialized instruction. The human element ensures deep understanding, emotional connection, and personalized support.
-                        </p>
-                        <div class="mt-6 pt-6 border-t border-gray-100">
-                            <h4 class="font-semibold mb-2">Key Features:</h4>
-                            <ul class="space-y-2">
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-secondary mt-1 mr-2"></i>
-                                    <span>Expert guidance and mentorship</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-secondary mt-1 mr-2"></i>
-                                    <span>Flexible scheduling options</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-secondary mt-1 mr-2"></i>
-                                    <span>Parent-teacher opportunities</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Social Learning -->
-                <div class="card bg-white">
-                    <div class="p-6">
-                        <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 mx-auto mb-6">
-                            <i class="fas fa-users text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-4 text-center">Social Learning</h3>
-                        <p class="text-gray-700">
-                            In-person activities and community connections provide crucial social development and real-world application of knowledge through collaborative experiences.
-                        </p>
-                        <div class="mt-6 pt-6 border-t border-gray-100">
-                            <h4 class="font-semibold mb-2">Key Features:</h4>
-                            <ul class="space-y-2">
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
-                                    <span>Safe, supervised group activities</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
-                                    <span>Location-based family matching</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
-                                    <span>Diverse learning environments</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center">
-                <a href="https://uszrybfc.gensparkspace.com/" class="btn-secondary">See How We Match Families</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="section">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">What Families Say</h2>
-                <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-                    Hear from our community of parents, teachers, and students about their experience with Curriculum Social.
-                </p>
-            </div>
-            
-            <div class="testimonial-container relative max-w-4xl mx-auto">
-                <!-- Testimonial 1 -->
-                <div class="testimonial-slide active">
-                    <div class="bg-white rounded-xl shadow-md p-8">
-                        <div class="flex items-center mb-6">
-                            <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-primary mr-4">
-                                <i class="fas fa-user text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold">Sarah J.</h4>
-                                <p class="text-sm text-gray-600">Digital Nomad Parent, 2 children</p>
-                            </div>
-                        </div>
-                        <blockquote class="text-lg text-gray-700 italic mb-6">
-                            "Curriculum Social transformed our family's educational experience. The blend of AI learning, teacher guidance, and social activities gives our children the perfect balance as we travel. They're academically challenged while making friends wherever we go."
-                        </blockquote>
-                        <div class="flex text-yellow-400">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Testimonial 2 -->
-                <div class="testimonial-slide">
-                    <div class="bg-white rounded-xl shadow-md p-8">
-                        <div class="flex items-center mb-6">
-                            <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-secondary mr-4">
-                                <i class="fas fa-user text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold">Michael T.</h4>
-                                <p class="text-sm text-gray-600">Montessori Teacher & Parent</p>
-                            </div>
-                        </div>
-                        <blockquote class="text-lg text-gray-700 italic mb-6">
-                            "As both a teacher and parent on the platform, I've seen firsthand how the hybrid approach serves different learning styles. I can teach subjects I'm passionate about while my children benefit from other experts. The parent-teacher model is revolutionary."
-                        </blockquote>
-                        <div class="flex text-yellow-400">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Testimonial 3 -->
-                <div class="testimonial-slide">
-                    <div class="bg-white rounded-xl shadow-md p-8">
-                        <div class="flex items-center mb-6">
-                            <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 mr-4">
-                                <i class="fas fa-user text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold">Emma L.</h4>
-                                <p class="text-sm text-gray-600">Expatriate Family, 3 children</p>
-                            </div>
-                        </div>
-                        <blockquote class="text-lg text-gray-700 italic mb-6">
-                            "Moving to a new country was challenging for our children's education, but Curriculum Social made the transition seamless. They maintained their academic progress while quickly making friends through local activities. The safety protocols give us peace of mind."
-                        </blockquote>
-                        <div class="flex text-yellow-400">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Navigation buttons -->
-                <div class="flex justify-center mt-8 space-x-2">
-                    <button onclick="showTestimonial(0)" class="w-3 h-3 rounded-full bg-blue-300 testimonial-dot active"></button>
-                    <button onclick="showTestimonial(1)" class="w-3 h-3 rounded-full bg-gray-300 testimonial-dot"></button>
-                    <button onclick="showTestimonial(2)" class="w-3 h-3 rounded-full bg-gray-300 testimonial-dot"></button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Matching System Demo Section -->
-    <section class="section bg-light-green">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">How Our Matching Works</h2>
-                <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-                    Our unique matching system connects families based on educational values, location, and learning needs.
-                </p>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                <!-- Tabs -->
-                <div class="flex border-b">
-                    <button class="tab active" onclick="showTab(0)">Set Preferences</button>
-                    <button class="tab" onclick="showTab(1)">View Suggestions</button>
-                    <button class="tab" onclick="showTab(2)">Connect & Plan</button>
-                </div>
-                
-                <!-- Tab Contents -->
-                <div class="tab-content active">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <h3 class="text-xl font-bold mb-4">Detailed Preference Setting</h3>
-                            <p class="text-gray-700 mb-4">
-                                Families input their educational philosophy, activity interests, and practical needs to enable precise matching.
-                            </p>
-                            <ul class="space-y-3 mb-6">
-                                <li class="flex items-start">
-                                    <div class="min-w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-primary mr-3 mt-0.5">
-                                        <i class="fas fa-book"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold">Educational Approach</h4>
-                                        <p class="text-sm text-gray-600">Montessori, Charlotte Mason, Classical, STEM-focused, etc.</p>
-                                    </div>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="min-w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-secondary mr-3 mt-0.5">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold">Geographic Preferences</h4>
-                                        <p class="text-sm text-gray-600">Location, distance willing to travel, venue types</p>
-                                    </div>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="min-w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 mr-3 mt-0.5">
-                                        <i class="fas fa-child"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold">Child-Specific Needs</h4>
-                                        <p class="text-sm text-gray-600">Age groups, interests, learning styles, special considerations</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="flex items-center justify-center">
-                            <img src="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8efa94af-83ef-4b0f-87b5-e923de67bd8d" alt="Koh Samui Market Analysis" class="rounded-lg max-w-full" style="max-height: 300px;">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="tab-content">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <h3 class="text-xl font-bold mb-4">Smart Family Suggestions</h3>
-                            <p class="text-gray-700 mb-4">
-                                Our algorithm provides compatibility-scored matches based on your preferences, showing why each family might be a good fit.
-                            </p>
-                            <ul class="space-y-3 mb-6">
-                                <li class="flex items-start">
-                                    <div class="min-w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-primary mr-3 mt-0.5">
-                                        <i class="fas fa-percentage"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold">Compatibility Scoring</h4>
-                                        <p class="text-sm text-gray-600">Clear metrics showing why families match your preferences</p>
-                                    </div>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="min-w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-secondary mr-3 mt-0.5">
-                                        <i class="fas fa-shield-alt"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold">Safety Verification</h4>
-                                        <p class="text-sm text-gray-600">Background check status and community verification</p>
-                                    </div>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="min-w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 mr-3 mt-0.5">
-                                        <i class="fas fa-search"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold">Browse & Filter</h4>
-                                        <p class="text-sm text-gray-600">Explore beyond automatic matches with detailed filtering</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="flex items-center justify-center">
-                            <img src="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/ca1d4aa3-0e9a-457b-9af3-80006f6ea50f" alt="Matching System Architecture" class="rounded-lg max-w-full" style="max-height: 300px;">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="tab-content">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <h3 class="text-xl font-bold mb-4">Connect & Plan Activities</h3>
-                            <p class="text-gray-700 mb-4">
-                                Once connected, families can coordinate learning activities, share resources, and build lasting educational partnerships.
-                            </p>
-                            <ul class="space-y-3 mb-6">
-                                <li class="flex items-start">
-                                    <div class="min-w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-primary mr-3 mt-0.5">
-                                        <i class="fas fa-comments"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold">Secure Messaging</h4>
-                                        <p class="text-sm text-gray-600">Private communication channels for connected families</p>
-                                    </div>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="min-w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-secondary mr-3 mt-0.5">
-                                        <i class="fas fa-calendar-alt"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold">Activity Scheduling</h4>
-                                        <p class="text-sm text-gray-600">Coordinated planning with timezone support</p>
-                                    </div>
-                                </li>
-                                <li class="flex items-start">
-                                    <div class="min-w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 mr-3 mt-0.5">
-                                        <i class="fas fa-map"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold">Venue Discovery</h4>
-                                        <p class="text-sm text-gray-600">Find and book verified safe learning spaces</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="flex items-center justify-center">
-                            <img src="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/9d23219f-3de6-4695-a0e7-a40b55fc25f2" alt="Standards Mapping" class="rounded-lg max-w-full" style="max-height: 300px;">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center mt-8">
-                <a href="https://uszrybfc.gensparkspace.com/" class="btn-outline">Explore The Full System</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Quick Facts Section -->
-    <section class="section">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Educational Approach</h2>
-                <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-                    Curriculum Social combines Montessori-inspired independence with global standards recognition.
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Fact 1 -->
-                <div class="bg-white rounded-xl shadow-sm p-6 text-center">
-                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-primary mx-auto mb-4">
-                        <i class="fas fa-brain text-2xl"></i>
-                    </div>
-                    <div class="fact-counter">100%</div>
-                    <div class="fact-label">Personalized Learning</div>
-                </div>
-                
-                <!-- Fact 2 -->
-                <div class="bg-white rounded-xl shadow-sm p-6 text-center">
-                    <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-secondary mx-auto mb-4">
-                        <i class="fas fa-globe text-2xl"></i>
-                    </div>
-                    <div class="fact-counter">4+</div>
-                    <div class="fact-label">Global Standards Alignment</div>
-                </div>
-                
-                <!-- Fact 3 -->
-                <div class="bg-white rounded-xl shadow-sm p-6 text-center">
-                    <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 mx-auto mb-4">
-                        <i class="fas fa-users text-2xl"></i>
-                    </div>
-                    <div class="fact-counter">2:1</div>
-                    <div class="fact-label">Adult-to-Child Ratio</div>
-                </div>
-                
-                <!-- Fact 4 -->
-                <div class="bg-white rounded-xl shadow-sm p-6 text-center">
-                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-primary mx-auto mb-4">
-                        <i class="fas fa-star text-2xl"></i>
-                    </div>
-                    <div class="fact-counter">5+</div>
-                    <div class="fact-label">Advanced Learning Modules</div>
-                </div>
-            </div>
-            
-            <div class="mt-12 text-center">
-                <a href="https://enxdvhrj.gensparkspace.com/" class="btn-secondary">Learn More for Parents</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="section bg-light-blue">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Join Our Community</h2>
-                <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-                    Express your interest in being part of the Curriculum Social community as a parent, teacher, venue host, or investor.
-                </p>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-md overflow-hidden max-w-4xl mx-auto">
-                <div class="p-8">
-                    <h3 class="text-xl font-bold mb-6">Express Interest</h3>
-                    <p class="text-gray-700 mb-6">
-                        Complete the form below to receive more information and join our waiting list for early access.
-                    </p>
-                    <a href="https://vpzvqkad.gensparkspace.com/" class="btn-primary block text-center">Open Interest Form</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Company Info -->
+    <section class="model-overview">
+        <div class="container">
+            <h2 class="section-title">Our Hybrid Learning Model</h2>
+            <div class="model-content">
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Curriculum Social</h3>
-                    <p class="text-gray-400 mb-4">
-                        Revolutionizing education through AI, human teaching, and community connection.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Quick Links -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
-                        <li><a href="#about" class="text-gray-400 hover:text-white">About Us</a></li>
-                        <li><a href="#pathways" class="text-gray-400 hover:text-white">For Parents</a></li>
-                        <li><a href="#pathways" class="text-gray-400 hover:text-white">For Teachers</a></li>
-                        <li><a href="#pathways" class="text-gray-400 hover:text-white">For Investors</a></li>
-                        <li><a href="#contact" class="text-gray-400 hover:text-white">Contact</a></li>
+                    <h3>Combining the Best of All Worlds</h3>
+                    <p>Curriculum Social integrates three powerful learning approaches:</p>
+                    <ul>
+                        <li><strong>AI-Powered Learning:</strong> Personalized curriculum adapted to each student's unique needs and interests</li>
+                        <li><strong>Human Teaching:</strong> Expert instruction from qualified educators and knowledge-sharing parent-teachers</li>
+                        <li><strong>Community Learning:</strong> Social development through meaningful in-person activities and collaborations</li>
                     </ul>
+                    <p>This balanced approach ensures comprehensive educational development while building lasting community connections.</p>
                 </div>
-                
-                <!-- Resources -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Resources</h3>
-                    <ul class="space-y-2">
-                        <li><a href="https://enxdvhrj.gensparkspace.com/" class="text-gray-400 hover:text-white">Parent Resources</a></li>
-                        <li><a href="https://srdodzno.gensparkspace.com/" class="text-gray-400 hover:text-white">Teacher Resources</a></li>
-                        <li><a href="https://splgdfmm.gensparkspace.com/" class="text-gray-400 hover:text-white">Investor Resources</a></li>
-                        <li><a href="https://yfwvmcqs.gensparkspace.com/" class="text-gray-400 hover:text-white">Legal Information</a></li>
-                        <li><a href="https://uszrybfc.gensparkspace.com/" class="text-gray-400 hover:text-white">Matching System</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Contact -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
-                    <ul class="space-y-2">
-                        <li class="flex items-start">
-                            <i class="fas fa-envelope text-gray-400 mr-2 mt-1"></i>
-                            <a href="/cdn-cgi/l/email-protection#5a3d283f3d1a392f282833392f362f37293539333b3674393537" class="text-gray-400 hover:text-white"><span class="__cf_email__" data-cfemail="563124333116352324243f35233a233b2539353f373a7835393b">[email&#160;protected]</span></a>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-gray-400 mr-2 mt-1"></i>
-                            <span class="text-gray-400">Koh Samui, Thailand</span>
-                        </li>
-                    </ul>
-                </div>
+                <img src="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/2909d185-8ea2-419c-b0eb-8292479efc6c" alt="Hybrid Learning Model" class="model-img">
             </div>
+        </div>
+    </section>
+
+    <!-- Updated Safety Section (Replacing 2:1 Graphic) -->
+    <section class="safety-section">
+        <div class="container">
+            <h2 class="section-title">Safety First Approach</h2>
+            <div class="safety-content">
+                <p>At Curriculum Social, child safety is our highest priority. Our comprehensive safety framework ensures:</p>
+                
+                <div class="safety-icons">
+                    <div class="safety-icon">
+                        <i class="fas fa-user-shield"></i>
+                        <h4>Verified Participants</h4>
+                        <p>Background checks for all adults involved in education</p>
+                    </div>
+                    <div class="safety-icon">
+                        <i class="fas fa-users"></i>
+                        <h4>Multiple Adult Supervision</h4>
+                        <p>All activities supervised by at least two qualified adults</p>
+                    </div>
+                    <div class="safety-icon">
+                        <i class="fas fa-building"></i>
+                        <h4>Safe Venues</h4>
+                        <p>Carefully inspected and certified learning environments</p>
+                    </div>
+                </div>
+                
+                <p>Our strict protocols and transparent policies create a secure environment where children can thrive.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Updated Koh Samui Location Section -->
+    <section id="locations-section">
+        <div class="container">
+            <h2 class="section-title">Starting in Beautiful Koh Samui</h2>
+            <p style="text-align: center; margin-bottom: 2rem;">Our initial community is launching in Koh Samui, Thailand - an international hub perfect for our vision of connected learning.</p>
             
-            <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between">
-                <p class="text-gray-400 text-sm mb-4 md:mb-0">
-                    &copy; 2025 Curriculum Social. All rights reserved.
-                </p>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-gray-400 hover:text-white text-sm">Privacy Policy</a>
-                    <a href="#" class="text-gray-400 hover:text-white text-sm">Terms of Service</a>
+            <!-- Replacing with a simple text description instead of incorrect map -->
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <p>Our initial focus areas include:</p>
+                <ul style="list-style: none; margin: 1rem 0;">
+                    <li><strong>Chaweng</strong> - Eastern coast, home to international schools and family amenities</li>
+                    <li><strong>Lamai</strong> - Southeastern coast, with growing expat and digital nomad communities</li>
+                    <li><strong>Bophut</strong> - Northern coast, featuring Fisherman's Village and family-friendly facilities</li>
+                    <li><strong>Maenam</strong> - Northwestern coast, quieter area with established coworking spaces</li>
+                </ul>
+                <p>With community hubs throughout the island, convenient access is available wherever you're located.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="matching-system">
+        <div class="container">
+            <h2 class="section-title">Our Unique Matching System</h2>
+            <p style="text-align: center; margin-bottom: 2rem;">Our proprietary matching system connects families based on educational values, learning goals, and geographic proximity.</p>
+            <div class="matching-demo">
+                <img src="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8efa94af-83ef-4b0f-87b5-e923de67bd8d" alt="Family Matching System" style="width: 100%; border-radius: 5px;">
+            </div>
+        </div>
+    </section>
+
+    <section class="quick-facts">
+        <div class="container">
+            <h2 class="section-title">Educational Approach</h2>
+            <div class="facts-grid">
+                <div class="fact-item">
+                    <i class="fas fa-brain"></i>
+                    <h3>Montessori-Inspired</h3>
+                    <p>Independence-focused learning adapted to each child's development</p>
+                </div>
+                <div class="fact-item">
+                    <i class="fas fa-globe"></i>
+                    <h3>Globally Recognized</h3>
+                    <p>Curriculum aligned with international educational standards</p>
+                </div>
+                <div class="fact-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <h3>Project-Based</h3>
+                    <p>Hands-on learning through meaningful real-world projects</p>
+                </div>
+                <div class="fact-item">
+                    <i class="fas fa-users"></i>
+                    <h3>Community-Driven</h3>
+                    <p>Learning enhanced through social connection and collaboration</p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section class="contact">
+        <div class="container">
+            <h2 class="section-title">Join the Community</h2>
+            <p style="text-align: center;">Ready to transform education for your family? Interested in teaching or investing? Get in touch with us today!</p>
+            <a href="mailto:greg@curriculumsocial.com" class="btn contact-btn">Contact Us</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Curriculum Social. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+            <p>Contact: <a href="mailto:greg@curriculumsocial.com">greg@curriculumsocial.com</a></p>
         </div>
     </footer>
-
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // Testimonial carousel
-        let currentTestimonial = 0;
-        const testimonials = document.querySelectorAll('.testimonial-slide');
-        const testimonialDots = document.querySelectorAll('.testimonial-dot');
-        
-        function showTestimonial(index) {
-            testimonials.forEach((slide, i) => {
-                slide.classList.remove('active');
-                testimonialDots[i].classList.remove('active');
-                testimonialDots[i].classList.add('bg-gray-300');
-                testimonialDots[i].classList.remove('bg-blue-300');
-            });
-            
-            testimonials[index].classList.add('active');
-            testimonialDots[index].classList.add('active');
-            testimonialDots[index].classList.add('bg-blue-300');
-            testimonialDots[index].classList.remove('bg-gray-300');
-            
-            currentTestimonial = index;
-        }
-        
-        // Auto-rotate testimonials
-        setInterval(() => {
-            let nextTestimonial = (currentTestimonial + 1) % testimonials.length;
-            showTestimonial(nextTestimonial);
-        }, 7000);
-        
-        // Tab system
-        function showTab(index) {
-            const tabs = document.querySelectorAll('.tab');
-            const tabContents = document.querySelectorAll('.tab-content');
-            
-            tabs.forEach(tab => tab.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-            
-            tabs[index].classList.add('active');
-            tabContents[index].classList.add('active');
-        }
-    </script>
 </body>
 </html>
-    <script id="html_badge_script1">
-        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
-            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDrD71ZBao3sne06NURK%2FflkAKEJvKzzru9QtmAET63WMe96sxuwSvZ%2BEMeL252bdPrU0B6pRh3yugcuQallmedjLynQkVX2OLHFfaEmRMAuSRSaiszA0V2XaPTgqobB6MYqcW%2Fve6hQ30U3juKgnAETvOB2nC0N%2FlphWkUvoVDEtfmc0Idhfk0rrYhUthdWUW7v5srSXHU3N%2FTXplIMScQDTdzfNYqmIEYXobmRCFRr2pz2zqanv2KyhwqOavbOTG4v5IDlcfVwzQkWYkkexLjGDJpT%2Ba0YJGN7ULqllDqkH7lU77BA4IYLc%2B90YPO5jjJiDpl5nz0grrqT7s0yCj6xN22SmwU0yPPEsT1Oe9lAk8JtQOxblTprJTPAU7ZIMTd9YLsK086G5OM%2B6xohsTC0QqKYK9dOtgDKdzvMagineSleS3vhEKb4NIugBzwJjhRLb%2BNVkBTOvAvAQDqxp%2BTMPHo8DGKW62hFXxnkj4YFAos6T2O0uLL01suslCnITB0lGVxpNRQByR%2FZEgmK05I4%3D";
-        window.__genspark_locale = "en-US";
-        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDrD71ZBao3sne06NURK/flkAKEJvKzzru9QtmAET63WMe96sxuwSvZ+EMeL252bdPrU0B6pRh3yugcuQallmedjLynQkVX2OLHFfaEmRMAuSRSaiszA0V2XaPTgqobB6MYqcW/ve6hQ30U3juKgnAETvOB2nC0N/lphWkUvoVDEtfmc0Idhfk0rrYhUthdWUW7v5srSXHU3N/TXplIMScQDTdzfNYqmIEYXobmRCFRr2pz2zqanv2KyhwqOavbOTG4v5IDlcfVwzQkWYkkexLjGDJpT+a0YJGN7ULqllDqkH7lU77BA4IYLc+90YPO5jjJiDpl5nz0grrqT7s0yCj6xN22SmwU0yPPEsT1Oe9lAk8JtQOxblTprJTPAU7ZIMTd9YLsK086G5OM+6xohsTC0QqKYK9dOtgDKdzvMagineSleS3vhEKb4NIugBzwJjhRLb+NVkBTOvAvAQDqxp+TMPHo8DGKW62hFXxnkj4YFAos6T2O0uLL01suslCnITB0lGVxpNRQByR/ZEgmK05I4=";
-    </script>
-    
-    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
-    
