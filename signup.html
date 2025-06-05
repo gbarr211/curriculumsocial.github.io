@@ -6,8 +6,8 @@
     <title>Sign Up - Curriculum Social</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        /* Use your existing CSS variables */
         :root {
             --primary-blue: #1a73e8;
             --secondary-blue: #4285f4;
@@ -16,245 +16,12 @@
             --light-blue: #e8f0fe;
             --light-green: #e6f4ea;
         }
-        
-        body {
-            font-family: 'Open Sans', sans-serif;
-            color: #333;
-            background: linear-gradient(135deg, #e8f0fe 0%, #e6f4ea 100%);
-            min-height: 100vh;
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Montserrat', sans-serif;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--secondary-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-secondary {
-            background-color: var(--primary-green);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn-secondary:hover {
-            background-color: var(--secondary-green);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-outline {
-            border: 2px solid var(--primary-blue);
-            color: var(--primary-blue);
-            background-color: transparent;
-            padding: 10px 22px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .btn-outline:hover {
-            background-color: var(--light-blue);
-        }
-        
-        .role-card {
-            border-radius: 12px;
-            border: 2px solid #e5e7eb;
-            background: white;
-            padding: 24px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-        
-        .role-card:hover {
-            border-color: var(--primary-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        }
-        
-        .role-card.selected {
-            border-color: var(--primary-blue);
-            background-color: var(--light-blue);
-        }
-        
-        .role-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-        }
-        
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #374151;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .text-primary {
-            color: var(--primary-blue);
-        }
-        
-        .text-secondary {
-            color: var(--primary-green);
-        }
-        
-        .bg-light-blue {
-            background-color: var(--light-blue);
-        }
-        
-        .bg-light-green {
-            background-color: var(--light-green);
-        }
-        
-        .social-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            color: #374151;
-            font-weight: 500;
-        }
-        
-        .social-btn:hover {
-            border-color: #d1d5db;
-            background: #f9fafb;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: #e5e7eb;
-            border-radius: 2px;
-            overflow: hidden;
-            margin-bottom: 24px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: var(--primary-blue);
-            transition: width 0.3s ease;
-        }
-
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 32px;
-        }
-        
-        .step {
-            display: flex;
-            align-items: center;
-            color: #9ca3af;
-        }
-        
-        .step.active {
-            color: var(--primary-blue);
-        }
-        
-        .step.completed {
-            color: var(--primary-green);
-        }
-        
-        .step-number {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            margin-right: 8px;
-        }
-        
-        .step.active .step-number {
-            background: var(--primary-blue);
-            color: white;
-        }
-        
-        .step.completed .step-number {
-            background: var(--primary-green);
-            color: white;
-        }
-        
-        .step-divider {
-            width: 40px;
-            height: 2px;
-            background: #e5e7eb;
-            margin: 0 16px;
-        }
-        
-        .location-suggestion {
-            padding: 12px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .location-suggestion:hover {
-            background-color: #f3f4f6;
-        }
     </style>
 </head>
-<body>
-    <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+<body class="bg-gray-50">
+    <!-- Header with clickable logo -->
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
                 <h1 class="text-2xl font-bold text-primary">
                     <a href="/" style="text-decoration: none; color: inherit;">
@@ -262,718 +29,170 @@
                     </a>
                 </h1>
             </div>
-            <div class="flex items-center space-x-4">
-                <a href="/login.html" class="text-gray-600 hover:text-blue-600">Already have an account? Sign In</a>
-            </div>
+            <nav class="hidden md:flex">
+                <a href="/" class="nav-link">Home</a>
+                <a href="login.html" class="nav-link">Login</a>
+            </nav>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 py-8">
-        <!-- Progress Indicator -->
-        <div class="step-indicator">
-            <div class="step active" id="step-1">
-                <div class="step-number">1</div>
-                <span>Choose Role</span>
-            </div>
-            <div class="step-divider"></div>
-            <div class="step" id="step-2">
-                <div class="step-number">2</div>
-                <span>Account Info</span>
-            </div>
-            <div class="step-divider"></div>
-            <div class="step" id="step-3">
-                <div class="step-number">3</div>
-                <span>Profile Setup</span>
-            </div>
-        </div>
-
-        <!-- Progress Bar -->
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress-fill" style="width: 33%"></div>
-        </div>
-
-        <!-- Step 1: Role Selection -->
-        <div id="step-role-selection" class="signup-step">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold mb-4">Join Curriculum Social</h2>
-                <p class="text-gray-600 text-lg">Choose your role to get started with personalized education</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <!-- Parent Role -->
-                <div class="role-card" data-role="parent">
-                    <div class="role-icon bg-light-blue text-primary">
-                        <i class="fas fa-home text-2xl"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Parent</h3>
-                    <p class="text-gray-600 text-sm">Connect with families and provide quality education for your children</p>
-                </div>
-
-                <!-- Teacher Role -->
-                <div class="role-card" data-role="teacher">
-                    <div class="role-icon bg-light-green text-secondary">
-                        <i class="fas fa-chalkboard-teacher text-2xl"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Teacher</h3>
-                    <p class="text-gray-600 text-sm">Share your expertise and earn income through flexible teaching</p>
-                </div>
-
-                <!-- Venue Host Role -->
-                <div class="role-card" data-role="venue">
-                    <div class="role-icon bg-blue-50 text-blue-500">
-                        <i class="fas fa-building text-2xl"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Venue Host</h3>
-                    <p class="text-gray-600 text-sm">Provide safe learning spaces for community activities</p>
-                </div>
-
-                <!-- Student Role -->
-                <div class="role-card" data-role="student">
-                    <div class="role-icon bg-yellow-100 text-yellow-600">
-                        <i class="fas fa-graduation-cap text-2xl"></i>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Student</h3>
-                    <p class="text-gray-600 text-sm">Join as an independent learner (16+ years old)</p>
-                </div>
-            </div>
-
+    <!-- Main signup form -->
+    <main class="min-h-screen flex items-center justify-center py-12 px-4">
+        <div class="max-w-md w-full space-y-8">
             <div class="text-center">
-                <button id="continue-to-account" class="btn-primary disabled:opacity-50" disabled>
-                    Continue to Account Setup
+                <h2 class="text-3xl font-bold text-gray-900">Create your account</h2>
+                <p class="mt-2 text-gray-600">Join the Curriculum Social community</p>
+            </div>
+            
+            <form id="signupForm" class="mt-8 space-y-6 bg-white p-8 rounded-lg shadow-md">
+                <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
+                
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" required 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" required minlength="6"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label for="displayName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="displayName" required 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-700">I am a...</label>
+                    <select id="role" required 
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Select your role</option>
+                        <option value="parent">Parent</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="venue">Venue Host</option>
+                    </select>
+                </div>
+                
+                <button type="submit" id="signupBtn" 
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Create Account
+                </button>
+            </form>
+            
+            <div class="text-center">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-gray-50 text-gray-500">Or continue with</span>
+                    </div>
+                </div>
+                
+                <button id="googleSignup" 
+                        class="mt-4 w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <i class="fab fa-google mr-2"></i>
+                    Sign up with Google
                 </button>
             </div>
-        </div>
-
-        <!-- Step 2: Account Information -->
-        <div id="step-account-info" class="signup-step hidden">
-            <div class="bg-white rounded-xl shadow-md p-8">
-                <h2 class="text-2xl font-bold mb-6">Create Your Account</h2>
-                
-                <!-- Social Login Options -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold mb-4">Quick Sign Up</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <button id="google-signup" class="social-btn">
-                            <i class="fab fa-google mr-3 text-red-500"></i>
-                            Continue with Google
-                        </button>
-                        <button id="facebook-signup" class="social-btn">
-                            <i class="fab fa-facebook mr-3 text-blue-600"></i>
-                            Continue with Facebook
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex items-center mb-6">
-                    <hr class="flex-1 border-gray-300">
-                    <span class="px-4 text-gray-500">or</span>
-                    <hr class="flex-1 border-gray-300">
-                </div>
-
-                <!-- Email/Password Form -->
-                <form id="signup-form">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="form-group">
-                            <label class="form-label">First Name *</label>
-                            <input type="text" class="form-input" name="firstName" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Last Name *</label>
-                            <input type="text" class="form-input" name="lastName" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Email Address *</label>
-                        <input type="email" class="form-input" name="email" required>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="form-group">
-                            <label class="form-label">Password *</label>
-                            <input type="password" class="form-input" name="password" required>
-                            <p class="text-sm text-gray-500 mt-1">Minimum 8 characters</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Confirm Password *</label>
-                            <input type="password" class="form-input" name="confirmPassword" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Phone Number</label>
-                        <input type="tel" class="form-input" name="phone" placeholder="Optional">
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <button type="button" id="back-to-role" class="btn-outline">Back</button>
-                        <button type="button" id="continue-to-profile" class="btn-primary">Continue to Profile</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Step 3: Profile Setup -->
-        <div id="step-profile-setup" class="signup-step hidden">
-            <div class="bg-white rounded-xl shadow-md p-8">
-                <h2 class="text-2xl font-bold mb-6">Complete Your Profile</h2>
-
-                <form id="profile-form">
-                    <!-- Common Fields -->
-                    <div class="form-group">
-                        <label class="form-label">Location *</label>
-                        <input type="text" class="form-input" id="location-input" name="location" placeholder="Enter your city or address" required>
-                        <div id="location-suggestions" class="mt-2 space-y-2 hidden"></div>
-                        <p class="text-sm text-gray-500 mt-1">This helps us connect you with nearby families and activities</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Bio</label>
-                        <textarea class="form-input" name="bio" rows="4" placeholder="Tell us about yourself and your educational goals..."></textarea>
-                    </div>
-
-                    <!-- Parent-specific fields -->
-                    <div id="parent-fields" class="hidden">
-                        <h3 class="text-lg font-semibold mb-4">Parent Information</h3>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Educational Philosophy</label>
-                            <select class="form-input" name="educationalPhilosophy">
-                                <option value="">Select your preferred approach</option>
-                                <option value="montessori">Montessori</option>
-                                <option value="charlotte-mason">Charlotte Mason</option>
-                                <option value="classical">Classical Education</option>
-                                <option value="waldorf">Waldorf/Steiner</option>
-                                <option value="unschooling">Unschooling</option>
-                                <option value="eclectic">Eclectic</option>
-                                <option value="traditional">Traditional</option>
-                                <option value="stem">STEM-focused</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Number of Children</label>
-                            <select class="form-input" name="numberOfChildren">
-                                <option value="1">1 child</option>
-                                <option value="2">2 children</option>
-                                <option value="3">3 children</option>
-                                <option value="4">4 children</option>
-                                <option value="5+">5+ children</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Children's Ages (approximate)</label>
-                            <input type="text" class="form-input" name="childrenAges" placeholder="e.g., 5, 8, 12">
-                        </div>
-                    </div>
-
-                    <!-- Teacher-specific fields -->
-                    <div id="teacher-fields" class="hidden">
-                        <h3 class="text-lg font-semibold mb-4">Teaching Information</h3>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Teaching Experience</label>
-                            <select class="form-input" name="teachingExperience">
-                                <option value="">Select your experience level</option>
-                                <option value="new">New to teaching</option>
-                                <option value="1-3">1-3 years</option>
-                                <option value="4-10">4-10 years</option>
-                                <option value="10+">10+ years</option>
-                                <option value="retired">Retired educator</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Subject Specialties</label>
-                            <input type="text" class="form-input" name="subjects" placeholder="e.g., Mathematics, Science, Art, Music">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Qualifications</label>
-                            <textarea class="form-input" name="qualifications" rows="3" placeholder="Degrees, certifications, relevant experience..."></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Preferred Age Groups</label>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="ageGroups" value="0-3" class="mr-2">
-                                    0-3 years
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="ageGroups" value="3-6" class="mr-2">
-                                    3-6 years
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="ageGroups" value="6-12" class="mr-2">
-                                    6-12 years
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="ageGroups" value="12+" class="mr-2">
-                                    12+ years
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Venue-specific fields -->
-                    <div id="venue-fields" class="hidden">
-                        <h3 class="text-lg font-semibold mb-4">Venue Information</h3>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Venue Type</label>
-                            <select class="form-input" name="venueType">
-                                <option value="">Select venue type</option>
-                                <option value="home">Home/Residential</option>
-                                <option value="coworking">Co-working Space</option>
-                                <option value="community-center">Community Center</option>
-                                <option value="outdoor">Outdoor Space</option>
-                                <option value="educational">Educational Facility</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Capacity</label>
-                            <select class="form-input" name="capacity">
-                                <option value="1-5">1-5 people</option>
-                                <option value="6-10">6-10 people</option>
-                                <option value="11-20">11-20 people</option>
-                                <option value="21-50">21-50 people</option>
-                                <option value="50+">50+ people</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Available Facilities</label>
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="facilities" value="wifi" class="mr-2">
-                                    WiFi
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="facilities" value="projector" class="mr-2">
-                                    Projector/Screen
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="facilities" value="whiteboard" class="mr-2">
-                                    Whiteboard
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="facilities" value="kitchen" class="mr-2">
-                                    Kitchen Access
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="facilities" value="parking" class="mr-2">
-                                    Parking
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="facilities" value="outdoor" class="mr-2">
-                                    Outdoor Space
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Student-specific fields -->
-                    <div id="student-fields" class="hidden">
-                        <h3 class="text-lg font-semibold mb-4">Student Information</h3>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="form-group">
-                                <label class="form-label">Age</label>
-                                <input type="number" class="form-input" name="age" min="16" max="25">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Grade Level</label>
-                                <select class="form-input" name="gradeLevel">
-                                    <option value="high-school">High School</option>
-                                    <option value="college">College</option>
-                                    <option value="adult-learner">Adult Learner</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Learning Interests</label>
-                            <input type="text" class="form-input" name="learningInterests" placeholder="e.g., Programming, Languages, Art, Science">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Learning Goals</label>
-                            <textarea class="form-input" name="learningGoals" rows="3" placeholder="What do you hope to achieve?"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Terms and Privacy -->
-                    <div class="form-group">
-                        <label class="flex items-start">
-                            <input type="checkbox" name="agreeTerms" required class="mt-1 mr-3">
-                            <span class="text-sm">
-                                I agree to the <a href="/t_agreement.html" class="text-primary hover:underline" target="_blank">Terms of Service</a> 
-                                and <a href="/privacy-policy.html" class="text-primary hover:underline" target="_blank">Privacy Policy</a>
-                            </span>
-                        </label>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="flex items-start">
-                            <input type="checkbox" name="marketingEmails" class="mt-1 mr-3">
-                            <span class="text-sm">
-                                I'd like to receive updates about Curriculum Social features and community events
-                            </span>
-                        </label>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <button type="button" id="back-to-account" class="btn-outline">Back</button>
-                        <button type="submit" id="complete-signup" class="btn-primary">
-                            <i class="fas fa-user-plus mr-2"></i>
-                            Create Account
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Success Message -->
-        <div id="signup-success" class="signup-step hidden">
+            
             <div class="text-center">
-                <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-check text-3xl text-green-600"></i>
-                </div>
-                <h2 class="text-3xl font-bold mb-4">Welcome to Curriculum Social!</h2>
-                <p class="text-gray-600 text-lg mb-8">Your account has been created successfully. Let's get you started with your educational journey.</p>
-                
-                <div class="space-y-4">
-                    <a href="/dashboard.html" class="btn-primary inline-block">Go to Dashboard</a>
-                    <br>
-                    <a href="/matching.html" class="btn-outline inline-block">Start Finding Families</a>
-                </div>
+                <p class="text-sm text-gray-600">
+                    Already have an account? 
+                    <a href="login.html" class="font-medium text-blue-600 hover:text-blue-500">Sign in</a>
+                </p>
             </div>
         </div>
     </main>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
     <script>
-        // Firebase Configuration (Replace with your actual config)
-        const firebaseConfig = {
-            apiKey: "your-api-key",
-            authDomain: "your-project.firebaseapp.com",
-            projectId: "your-project-id",
-            storageBucket: "your-project.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "your-app-id"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // Global variables
-        let selectedRole = '';
-        let currentStep = 1;
-
-        // DOM Elements
-        const roleCards = document.querySelectorAll('.role-card');
-        const continueToAccountBtn = document.getElementById('continue-to-account');
-        const continueToProfileBtn = document.getElementById('continue-to-profile');
-        const backToRoleBtn = document.getElementById('back-to-role');
-        const backToAccountBtn = document.getElementById('back-to-account');
-        const signupForm = document.getElementById('signup-form');
-        const profileForm = document.getElementById('profile-form');
-        const completeSignupBtn = document.getElementById('complete-signup');
-
-        // Role selection
-        roleCards.forEach(card => {
-            card.addEventListener('click', () => {
-                // Remove selected class from all cards
-                roleCards.forEach(c => c.classList.remove('selected'));
+        // Signup functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const signupForm = document.getElementById('signupForm');
+            const googleSignupBtn = document.getElementById('googleSignup');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.remove('hidden');
+            }
+            
+            function hideError() {
+                errorMessage.classList.add('hidden');
+            }
+            
+            // Email/Password Signup
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideError();
                 
-                // Add selected class to clicked card
-                card.classList.add('selected');
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const displayName = document.getElementById('displayName').value;
+                const role = document.getElementById('role').value;
                 
-                // Store selected role
-                selectedRole = card.dataset.role;
-                
-                // Enable continue button
-                continueToAccountBtn.disabled = false;
-                continueToAccountBtn.classList.remove('disabled:opacity-50');
+                try {
+                    const userCredential = await window.firebaseAuth.createUserWithEmailAndPassword(window.auth, email, password);
+                    
+                    // Update the user's display name
+                    await window.firebaseAuth.updateProfile(userCredential.user, {
+                        displayName: displayName
+                    });
+                    
+                    // Create user profile in Firestore
+                    await window.curriculumSocial.createUserProfile(userCredential.user.uid, {
+                        email: email,
+                        displayName: displayName,
+                        role: role,
+                        emailVerified: false
+                    });
+                    
+                    alert('Account created successfully!');
+                    window.location.href = 'dashboard.html';
+                } catch (error) {
+                    showError(error.message);
+                }
             });
-        });
-
-        // Navigation between steps
-        continueToAccountBtn.addEventListener('click', () => {
-            if (selectedRole) {
-                goToStep(2);
-            }
-        });
-
-        continueToProfileBtn.addEventListener('click', () => {
-            if (validateAccountForm()) {
-                goToStep(3);
-                showRoleSpecificFields();
-            }
-        });
-
-        backToRoleBtn.addEventListener('click', () => {
-            goToStep(1);
-        });
-
-        backToAccountBtn.addEventListener('click', () => {
-            goToStep(2);
-        });
-
-        // Step navigation function
-        function goToStep(stepNumber) {
-            // Hide all steps
-            document.querySelectorAll('.signup-step').forEach(step => {
-                step.classList.add('hidden');
-            });
-
-            // Show current step
-            const steps = {
-                1: 'step-role-selection',
-                2: 'step-account-info',
-                3: 'step-profile-setup'
-            };
-
-            document.getElementById(steps[stepNumber]).classList.remove('hidden');
-
-            // Update progress indicator
-            updateProgressIndicator(stepNumber);
-            updateProgressBar(stepNumber);
-
-            currentStep = stepNumber;
-        }
-
-        function updateProgressIndicator(stepNumber) {
-            for (let i = 1; i <= 3; i++) {
-                const step = document.getElementById(`step-${i}`);
-                if (i < stepNumber) {
-                    step.className = 'step completed';
-                } else if (i === stepNumber) {
-                    step.className = 'step active';
-                } else {
-                    step.className = 'step';
-                }
-            }
-        }
-
-        function updateProgressBar(stepNumber) {
-            const progressFill = document.getElementById('progress-fill');
-            const progressPercentage = (stepNumber / 3) * 100;
-            progressFill.style.width = `${progressPercentage}%`;
-        }
-
-        function showRoleSpecificFields() {
-            // Hide all role-specific fields
-            ['parent-fields', 'teacher-fields', 'venue-fields', 'student-fields'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-
-            // Show fields for selected role
-            if (selectedRole) {
-                document.getElementById(`${selectedRole}-fields`).classList.remove('hidden');
-            }
-        }
-
-        function validateAccountForm() {
-            const form = signupForm;
-            const formData = new FormData(form);
             
-            // Basic validation
-            const requiredFields = ['firstName', 'lastName', 'email', 'password', 'confirmPassword'];
-            for (let field of requiredFields) {
-                if (!formData.get(field)) {
-                    alert(`Please fill in your ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
-                    return false;
-                }
-            }
-
-            // Password validation
-            const password = formData.get('password');
-            const confirmPassword = formData.get('confirmPassword');
-            
-            if (password.length < 8) {
-                alert('Password must be at least 8 characters long');
-                return false;
-            }
-
-            if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return false;
-            }
-
-            return true;
-        }
-
-        // Location autocomplete (mock implementation)
-        const locationInput = document.getElementById('location-input');
-        const locationSuggestions = document.getElementById('location-suggestions');
-
-        locationInput.addEventListener('input', (e) => {
-            const query = e.target.value;
-            if (query.length > 2) {
-                // Mock location suggestions
-                const suggestions = [
-                    'Koh Samui, Thailand',
-                    'Bangkok, Thailand',
-                    'Chiang Mai, Thailand',
-                    'Phuket, Thailand'
-                ].filter(location => location.toLowerCase().includes(query.toLowerCase()));
-
-                if (suggestions.length > 0) {
-                    locationSuggestions.innerHTML = suggestions.map(suggestion => 
-                        `<div class="location-suggestion" onclick="selectLocation('${suggestion}')">${suggestion}</div>`
-                    ).join('');
-                    locationSuggestions.classList.remove('hidden');
-                } else {
-                    locationSuggestions.classList.add('hidden');
-                }
-            } else {
-                locationSuggestions.classList.add('hidden');
-            }
-        });
-
-        function selectLocation(location) {
-            locationInput.value = location;
-            locationSuggestions.classList.add('hidden');
-        }
-
-        // Social login handlers
-        document.getElementById('google-signup').addEventListener('click', () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider)
-                .then((result) => {
-                    console.log('Google signup successful', result.user);
-                    // Handle successful signup
-                    handleSocialSignup(result.user);
-                })
-                .catch((error) => {
-                    console.error('Google signup error:', error);
-                    alert('Google signup failed. Please try again.');
-                });
-        });
-
-        document.getElementById('facebook-signup').addEventListener('click', () => {
-            const provider = new firebase.auth.FacebookAuthProvider();
-            auth.signInWithPopup(provider)
-                .then((result) => {
-                    console.log('Facebook signup successful', result.user);
-                    handleSocialSignup(result.user);
-                })
-                .catch((error) => {
-                    console.error('Facebook signup error:', error);
-                    alert('Facebook signup failed. Please try again.');
-                });
-        });
-
-        function handleSocialSignup(user) {
-            // Pre-fill form with social data
-            document.querySelector('input[name="firstName"]').value = user.displayName?.split(' ')[0] || '';
-            document.querySelector('input[name="lastName"]').value = user.displayName?.split(' ').slice(1).join(' ') || '';
-            document.querySelector('input[name="email"]').value = user.email || '';
-            
-            // Skip to profile setup
-            goToStep(3);
-            showRoleSpecificFields();
-        }
-
-        // Final signup submission
-        profileForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            completeSignupBtn.disabled = true;
-            completeSignupBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating Account...';
-
-            try {
-                // Get all form data
-                const accountData = new FormData(signupForm);
-                const profileData = new FormData(profileForm);
-
-                // Create user account
-                const userCredential = await auth.createUserWithEmailAndPassword(
-                    accountData.get('email'),
-                    accountData.get('password')
-                );
-
-                const user = userCredential.user;
-
-                // Create user profile in Firestore
-                const userProfile = {
-                    uid: user.uid,
-                    role: selectedRole,
-                    firstName: accountData.get('firstName'),
-                    lastName: accountData.get('lastName'),
-                    email: accountData.get('email'),
-                    phone: accountData.get('phone') || '',
-                    location: profileData.get('location'),
-                    bio: profileData.get('bio') || '',
-                    agreeTerms: profileData.get('agreeTerms') === 'on',
-                    marketingEmails: profileData.get('marketingEmails') === 'on',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    verified: false,
-                    active: true
-                };
-
-                // Add role-specific data
-                if (selectedRole === 'parent') {
-                    userProfile.educationalPhilosophy = profileData.get('educationalPhilosophy');
-                    userProfile.numberOfChildren = profileData.get('numberOfChildren');
-                    userProfile.childrenAges = profileData.get('childrenAges');
-                } else if (selectedRole === 'teacher') {
-                    userProfile.teachingExperience = profileData.get('teachingExperience');
-                    userProfile.subjects = profileData.get('subjects');
-                    userProfile.qualifications = profileData.get('qualifications');
-                    userProfile.ageGroups = Array.from(profileForm.querySelectorAll('input[name="ageGroups"]:checked')).map(cb => cb.value);
-                } else if (selectedRole === 'venue') {
-                    userProfile.venueType = profileData.get('venueType');
-                    userProfile.capacity = profileData.get('capacity');
-                    userProfile.facilities = Array.from(profileForm.querySelectorAll('input[name="facilities"]:checked')).map(cb => cb.value);
-                } else if (selectedRole === 'student') {
-                    userProfile.age = profileData.get('age');
-                    userProfile.gradeLevel = profileData.get('gradeLevel');
-                    userProfile.learningInterests = profileData.get('learningInterests');
-                    userProfile.learningGoals = profileData.get('learningGoals');
-                }
-
-                // Save to Firestore
-                await db.collection('users').doc(user.uid).set(userProfile);
-
-                console.log('User profile created successfully');
-
-                // Show success step
-                goToStep(4);
-                document.getElementById('signup-success').classList.remove('hidden');
-
-            } catch (error) {
-                console.error('Signup error:', error);
-                alert('Signup failed: ' + error.message);
-                
-                completeSignupBtn.disabled = false;
-                completeSignupBtn.innerHTML = '<i class="fas fa-user-plus mr-2"></i>Create Account';
-            }
-        });
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check if user is already logged in
-            auth.onAuthStateChanged((user) => {
-                if (user && currentStep < 4) {
-                    // User is signed in, redirect to dashboard
-                    window.location.href = '/dashboard.html';
+            // Google Signup
+            googleSignupBtn.addEventListener('click', async () => {
+                hideError();
+                try {
+                    const result = await window.firebaseAuth.signInWithPopup(window.auth, window.googleProvider);
+                    
+                    // Check if user profile already exists
+                    const existingProfile = await window.curriculumSocial.getUserProfile(result.user.uid);
+                    
+                    if (!existingProfile.success) {
+                        // New user - need to set role
+                        const role = prompt("Please select your role:\n1. parent\n2. teacher\n3. venue\n\nEnter one of the above:");
+                        
+                        if (role && ['parent', 'teacher', 'venue'].includes(role.toLowerCase())) {
+                            await window.curriculumSocial.createUserProfile(result.user.uid, {
+                                email: result.user.email,
+                                displayName: result.user.displayName,
+                                role: role.toLowerCase(),
+                                emailVerified: result.user.emailVerified,
+                                photoURL: result.user.photoURL
+                            });
+                        } else {
+                            showError('Please select a valid role');
+                            return;
+                        }
+                    }
+                    
+                    window.location.href = 'dashboard.html';
+                } catch (error) {
+                    showError(error.message);
                 }
             });
         });
     </script>
+    
+    <!-- Firebase configuration -->
     <script type="module" src="js/firebase-config.js"></script>
 </body>
 </html>
