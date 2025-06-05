@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Management - Curriculum Social</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --secondary-blue: #4285f4;
+            --primary-green: #34a853;
+            --secondary-green: #66bb6a;
+            --light-blue: #e8f0fe;
+            --light-green: #e6f4ea;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline {
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            background-color: transparent;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--light-blue);
+        }
+        
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+        
+        .tab-nav {
+            border-bottom: 2px solid #e1e5e9;
+        }
+        
+        .tab-button {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            color: #6b7280;
+            transition: all 0.3s;
+        }
+        
+        .tab-button.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+        }
+        
+        .tab-button:hover {
+            color: var(--primary-blue);
+            background-color: #f3f4f6;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #e1e5e9;
+        }
+        
+        .student-card {
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            background: white;
+            transition: all 0.3s;
+        }
+        
+        .student-card:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .preference-tag {
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 4px;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .preference-tag.selected {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+        
+        .preference-tag:hover {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold text-primary">
+                    <a href="/" style="text-decoration: none; color: inherit;">
+                        <span style="color: var(--primary-green);">Curriculum</span> Social
+                    </a>
+                </h1>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="/dashboard.html" class="text-gray-600 hover:text-blue-600 font-medium">Dashboard</a>
+                <a href="/matching.html" class="text-gray-600 hover:text-blue-600 font-medium">Find Families</a>
+                <a href="/activities.html" class="text-gray-600 hover:text-blue-600 font-medium">Activities</a>
+                <a href="/messages.html" class="text-gray-600 hover:text-blue-600 font-medium">Messages</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button id="notifications-btn" class="text-gray-600 hover:text-blue-600 relative">
+                    <i class="fas fa-bell text-xl"></i>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+                </button>
+                <div class="relative">
+                    <button id="user-menu-btn" class="flex items-center space-x-2 text-gray-600 hover:text-blue-600">
+                        <img src="https://via.placeholder.com/32" alt="Profile" class="w-8 h-8 rounded-full">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <button onclick="logout()" class="btn-outline text-sm">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar -->
+            <div class="lg:w-1/4">
+                <div class="card p-6 mb-6">
+                    <div class="text-center mb-6">
+                        <div class="relative inline-block">
+                            <img id="profile-image" src="https://via.placeholder.com/120" alt="Profile Picture" class="profile-image mx-auto">
+                            <button id="change-photo-btn" class="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <input type="file" id="profile-image-input" accept="image/*" class="hidden">
+                        </div>
+                        <h3 id="user-name" class="text-xl font-bold mt-4">Sarah Johnson</h3>
+                        <p id="user-role" class="text-gray-600">Parent • Koh Samui, Thailand</p>
+                        <div class="flex items-center justify-center mt-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600 text-sm">(4.9/5)</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-calendar-alt w-5"></i>
+                            <span class="ml-3">Joined March 2024</span>
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-users w-5"></i>
+                            <span class="ml-3">12 Connections</span>
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-certificate w-5"></i>
+                            <span class="ml-3">Verified Member</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card p-6">
+                    <h4 class="font-bold mb-4">Quick Actions</h4>
+                    <div class="space-y-3">
+                        <button class="w-full btn-primary text-left">
+                            <i class="fas fa-search mr-2"></i>Find Families
+                        </button>
+                        <button class="w-full btn-outline text-left">
+                            <i class="fas fa-plus mr-2"></i>Add Student
+                        </button>
+                        <button class="w-full btn-outline text-left">
+                            <i class="fas fa-calendar mr-2"></i>Schedule Activity
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Profile Content -->
+            <div class="lg:w-3/4">
+                <div class="card">
+                    <!-- Tab Navigation -->
+                    <div class="tab-nav px-6 pt-6">
+                        <div class="flex space-x-0">
+                            <button class="tab-button active" onclick="showTab('personal')">Personal Info</button>
+                            <button class="tab-button" onclick="showTab('students')">Students</button>
+                            <button class="tab-button" onclick="showTab('preferences')">Preferences</button>
+                            <button class="tab-button" onclick="showTab('location')">Location</button>
+                            <button class="tab-button" onclick="showTab('account')">Account</button>
+                        </div>
+                    </div>
+
+                    <!-- Personal Information Tab -->
+                    <div id="personal-tab" class="tab-content active p-6">
+                        <h3 class="text-xl font-bold mb-6">Personal Information</h3>
+                        <form id="personal-info-form" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                    <input type="text" id="first-name" class="form-input" value="Sarah" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                    <input type="text" id="last-name" class="form-input" value="Johnson" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" id="email" class="form-input" value="sarah.johnson@email.com" required>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                    <input type="tel" id="phone" class="form-input" value="+66 98 765 4321">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Time Zone</label>
+                                    <select id="timezone" class="form-input">
+                                        <option value="Asia/Bangkok" selected>Asia/Bangkok (GMT+7)</option>
+                                        <option value="Asia/Singapore">Asia/Singapore (GMT+8)</option>
+                                        <option value="America/New_York">America/New_York (GMT-5)</option>
+                                        <option value="Europe/London">Europe/London (GMT+0)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+                                <textarea id="bio" rows="4" class="form-input" placeholder="Tell other families about yourself...">Digital nomad family living in Koh Samui. We're passionate about Montessori education and love exploring nature with our kids. Looking for like-minded families to share educational adventures!</textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Languages Spoken</label>
+                                <input type="text" id="languages" class="form-input" value="English, Thai (Basic), Spanish" placeholder="e.g., English, Spanish, Thai">
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Students Tab -->
+                    <div id="students-tab" class="tab-content p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold">Student Profiles</h3>
+                            <button id="add-student-btn" class="btn-primary">
+                                <i class="fas fa-plus mr-2"></i>Add Student
+                            </button>
+                        </div>
+
+                        <div id="students-list">
+                            <!-- Student 1 -->
+                            <div class="student-card">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <img src="https://via.placeholder.com/60" alt="Student" class="w-15 h-15 rounded-full">
+                                        <div>
+                                            <h4 class="font-bold text-lg">Emma Johnson</h4>
+                                            <p class="text-gray-600">Age 8 • Grade 3</p>
+                                            <div class="flex space-x-2 mt-2">
+                                                <span class="preference-tag">Mathematics</span>
+                                                <span class="preference-tag">Science</span>
+                                                <span class="preference-tag">Art</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="btn-outline text-sm">
+                                            <i class="fas fa-edit mr-1"></i>Edit
+                                        </button>
+                                        <button class="btn-outline text-sm text-red-600 border-red-600 hover:bg-red-50">
+                                            <i class="fas fa-trash mr-1"></i>Remove
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                                    <h5 class="font-semibold mb-2">Learning Progress</h5>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between">
+                                            <span>Mathematics</span>
+                                            <span class="font-semibold">85%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-blue-600 h-2 rounded-full" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Student 2 -->
+                            <div class="student-card">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <img src="https://via.placeholder.com/60" alt="Student" class="w-15 h-15 rounded-full">
+                                        <div>
+                                            <h4 class="font-bold text-lg">Oliver Johnson</h4>
+                                            <p class="text-gray-600">Age 6 • Kindergarten</p>
+                                            <div class="flex space-x-2 mt-2">
+                                                <span class="preference-tag">Reading</span>
+                                                <span class="preference-tag">Nature Studies</span>
+                                                <span class="preference-tag">Music</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="btn-outline text-sm">
+                                            <i class="fas fa-edit mr-1"></i>Edit
+                                        </button>
+                                        <button class="btn-outline text-sm text-red-600 border-red-600 hover:bg-red-50">
+                                            <i class="fas fa-trash mr-1"></i>Remove
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                                    <h5 class="font-semibold mb-2">Learning Progress</h5>
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between">
+                                            <span>Reading</span>
+                                            <span class="font-semibold">72%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-green-600 h-2 rounded-full" style="width: 72%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preferences Tab -->
+                    <div id="preferences-tab" class="tab-content p-6">
+                        <h3 class="text-xl font-bold mb-6">Educational Preferences</h3>
+                        
+                        <div class="space-y-8">
+                            <div>
+                                <h4 class="font-semibold mb-4">Educational Philosophy</h4>
+                                <div class="flex flex-wrap">
+                                    <span class="preference-tag selected">Montessori</span>
+                                    <span class="preference-tag">Charlotte Mason</span>
+                                    <span class="preference-tag">Classical</span>
+                                    <span class="preference-tag">Waldorf</span>
+                                    <span class="preference-tag">STEM-focused</span>
+                                    <span class="preference-tag">Unschooling</span>
+                                    <span class="preference-tag">Traditional</span>
+                                    <span class="preference-tag">Project-based</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold mb-4">Activity Interests</h4>
+                                <div class="flex flex-wrap">
+                                    <span class="preference-tag selected">Nature Studies</span>
+                                    <span class="preference-tag selected">Science Experiments</span>
+                                    <span class="preference-tag">Arts & Crafts</span>
+                                    <span class="preference-tag selected">Music</span>
+                                    <span class="preference-tag">Sports</span>
+                                    <span class="preference-tag">Cooking</span>
+                                    <span class="preference-tag">Field Trips</span>
+                                    <span class="preference-tag">Cultural Activities</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold mb-4">Communication Preferences</h4>
+                                <div class="space-y-4">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-3" checked>
+                                        <span>Receive activity notifications</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-3" checked>
+                                        <span>Weekly progress reports</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-3">
+                                        <span>Marketing communications</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold mb-4">Availability</h4>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-2" checked>
+                                        <span>Mornings</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-2" checked>
+                                        <span>Afternoons</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-2">
+                                        <span>Evenings</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-2" checked>
+                                        <span>Weekends</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end">
+                                <button class="btn-primary">Save Preferences</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location Tab -->
+                    <div id="location-tab" class="tab-content p-6">
+                        <h3 class="text-xl font-bold mb-6">Location & Matching</h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Current Location</label>
+                                <input type="text" id="location" class="form-input" value="Koh Samui, Thailand" placeholder="Enter your city or address">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Search Radius (km)</label>
+                                <div class="flex items-center space-x-4">
+                                    <input type="range" id="radius-slider" min="5" max="50" value="25" class="flex-1">
+                                    <span id="radius-value" class="font-semibold text-blue-600">25 km</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">Families within this distance will be shown in your matches</p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold mb-4">Preferred Venues</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-3" checked>
+                                        <span>Home environments</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-3" checked>
+                                        <span>Public parks</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-3">
+                                        <span>Libraries</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-3" checked>
+                                        <span>Community centers</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-3" checked>
+                                        <span>Beaches/Outdoor</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="mr-3">
+                                        <span>Museums</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold mb-4">Transportation</h4>
+                                <div class="space-y-2">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="transport" class="mr-3" checked>
+                                        <span>Can drive to activities</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="transport" class="mr-3">
+                                        <span>Walking/Cycling only</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="transport" class="mr-3">
+                                        <span>Public transport</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h5 class="font-semibold text-blue-800 mb-2">Location Privacy</h5>
+                                <p class="text-blue-700 text-sm mb-3">Your exact address is never shared. Other families see only your general area and distance.</p>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-3" checked>
+                                    <span class="text-blue-700">Allow families to see my approximate location for matching</span>
+                                </label>
+                            </div>
+
+                            <div class="flex justify-end">
+                                <button class="btn-primary">Update Location Settings</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Tab -->
+                    <div id="account-tab" class="tab-content p-6">
+                        <h3 class="text-xl font-bold mb-6">Account Settings</h3>
+                        
+                        <div class="space-y-8">
+                            <div>
+                                <h4 class="font-semibold mb-4">Security</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                                        <input type="password" class="form-input" placeholder="Enter current password">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                                        <input type="password" class="form-input" placeholder="Enter new password">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                                        <input type="password" class="form-input" placeholder="Confirm new password">
+                                    </div>
+                                    <button class="btn-outline">Update Password</button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold mb-4">Privacy Settings</h4>
+                                <div class="space-y-4">
+                                    <label class="flex items-center justify-between">
+                                        <span>Show my profile to other families</span>
+                                        <input type="checkbox" class="toggle" checked>
+                                    </label>
+                                    <label class="flex items-center justify-between">
+                                        <span>Allow direct messages</span>
+                                        <input type="checkbox" class="toggle" checked>
+                                    </label>
+                                    <label class="flex items-center justify-between">
+                                        <span>Share my activities publicly</span>
+                                        <input type="checkbox" class="toggle">
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold mb-4">Subscription</h4>
+                                <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h5 class="font-semibold text-green-800">Premium Plan</h5>
+                                            <p class="text-green-700">$24.99/month • Renews on March 15, 2024</p>
+                                        </div>
+                                        <button class="btn-outline text-sm">Manage Plan</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold mb-4">Verification Status</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                                            <span>Email Verified</span>
+                                        </div>
+                                        <span class="text-green-600 text-sm">Completed</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                                            <span>Identity Verified</span>
+                                        </div>
+                                        <span class="text-green-600 text-sm">Completed</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-clock text-yellow-600 mr-3"></i>
+                                            <span>Background Check</span>
+                                        </div>
+                                        <button class="btn-outline text-sm">Start Process</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-t pt-6">
+                                <h4 class="font-semibold mb-4 text-red-600">Danger Zone</h4>
+                                <div class="space-y-4">
+                                    <button class="btn-outline text-red-600 border-red-600 hover:bg-red-50">
+                                        Deactivate Account
+                                    </button>
+                                    <button class="btn-outline text-red-600 border-red-600 hover:bg-red-50">
+                                        Delete Account Permanently
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div id="add-student-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg p-6 max-w-md w-full">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold">Add New Student</h3>
+                    <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="add-student-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Student Name</label>
+                        <input type="text" id="student-name" class="form-input" required>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Age</label>
+                            <input type="number" id="student-age" class="form-input" min="3" max="18" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Grade</label>
+                            <select id="student-grade" class="form-input" required>
+                                <option value="">Select Grade</option>
+                                <option value="pre-k">Pre-K</option>
+                                <option value="k">Kindergarten</option>
+                                <option value="1">Grade 1</option>
+                                <option value="2">Grade 2</option>
+                                <option value="3">Grade 3</option>
+                                <option value="4">Grade 4</option>
+                                <option value="5">Grade 5</option>
+                                <option value="6">Grade 6</option>
+                                <option value="7">Grade 7</option>
+                                <option value="8">Grade 8</option>
+                                <option value="9">Grade 9</option>
+                                <option value="10">Grade 10</option>
+                                <option value="11">Grade 11</option>
+                                <option value="12">Grade 12</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Interests</label>
+                        <input type="text" id="student-interests" class="form-input" placeholder="e.g., Math, Science, Art">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" id="cancel-add" class="btn-outline">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Student</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+        import { getFirestore, doc, updateDoc, getDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "your-api-key",
+            authDomain: "curriculum-social.firebaseapp.com",
+            projectId: "curriculum-social",
+            storageBucket: "curriculum-social.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "your-app-id"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // Check authentication
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = '/login.html';
+            } else {
+                loadUserProfile(user.uid);
+            }
+        });
+
+        // Load user profile
+        async function loadUserProfile(userId) {
+            try {
+                const userDoc = await getDoc(doc(db, 'users', userId));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    populateUserData(userData);
+                }
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+            }
+        }
+
+        // Populate user data
+        function populateUserData(userData) {
+            document.getElementById('user-name').textContent = `${userData.firstName} ${userData.lastName}`;
+            document.getElementById('user-role').textContent = `${userData.role} • ${userData.location}`;
+            document.getElementById('first-name').value = userData.firstName || '';
+            document.getElementById('last-name').value = userData.lastName || '';
+            document.getElementById('email').value = userData.email || '';
+            document.getElementById('phone').value = userData.phone || '';
+            document.getElementById('bio').value = userData.bio || '';
+            document.getElementById('languages').value = userData.languages || '';
+            document.getElementById('location').value = userData.location || '';
+        }
+
+        // Global logout function
+        window.logout = async function() {
+            try {
+                await signOut(auth);
+                window.location.href = '/login.html';
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
+        };
+
+        // Save personal information
+        document.getElementById('personal-info-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const user = auth.currentUser;
+            if (!user) return;
+
+            const userData = {
+                firstName: document.getElementById('first-name').value,
+                lastName: document.getElementById('last-name').value,
+                phone: document.getElementById('phone').value,
+                bio: document.getElementById('bio').value,
+                languages: document.getElementById('languages').value,
+                timezone: document.getElementById('timezone').value,
+                updatedAt: new Date()
+            };
+
+            try {
+                await updateDoc(doc(db, 'users', user.uid), userData);
+                alert('Profile updated successfully!');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Error updating profile. Please try again.');
+            }
+        });
+
+        // Profile image upload
+        document.getElementById('change-photo-btn').addEventListener('click', () => {
+            document.getElementById('profile-image-input').click();
+        });
+
+        document.getElementById('profile-image-input').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const user = auth.currentUser;
+            if (!user) return;
+
+            try {
+                const storageRef = ref(storage, `profile-images/${user.uid}`);
+                await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(storageRef);
+                
+                // Update Firestore with new image URL
+                await updateDoc(doc(db, 'users', user.uid), {
+                    profileImage: downloadURL
+                });
+
+                // Update image in UI
+                document.getElementById('profile-image').src = downloadURL;
+                alert('Profile picture updated successfully!');
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                alert('Error uploading image. Please try again.');
+            }
+        });
+    </script>
+
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Range slider for location radius
+        const radiusSlider = document.getElementById('radius-slider');
+        const radiusValue = document.getElementById('radius-value');
+
+        radiusSlider.addEventListener('input', (e) => {
+            radiusValue.textContent = e.target.value + ' km';
+        });
+
+        // Add student modal
+        const addStudentBtn = document.getElementById('add-student-btn');
+        const addStudentModal = document.getElementById('add-student-modal');
+        const closeModal = document.getElementById('close-modal');
+        const cancelAdd = document.getElementById('cancel-add');
+
+        addStudentBtn.addEventListener('click', () => {
+            addStudentModal.classList.remove('hidden');
+        });
+
+        closeModal.addEventListener('click', () => {
+            addStudentModal.classList.add('hidden');
+        });
+
+        cancelAdd.addEventListener('click', () => {
+            addStudentModal.classList.add('hidden');
+        });
+
+        // Add student form submission
+        document.getElementById('add-student-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const studentName = document.getElementById('student-name').value;
+            const studentAge = document.getElementById('student-age').value;
+            const studentGrade = document.getElementById('student-grade').value;
+            const studentInterests = document.getElementById('student-interests').value;
+
+            // Here you would typically save to Firebase
+            console.log('Adding student:', { studentName, studentAge, studentGrade, studentInterests });
+            
+            // Close modal and reset form
+            addStudentModal.classList.add('hidden');
+            document.getElementById('add-student-form').reset();
+            
+            alert('Student added successfully!');
+        });
+
+        // Preference tags selection
+        document.querySelectorAll('.preference-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                tag.classList.toggle('selected');
+            });
+        });
+
+        // Close modal when clicking outside
+        addStudentModal.addEventListener('click', (e) => {
+            if (e.target === addStudentModal) {
+                addStudentModal.classList.add('hidden');
+            }
+        });
+
+        // Form submissions for other tabs
+        document.addEventListener('DOMContentLoaded', () => {
+            // Location settings
+            document.querySelector('#location-tab .btn-primary').addEventListener('click', () => {
+                alert('Location settings updated!');
+            });
+
+            // Preferences
+            document.querySelector('#preferences-tab .btn-primary').addEventListener('click', () => {
+                alert('Preferences saved!');
+            });
+        });
+    </script>
+</body>
+</html>
