@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities - Curriculum Social</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --secondary-blue: #4285f4;
+            --primary-green: #34a853;
+            --secondary-green: #66bb6a;
+            --light-blue: #e8f0fe;
+            --light-green: #e6f4ea;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: #333;
+            background: linear-gradient(135deg, #e8f0fe 0%, #e6f4ea 100%);
+            min-height: 100vh;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-outline {
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            background-color: transparent;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 8px;
+            font-weight: 500;
+            color: #4a5568;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-blue);
+        }
+        
+        .activity-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .activity-type {
+            background: var(--light-green);
+            color: var(--primary-green);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .calendar-view {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .participants-count {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold text-primary">
+                    <a href="index.html" style="text-decoration: none; color: inherit;">
+                        <span class="text-secondary">Curriculum</span> Social
+                    </a>
+                </h1>
+            </div>
+            <nav class="hidden md:flex">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="profile.html" class="nav-link">Profile</a>
+                <a href="matching.html" class="nav-link">Find Families</a>
+                <a href="#" class="nav-link" style="color: var(--primary-blue);">Activities</a>
+            </nav>
+            <div>
+                <button id="createActivityBtn" class="btn-secondary hidden md:inline-block mr-2">Create Activity</button>
+                <button id="signOutBtn" class="btn-outline hidden md:inline-block">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold mb-4" style="color: var(--primary-blue);">Educational Activities</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Discover and join local educational activities, field trips, and learning experiences in your community.</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white rounded-12 p-6 mb-8 shadow-sm">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Activity Type</label>
+                    <select id="typeFilter" class="w-full p-2 border border-gray-300 rounded-md">
+                        <option value="">All Types</option>
+                        <option value="field_trip">Field Trip</option>
+                        <option value="workshop">Workshop</option>
+                        <option value="playgroup">Playgroup</option>
+                        <option value="academic">Academic Session</option>
+                        <option value="sports">Sports</option>
+                        <option value="arts">Arts & Crafts</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Age Group</label>
+                    <select id="ageFilter" class="w-full p-2 border border-gray-300 rounded-md">
+                        <option value="">All Ages</option>
+                        <option value="0-3">0-3 years</option>
+                        <option value="3-6">3-6 years</option>
+                        <option value="6-12">6-12 years</option>
+                        <option value="12+">12+ years</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                    <input type="date" id="dateFilter" class="w-full p-2 border border-gray-300 rounded-md">
+                </div>
+                <div class="flex items-end">
+                    <button id="filterBtn" class="btn-primary w-full">Filter Activities</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activities List -->
+        <div id="activitiesList" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Sample activities will be loaded here -->
+        </div>
+
+        <!-- Create Activity Modal -->
+        <div id="createModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+            <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-90vh overflow-y-auto">
+                <h3 class="text-xl font-semibold mb-4" style="color: var(--primary-blue);">Create New Activity</h3>
+                
+                <form id="activityForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="activityTitle">Activity Title</label>
+                            <input type="text" id="activityTitle" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="activityType">Type</label>
+                            <select id="activityType" required>
+                                <option value="">Select Type</option>
+                                <option value="field_trip">Field Trip</option>
+                                <option value="workshop">Workshop</option>
+                                <option value="playgroup">Playgroup</option>
+                                <option value="academic">Academic Session</option>
+                                <option value="sports">Sports</option>
+                                <option value="arts">Arts & Crafts</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="activityDescription">Description</label>
+                        <textarea id="activityDescription" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="form-group">
+                            <label for="activityDate">Date</label>
+                            <input type="date" id="activityDate" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="activityTime">Time</label>
+                            <input type="time" id="activityTime" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="activityDuration">Duration (hours)</label>
+                            <input type="number" id="activityDuration" min="0.5" max="8" step="0.5" required>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="activityLocation">Location</label>
+                            <input type="text" id="activityLocation" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="maxParticipants">Max Participants</label>
+                            <input type="number" id="maxParticipants" min="1" max="50" required>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="ageRange">Age Range</label>
+                            <select id="ageRange" required>
+                                <option value="">Select Age Range</option>
+                                <option value="0-3">0-3 years</option>
+                                <option value="3-6">3-6 years</option>
+                                <option value="6-12">6-12 years</option>
+                                <option value="12+">12+ years</option>
+                                <option value="all">All Ages</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="costPerChild">Cost per Child ($)</label>
+                            <input type="number" id="costPerChild" min="0" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn-primary flex-1">Create Activity</button>
+                        <button type="button" id="cancelCreateBtn" class="btn-outline flex-1">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentUser = null;
+            
+            // Sample activities data
+            const sampleActivities = [
+                {
+                    id: 'activity1',
+                    title: 'Beach Nature Study',
+                    type: 'field_trip',
+                    description: 'Explore marine life and coastal ecosystems at Chaweng Beach. Children will collect shells, observe tide pools, and learn about ocean conservation.',
+                    date: '2025-01-15',
+                    time: '09:00',
+                    duration: 3,
+                    location: 'Chaweng Beach, Koh Samui',
+                    organizer: 'Sarah Johnson',
+                    maxParticipants: 12,
+                    currentParticipants: 8,
+                    ageRange: '3-12',
+                    cost: 15.00,
+                    verified: true
+                },
+                {
+                    id: 'activity2',
+                    title: 'Thai Cooking Workshop',
+                    type: 'workshop',
+                    description: 'Learn to cook traditional Thai dishes with local ingredients. A cultural and practical life skills experience for the whole family.',
+                    date: '2025-01-18',
+                    time: '14:00',
+                    duration: 2.5,
+                    location: 'Samui Cooking School, Bophut',
+                    organizer: 'The Martinez Family',
+                    maxParticipants: 8,
+                    currentParticipants: 5,
+                    ageRange: '6+',
+                    cost: 25.00,
+                    verified: true
+                },
+                {
+                    id: 'activity3',
+                    title: 'Morning Montessori Playgroup',
+                    type: 'playgroup',
+                    description: 'Structured play session focusing on practical life activities, sensorial exploration, and social interaction for young children.',
+                    date: '2025-01-20',
+                    time: '10:00',
+                    duration: 2,
+                    location: 'Community Center, Lamai',
+                    organizer: 'Emma Kumar',
+                    maxParticipants: 10,
+                    currentParticipants: 7,
+                    ageRange: '2-6',
+                    cost: 0,
+                    verified: true
+                },
+                {
+                    id: 'activity4',
+                    title: 'Science Experiment Lab',
+                    type: 'academic',
+                    description: 'Hands-on science experiments covering basic chemistry and physics concepts. Age-appropriate activities to spark curiosity.',
+                    date: '2025-01-22',
+                    time: '15:30',
+                    duration: 1.5,
+                    location: 'Williams Home School, Nathon',
+                    organizer: 'Dr. Williams',
+                    maxParticipants: 6,
+                    currentParticipants: 4,
+                    ageRange: '8-14',
+                    cost: 20.00,
+                    verified: true
+                }
+            ];
+            
+            // Check authentication
+            window.firebaseAuth.onAuthStateChanged(window.auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    loadActivities();
+                } else {
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            function loadActivities() {
+                displayActivities(sampleActivities);
+            }
+            
+            function displayActivities(activities) {
+                const container = document.getElementById('activitiesList');
+                container.innerHTML = '';
+                
+                activities.forEach(activity => {
+                    const activityCard = createActivityCard(activity);
+                    container.appendChild(activityCard);
+                });
+            }
+            
+            function createActivityCard(activity) {
+                const card = document.createElement('div');
+                card.className = 'activity-card';
+              
+                const spotsLeft = activity.maxParticipants - activity.currentParticipants;
+                const isFull = spotsLeft <= 0;
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="activity-type">${activity.type.replace('_', ' ')}</span>
+                                ${activity.verified ? '<i class="fas fa-check-circle text-green-500" title="Verified Organizer"></i>' : ''}
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2" style="color: var(--primary-blue);">${activity.title}</h3>
+                            <p class="text-gray-600 mb-3">${activity.description}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+                        <div>
+                            <i class="fas fa-calendar-alt text-gray-400 mr-2"></i>
+                            <span>${new Date(activity.date).toLocaleDateString()}</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-clock text-gray-400 mr-2"></i>
+                            <span>${activity.time} (${activity.duration}h)</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+                            <span>${activity.location}</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-user text-gray-400 mr-2"></i>
+                            <span>Ages ${activity.ageRange}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <span class="text-sm text-gray-600">Organized by: </span>
+                            <span class="font-medium">${activity.organizer}</span>
+                        </div>
+                        <div class="text-right">
+                            <div class="participants-count">${activity.currentParticipants}/${activity.maxParticipants} joined</div>
+                            <div class="text-sm text-gray-600">${spotsLeft} spots left</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="text-lg font-semibold" style="color: var(--primary-green);">
+                            ${activity.cost > 0 ? `$${activity.cost.toFixed(2)}` : 'Free'}
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="btn-outline" onclick="viewActivity('${activity.id}')">
+                                <i class="fas fa-eye mr-1"></i>Details
+                            </button>
+                            <button class="btn-primary ${isFull ? 'opacity-50 cursor-not-allowed' : ''}" 
+                                    onclick="joinActivity('${activity.id}')" 
+                                    ${isFull ? 'disabled' : ''}>
+                                <i class="fas fa-user-plus mr-1"></i>
+                                ${isFull ? 'Full' : 'Join'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            // Filter functionality
+            document.getElementById('filterBtn').addEventListener('click', function() {
+                const typeFilter = document.getElementById('typeFilter').value;
+                const ageFilter = document.getElementById('ageFilter').value;
+                const dateFilter = document.getElementById('dateFilter').value;
+                
+                let filteredActivities = sampleActivities.filter(activity => {
+                    // Type filter
+                    if (typeFilter && activity.type !== typeFilter) return false;
+                    
+                    // Age filter
+                    if (ageFilter && !activity.ageRange.includes(ageFilter.split('-')[0])) return false;
+                    
+                    // Date filter
+                    if (dateFilter && activity.date !== dateFilter) return false;
+                    
+                    return true;
+                });
+                
+                displayActivities(filteredActivities);
+            });
+            
+            // Create activity modal
+            document.getElementById('createActivityBtn').addEventListener('click', function() {
+                document.getElementById('createModal').style.display = 'flex';
+            });
+            
+            document.getElementById('cancelCreateBtn').addEventListener('click', function() {
+                document.getElementById('createModal').style.display = 'none';
+            });
+            
+            document.getElementById('activityForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const activityData = {
+                    title: document.getElementById('activityTitle').value,
+                    type: document.getElementById('activityType').value,
+                    description: document.getElementById('activityDescription').value,
+                    date: document.getElementById('activityDate').value,
+                    time: document.getElementById('activityTime').value,
+                    duration: parseFloat(document.getElementById('activityDuration').value),
+                    location: document.getElementById('activityLocation').value,
+                    maxParticipants: parseInt(document.getElementById('maxParticipants').value),
+                    ageRange: document.getElementById('ageRange').value,
+                    cost: parseFloat(document.getElementById('costPerChild').value) || 0,
+                    organizer: currentUser.displayName || currentUser.email,
+                    organizerId: currentUser.uid,
+                    currentParticipants: 0,
+                    createdAt: new Date(),
+                    verified: false
+                };
+                
+                try {
+                    // In real implementation, save to Firestore
+                    // await window.firebaseFirestore.addDoc(window.firebaseFirestore.collection(window.db, 'activities'), activityData);
+                    
+                    alert('Activity created successfully! It will be visible once approved.');
+                    document.getElementById('createModal').style.display = 'none';
+                    document.getElementById('activityForm').reset();
+                    
+                    // Reload activities
+                    loadActivities();
+                } catch (error) {
+                    alert('Error creating activity: ' + error.message);
+                }
+            });
+            
+            // Sign out functionality
+            document.getElementById('signOutBtn').addEventListener('click', async () => {
+                try {
+                    await window.curriculumSocial.signOut();
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error('Error signing out:', error);
+                }
+            });
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('activityDate').min = today;
+            document.getElementById('dateFilter').min = today;
+        });
+        
+        // Global functions
+        window.viewActivity = function(activityId) {
+            alert(`Viewing detailed information for activity ${activityId}. Full activity details coming soon!`);
+        };
+        
+        window.joinActivity = function(activityId) {
+            if (confirm('Would you like to join this activity? The organizer will be notified of your interest.')) {
+                alert('Join request sent! The organizer will contact you with further details.');
+                // In real implementation, this would update the database and send notifications
+            }
+        };
+    </script>
+    
+    <script type="module" src="js/firebase-config.js"></script>
+</body>
+</html>
