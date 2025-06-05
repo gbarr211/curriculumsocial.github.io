@@ -110,14 +110,15 @@
             border-color: var(--primary-green);
         }
         
-        /* Navigation */
-        .nav-link {
-            position: relative;
-            padding: 8px 16px;
-            margin: 0 8px;
-            font-weight: 500;
-            color: #4a5568;
-            transition: all 0.3s;
+        /* Mobile menu positioning fix */
+        #mobileMenu {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
         }
         
         .nav-link::after {
