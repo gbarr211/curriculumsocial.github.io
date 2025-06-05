@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary-blue: #1a73e8;
@@ -21,7 +20,8 @@
         body {
             font-family: 'Open Sans', sans-serif;
             color: #333;
-            background-color: #f8fafc;
+            background: linear-gradient(135deg, #e8f0fe 0%, #e6f4ea 100%);
+            min-height: 100vh;
         }
         
         h1, h2, h3, h4, h5, h6 {
@@ -31,854 +31,541 @@
         .btn-primary {
             background-color: var(--primary-blue);
             color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
         
         .btn-primary:hover {
             background-color: var(--secondary-blue);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
         .btn-secondary {
             background-color: var(--primary-green);
             color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
         
         .btn-secondary:hover {
             background-color: var(--secondary-green);
-        }
-        
-        .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-        }
-        
-        .card:hover {
+            transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            margin: 4px 0;
-            border-radius: 6px;
-            color: #64748b;
-            text-decoration: none;
+        .btn-outline {
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            background-color: transparent;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 600;
             transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
         
-        .sidebar-link:hover, .sidebar-link.active {
+        .btn-outline:hover {
             background-color: var(--light-blue);
+        }
+        
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .text-primary {
             color: var(--primary-blue);
         }
         
-        .sidebar-link i {
-            margin-right: 12px;
-            width: 16px;
-        }
-        
-        .notification-badge {
-            background-color: #ef4444;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: auto;
-        }
-        
-        .progress-bar {
-            background-color: #e5e7eb;
-            border-radius: 10px;
-            height: 8px;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            background-color: var(--primary-green);
-            height: 100%;
-            transition: width 0.3s;
-        }
-        
-        .activity-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-        
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-        }
-        
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
-        .status-active {
-            background-color: var(--light-green);
+        .text-secondary {
             color: var(--primary-green);
         }
         
-        .status-pending {
-            background-color: #fef3c7;
-            color: #d97706;
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 8px;
+            font-weight: 500;
+            color: #4a5568;
+            transition: all 0.3s;
+            text-decoration: none;
         }
         
-        .status-completed {
-            background-color: #e0e7ff;
-            color: #3730a3;
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-blue);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-blue);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-right: 1.5rem;
+        }
+        
+        .user-avatar img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.2rem;
+            color: var(--primary-blue);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .dashboard-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .dashboard-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-item i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+        }
+        
+        .dashboard-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-blue);
+        }
+        
+        .dashboard-item p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        
+        .welcome-banner {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .user-details h2 {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            margin: 0;
+        }
+        
+        .user-details p {
+            color: #666;
+            margin: 0.5rem 0 0 0;
+            text-transform: capitalize;
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <h1 class="text-xl font-bold text-blue-600">
-                        <a href="/" style="text-decoration: none; color: inherit;">
-                            <span class="text-green-600">Curriculum</span> Social
-                        </a>
-                    </h1>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <!-- Notifications -->
-                    <button class="relative p-2 text-gray-600 hover:text-blue-600" onclick="toggleNotifications()">
-                        <i class="fas fa-bell text-lg"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center" id="notificationCount">3</span>
-                    </button>
-                    
-                    <!-- User Menu -->
-                    <div class="relative">
-                        <button class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100" onclick="toggleUserMenu()">
-                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
-                                <i class="fas fa-user text-sm"></i>
-                            </div>
-                            <span class="text-sm font-medium" id="userName">Sarah Johnson</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </button>
-                        
-                        <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border hidden">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile Settings</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Account</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Help</a>
-                            <hr class="my-1">
-                            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100" onclick="logout()">Sign Out</a>
-                        </div>
-                    </div>
-                </div>
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold text-primary">
+                    <a href="/" style="text-decoration: none; color: inherit;">
+                        <span class="text-secondary">Curriculum</span> Social
+                    </a>
+                </h1>
+            </div>
+            <nav class="hidden md:flex">
+                <a href="/" class="nav-link">Home</a>
+                <a href="profile.html" class="nav-link">Profile</a>
+                <a href="matching.html" class="nav-link">Find Families</a>
+                <a href="#" class="nav-link" id="dashboardLink">Dashboard</a>
+            </nav>
+            <div>
+                <button id="signOutBtn" class="btn-outline hidden md:inline-block">Sign Out</button>
+                <button class="md:hidden text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
             </div>
         </div>
     </header>
 
-    <div class="flex h-screen">
-        <!-- Sidebar -->
-        <div class="w-64 bg-white border-r border-gray-200 overflow-y-auto">
-            <div class="p-6">
-                <!-- Role Switch -->
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">View as:</label>
-                    <select id="roleSwitch" class="w-full p-2 border border-gray-300 rounded-lg" onchange="switchRole()">
-                        <option value="parent">Parent</option>
-                        <option value="teacher">Teacher</option>
-                        <option value="venue">Venue Host</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                
-                <!-- Navigation Menu -->
-                <nav id="navigationMenu">
-                    <!-- Will be populated by JavaScript based on role -->
-                </nav>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="flex-1 overflow-y-auto">
-            <div class="p-6">
-                <!-- Parent Dashboard -->
-                <div id="parentDashboard" class="role-content">
-                    <div class="mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Welcome back, Sarah!</h2>
-                        <p class="text-gray-600">Here's what's happening with your children's education today.</p>
-                    </div>
-                    
-                    <!-- Quick Stats -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-blue-100 rounded-lg">
-                                    <i class="fas fa-child text-blue-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Active Students</p>
-                                    <p class="text-2xl font-bold text-gray-900">2</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-green-100 rounded-lg">
-                                    <i class="fas fa-calendar-check text-green-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">This Week's Activities</p>
-                                    <p class="text-2xl font-bold text-gray-900">5</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-purple-100 rounded-lg">
-                                    <i class="fas fa-users text-purple-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Connected Families</p>
-                                    <p class="text-2xl font-bold text-gray-900">8</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-yellow-100 rounded-lg">
-                                    <i class="fas fa-star text-yellow-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Learning Progress</p>
-                                    <p class="text-2xl font-bold text-gray-900">85%</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Children Progress -->
-                        <div class="card p-6">
-                            <h3 class="text-lg font-semibold mb-4">Children's Progress</h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="font-medium">Emma (Age 8)</span>
-                                        <span class="text-sm text-gray-600">Mathematics</span>
-                                    </div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 78%"></div>
-                                    </div>
-                                    <p class="text-xs text-gray-600 mt-1">78% complete this week</p>
-                                </div>
-                                
-                                <div>
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="font-medium">Jack (Age 6)</span>
-                                        <span class="text-sm text-gray-600">Reading</span>
-                                    </div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 92%"></div>
-                                    </div>
-                                    <p class="text-xs text-gray-600 mt-1">92% complete this week</p>
-                                </div>
-                            </div>
-                            <button class="btn-primary mt-4 w-full">View Detailed Progress</button>
-                        </div>
-                        
-                        <!-- Upcoming Activities -->
-                        <div class="card p-6">
-                            <h3 class="text-lg font-semibold mb-4">Upcoming Activities</h3>
-                            <div class="space-y-3">
-                                <div class="activity-item">
-                                    <div class="activity-icon bg-blue-100">
-                                        <i class="fas fa-microscope text-blue-600"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium">Science Lab Session</p>
-                                        <p class="text-sm text-gray-600">Today, 2:00 PM</p>
-                                    </div>
-                                    <span class="status-badge status-active">Today</span>
-                                </div>
-                                
-                                <div class="activity-item">
-                                    <div class="activity-icon bg-green-100">
-                                        <i class="fas fa-leaf text-green-600"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium">Nature Walk</p>
-                                        <p class="text-sm text-gray-600">Tomorrow, 9:00 AM</p>
-                                    </div>
-                                    <span class="status-badge status-pending">Tomorrow</span>
-                                </div>
-                                
-                                <div class="activity-item">
-                                    <div class="activity-icon bg-purple-100">
-                                        <i class="fas fa-palette text-purple-600"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium">Art Workshop</p>
-                                        <p class="text-sm text-gray-600">Friday, 10:00 AM</p>
-                                    </div>
-                                    <span class="status-badge status-pending">Fri</span>
-                                </div>
-                            </div>
-                            <button class="btn-secondary mt-4 w-full">View All Activities</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Teacher Dashboard -->
-                <div id="teacherDashboard" class="role-content hidden">
-                    <div class="mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Teacher Dashboard</h2>
-                        <p class="text-gray-600">Manage your teaching schedule and track your earnings.</p>
-                    </div>
-                    
-                    <!-- Teacher Stats -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-green-100 rounded-lg">
-                                    <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">This Month's Earnings</p>
-                                    <p class="text-2xl font-bold text-gray-900">$1,245</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-blue-100 rounded-lg">
-                                    <i class="fas fa-chalkboard-teacher text-blue-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Active Students</p>
-                                    <p class="text-2xl font-bold text-gray-900">12</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-yellow-100 rounded-lg">
-                                    <i class="fas fa-clock text-yellow-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Hours This Week</p>
-                                    <p class="text-2xl font-bold text-gray-900">18</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-purple-100 rounded-lg">
-                                    <i class="fas fa-star text-purple-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Average Rating</p>
-                                    <p class="text-2xl font-bold text-gray-900">4.9</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Teaching Schedule -->
-                        <div class="card p-6">
-                            <h3 class="text-lg font-semibold mb-4">Today's Schedule</h3>
-                            <div class="space-y-3">
-                                <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                                    <div>
-                                        <p class="font-medium">Mathematics - Grade 3</p>
-                                        <p class="text-sm text-gray-600">10:00 AM - 11:00 AM</p>
-                                    </div>
-                                    <button class="btn-primary text-sm">Join Session</button>
-                                </div>
-                                
-                                <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                                    <div>
-                                        <p class="font-medium">Science Lab</p>
-                                        <p class="text-sm text-gray-600">2:00 PM - 3:30 PM</p>
-                                    </div>
-                                    <button class="btn-secondary text-sm">Prepare</button>
-                                </div>
-                            </div>
-                            <button class="btn-primary mt-4 w-full">View Full Schedule</button>
-                        </div>
-                        
-                        <!-- Earnings Chart -->
-                        <div class="card p-6">
-                            <h3 class="text-lg font-semibold mb-4">Earnings Overview</h3>
-                            <canvas id="earningsChart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Venue Dashboard -->
-                <div id="venueDashboard" class="role-content hidden">
-                    <div class="mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Venue Host Dashboard</h2>
-                        <p class="text-gray-600">Manage your venue bookings and availability.</p>
-                    </div>
-                    
-                    <!-- Venue Stats -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-green-100 rounded-lg">
-                                    <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Monthly Revenue</p>
-                                    <p class="text-2xl font-bold text-gray-900">$2,850</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-blue-100 rounded-lg">
-                                    <i class="fas fa-calendar-check text-blue-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Bookings This Month</p>
-                                    <p class="text-2xl font-bold text-gray-900">24</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-yellow-100 rounded-lg">
-                                    <i class="fas fa-percentage text-yellow-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Occupancy Rate</p>
-                                    <p class="text-2xl font-bold text-gray-900">78%</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-purple-100 rounded-lg">
-                                    <i class="fas fa-star text-purple-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Rating</p>
-                                    <p class="text-2xl font-bold text-gray-900">4.8</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Recent Bookings -->
-                        <div class="card p-6">
-                            <h3 class="text-lg font-semibold mb-4">Recent Bookings</h3>
-                            <div class="space-y-3">
-                                <div class="flex items-center justify-between p-3 border rounded-lg">
-                                    <div>
-                                        <p class="font-medium">Science Workshop</p>
-                                        <p class="text-sm text-gray-600">Tomorrow, 2:00 PM - 4:00 PM</p>
-                                    </div>
-                                    <span class="status-badge status-pending">Pending</span>
-                                </div>
-                                
-                                <div class="flex items-center justify-between p-3 border rounded-lg">
-                                    <div>
-                                        <p class="font-medium">Art Class</p>
-                                        <p class="text-sm text-gray-600">Friday, 10:00 AM - 12:00 PM</p>
-                                    </div>
-                                    <span class="status-badge status-active">Confirmed</span>
-                                </div>
-                            </div>
-                            <button class="btn-primary mt-4 w-full">View All Bookings</button>
-                        </div>
-                        
-                        <!-- Venue Performance -->
-                        <div class="card p-6">
-                            <h3 class="text-lg font-semibold mb-4">Performance Metrics</h3>
-                            <canvas id="venueChart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Admin Dashboard -->
-                <div id="adminDashboard" class="role-content hidden">
-                    <div class="mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Admin Dashboard</h2>
-                        <p class="text-gray-600">Platform overview and management tools.</p>
-                    </div>
-                    
-                    <!-- Admin Stats -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-blue-100 rounded-lg">
-                                    <i class="fas fa-users text-blue-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Total Users</p>
-                                    <p class="text-2xl font-bold text-gray-900">1,247</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-green-100 rounded-lg">
-                                    <i class="fas fa-chalkboard-teacher text-green-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Active Teachers</p>
-                                    <p class="text-2xl font-bold text-gray-900">89</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-purple-100 rounded-lg">
-                                    <i class="fas fa-map-marker-alt text-purple-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Verified Venues</p>
-                                    <p class="text-2xl font-bold text-gray-900">34</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card p-6">
-                            <div class="flex items-center">
-                                <div class="p-3 bg-yellow-100 rounded-lg">
-                                    <i class="fas fa-dollar-sign text-yellow-600 text-xl"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm text-gray-600">Monthly Revenue</p>
-                                    <p class="text-2xl font-bold text-gray-900">$12,450</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Pending Approvals -->
-                        <div class="card p-6">
-                            <h3 class="text-lg font-semibold mb-4">Pending Approvals</h3>
-                            <div class="space-y-3">
-                                <div class="flex items-center justify-between p-3 border rounded-lg">
-                                    <div>
-                                        <p class="font-medium">Teacher: John Smith</p>
-                                        <p class="text-sm text-gray-600">Mathematics Certification</p>
-                                    </div>
-                                    <div class="space-x-2">
-                                        <button class="btn-secondary text-sm">Approve</button>
-                                        <button class="btn-outline text-sm">Review</button>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center justify-between p-3 border rounded-lg">
-                                    <div>
-                                        <p class="font-medium">Venue: Community Center</p>
-                                        <p class="text-sm text-gray-600">Safety Inspection</p>
-                                    </div>
-                                    <div class="space-x-2">
-                                        <button class="btn-secondary text-sm">Approve</button>
-                                        <button class="btn-outline text-sm">Review</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn-primary mt-4 w-full">View All Pending</button>
-                        </div>
-                        
-                        <!-- Platform Analytics -->
-                        <div class="card p-6">
-                            <h3 class="text-lg font-semibold mb-4">Platform Growth</h3>
-                            <canvas id="platformChart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Loading State -->
+    <div id="loadingState" class="loading">
+        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+        <p>Loading your dashboard...</p>
     </div>
 
-    <!-- Notification Panel -->
-    <div id="notificationPanel" class="fixed top-16 right-4 w-80 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
-        <div class="p-4">
-            <h3 class="text-lg font-semibold mb-3">Notifications</h3>
-            <div class="space-y-3">
-                <div class="p-3 bg-blue-50 rounded-lg">
-                    <p class="text-sm font-medium">New activity available</p>
-                    <p class="text-xs text-gray-600">Science lab session tomorrow</p>
+    <!-- Main Dashboard Content -->
+    <main id="dashboardContent" class="container mx-auto px-4 py-8" style="display: none;">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <div class="user-info">
+                <div style="display: flex; align-items: center;">
+                    <div class="user-avatar" id="userAvatar">
+                        U
+                    </div>
+                    <div class="user-details">
+                        <h2 id="userName">Welcome!</h2>
+                        <p id="userRole">Loading...</p>
+                        <p id="userEmail" style="color: #999; font-size: 0.9rem;"></p>
+                    </div>
                 </div>
-                
-                <div class="p-3 bg-green-50 rounded-lg">
-                    <p class="text-sm font-medium">Payment received</p>
-                    <p class="text-xs text-gray-600">Teaching session payment processed</p>
-                </div>
-                
-                <div class="p-3 bg-yellow-50 rounded-lg">
-                    <p class="text-sm font-medium">Profile update required</p>
-                    <p class="text-xs text-gray-600">Please update your teaching credentials</p>
+                <div>
+                    <button id="editProfileBtn" class="btn-secondary">Edit Profile</button>
                 </div>
             </div>
-            <button class="btn-primary w-full mt-3 text-sm">View All</button>
         </div>
-    </div>
 
+        <!-- Dashboard Content Area -->
+        <div id="roleSpecificContent">
+            <!-- Content will be loaded dynamically based on user role -->
+        </div>
+    </main>
+
+    <!-- Scripts -->
     <script>
-        // Current user role
-        let currentRole = 'parent';
-        
-        // Navigation menus for different roles
-        const navigationMenus = {
-            parent: [
-                { icon: 'fas fa-home', text: 'Dashboard', href: '#', active: true },
-                { icon: 'fas fa-child', text: 'Children', href: '#' },
-                { icon: 'fas fa-users', text: 'Connected Families', href: '#' },
-                { icon: 'fas fa-calendar', text: 'Activities', href: '#' },
-                { icon: 'fas fa-chalkboard-teacher', text: 'Teacher Sessions', href: '#' },
-                { icon: 'fas fa-chart-line', text: 'Progress Reports', href: '#' },
-                { icon: 'fas fa-comments', text: 'Messages', href: '#', badge: 2 },
-                { icon: 'fas fa-cog', text: 'Settings', href: '#' }
-            ],
-            teacher: [
-                { icon: 'fas fa-home', text: 'Dashboard', href: '#', active: true },
-                { icon: 'fas fa-calendar', text: 'Schedule', href: '#' },
-                { icon: 'fas fa-users', text: 'Students', href: '#' },
-                { icon: 'fas fa-book', text: 'Curriculum', href: '#' },
-                { icon: 'fas fa-dollar-sign', text: 'Earnings', href: '#' },
-                { icon: 'fas fa-star', text: 'Reviews', href: '#' },
-                { icon: 'fas fa-comments', text: 'Messages', href: '#', badge: 5 },
-                { icon: 'fas fa-cog', text: 'Settings', href: '#' }
-            ],
-            venue: [
-                { icon: 'fas fa-home', text: 'Dashboard', href: '#', active: true },
-                { icon: 'fas fa-calendar-check', text: 'Bookings', href: '#' },
-                { icon: 'fas fa-map-marker-alt', text: 'Venue Details', href: '#' },
-                { icon: 'fas fa-shield-alt', text: 'Safety & Compliance', href: '#' },
-                { icon: 'fas fa-chart-bar', text: 'Analytics', href: '#' },
-                { icon: 'fas fa-dollar-sign', text: 'Revenue', href: '#' },
-                { icon: 'fas fa-comments', text: 'Messages', href: '#', badge: 1 },
-                { icon: 'fas fa-cog', text: 'Settings', href: '#' }
-            ],
-            admin: [
-                { icon: 'fas fa-home', text: 'Dashboard', href: '#', active: true },
-                { icon: 'fas fa-users-cog', text: 'User Management', href: '#' },
-                { icon: 'fas fa-shield-alt', text: 'Approvals', href: '#', badge: 8 },
-                { icon: 'fas fa-chart-line', text: 'Analytics', href: '#' },
-                { icon: 'fas fa-dollar-sign', text: 'Financial Overview', href: '#' },
-                { icon: 'fas fa-exclamation-triangle', text: 'Reports & Issues', href: '#' },
-                { icon: 'fas fa-cog', text: 'Platform Settings', href: '#' }
-            ]
-        };
-        
-        // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
-            updateNavigationMenu();
-            initializeCharts();
-        });
-        
-        // Switch user role
-        function switchRole() {
-            const roleSelect = document.getElementById('roleSwitch');
-            currentRole = roleSelect.value;
+            const loadingState = document.getElementById('loadingState');
+            const dashboardContent = document.getElementById('dashboardContent');
+            const signOutBtn = document.getElementById('signOutBtn');
+            const editProfileBtn = document.getElementById('editProfileBtn');
             
-            // Hide all role content
-            document.querySelectorAll('.role-content').forEach(content => {
-                content.classList.add('hidden');
+            // Check authentication state
+            window.firebaseAuth.onAuthStateChanged(window.auth, async (user) => {
+                if (user) {
+                    await loadUserDashboard(user);
+                } else {
+                    // Redirect to login if not authenticated
+                    window.location.href = 'login.html';
+                }
             });
             
-            // Show selected role content
-            document.getElementById(currentRole + 'Dashboard').classList.remove('hidden');
-            
-            // Update navigation
-            updateNavigationMenu();
-            
-            // Update user name based on role
-            const userNames = {
-                parent: 'Sarah Johnson',
-                teacher: 'Dr. Michael Brown',
-                venue: 'Lisa Chen',
-                admin: 'Admin User'
-            };
-            document.getElementById('userName').textContent = userNames[currentRole];
-        }
-        
-        // Update navigation menu
-        function updateNavigationMenu() {
-            const menuContainer = document.getElementById('navigationMenu');
-            const menu = navigationMenus[currentRole];
-            
-            menuContainer.innerHTML = menu.map(item => `
-                <a href="${item.href}" class="sidebar-link ${item.active ? 'active' : ''}">
-                    <i class="${item.icon}"></i>
-                    <span>${item.text}</span>
-                    ${item.badge ? `<span class="notification-badge">${item.badge}</span>` : ''}
-                </a>
-            `).join('');
-        }
-        
-        // Toggle notifications
-        function toggleNotifications() {
-            const panel = document.getElementById('notificationPanel');
-            panel.classList.toggle('hidden');
-        }
-        
-        // Toggle user menu
-        function toggleUserMenu() {
-            const menu = document.getElementById('userMenu');
-            menu.classList.toggle('hidden');
-        }
-        
-        // Logout function
-        function logout() {
-            if (confirm('Are you sure you want to sign out?')) {
-                window.location.href = '/login.html';
-            }
-        }
-        
-        // Initialize charts
-        function initializeCharts() {
-            // Earnings chart for teachers
-            const earningsCtx = document.getElementById('earningsChart');
-            if (earningsCtx) {
-                new Chart(earningsCtx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                        datasets: [{
-                            label: 'Monthly Earnings',
-                            data: [800, 950, 1100, 1050, 1200, 1245],
-                            borderColor: '#1a73e8',
-                            backgroundColor: 'rgba(26, 115, 232, 0.1)',
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    callback: function(value) {
-                                        return '$' + value;
-                                    }
-                                }
-                            }
+            async function loadUserDashboard(user) {
+                try {
+                    // Get user profile from Firestore
+                    const profileResult = await window.curriculumSocial.getUserProfile(user.uid);
+                    
+                    if (profileResult.success) {
+                        const userData = profileResult.data;
+                        displayUserInfo(user, userData);
+                        displayRoleSpecificContent(userData.role);
+                        
+                        // Hide loading, show dashboard
+                        loadingState.style.display = 'none';
+                        dashboardContent.style.display = 'block';
+                    } else {
+                        // Profile doesn't exist - create basic profile
+                        const role = prompt("Welcome! Please select your role:\n1. parent\n2. teacher\n3. venue\n\nEnter one of the above:");
+                        
+                        if (role && ['parent', 'teacher', 'venue'].includes(role.toLowerCase())) {
+                            await window.curriculumSocial.createUserProfile(user.uid, {
+                                email: user.email,
+                                displayName: user.displayName || user.email.split('@')[0],
+                                role: role.toLowerCase(),
+                                emailVerified: user.emailVerified,
+                                photoURL: user.photoURL
+                            });
+                            location.reload();
+                        } else {
+                            alert('Please select a valid role');
+                            await window.curriculumSocial.signOut();
+                            window.location.href = 'login.html';
                         }
                     }
-                });
+                } catch (error) {
+                    console.error('Error loading dashboard:', error);
+                    showError('Error loading dashboard. Please try refreshing the page.');
+                }
             }
             
-            // Venue performance chart
-            const venueCtx = document.getElementById('venueChart');
-            if (venueCtx) {
-                new Chart(venueCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Booked', 'Available'],
-                        datasets: [{
-                            data: [78, 22],
-                            backgroundColor: ['#34a853', '#e5e7eb']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        }
-                    }
-                });
+            function displayUserInfo(user, userData) {
+                const userName = document.getElementById('userName');
+                const userRole = document.getElementById('userRole');
+                const userEmail = document.getElementById('userEmail');
+                const userAvatar = document.getElementById('userAvatar');
+                
+                userName.textContent = `Welcome, ${userData.displayName || 'User'}!`;
+                userRole.textContent = `${userData.role || 'member'} • Member since ${new Date(userData.createdAt?.toDate() || new Date()).toLocaleDateString()}`;
+                userEmail.textContent = user.email;
+                
+                if (userData.photoURL) {
+                    userAvatar.innerHTML = `<img src="${userData.photoURL}" alt="Profile Picture">`;
+                } else {
+                    userAvatar.textContent = (userData.displayName || 'U').charAt(0).toUpperCase();
+                }
             }
             
-            // Platform growth chart
-            const platformCtx = document.getElementById('platformChart');
-            if (platformCtx) {
-                new Chart(platformCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                        datasets: [{
-                            label: 'New Users',
-                            data: [45, 67, 89, 112, 134, 156],
-                            backgroundColor: '#1a73e8'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
+            function displayRoleSpecificContent(role) {
+                const contentArea = document.getElementById('roleSpecificContent');
+                let content = '';
+                
+                switch(role) {
+                    case 'parent':
+                        content = `
+                            <h3 style="color: var(--primary-blue); margin-bottom: 1.5rem; font-size: 1.8rem;">Parent Dashboard</h3>
+                            <div class="dashboard-grid">
+                                <div class="dashboard-item">
+                                    <i class="fas fa-child"></i>
+                                    <h3>My Children</h3>
+                                    <p>Manage your children's profiles, track their progress, and view their learning activities.</p>
+                                    <button class="btn-primary" onclick="goToStudents()">Manage Students</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-users"></i>
+                                    <h3>Find Families</h3>
+                                    <p>Connect with like-minded families in your area based on educational philosophy and interests.</p>
+                                    <a href="matching.html" class="btn-primary">Start Matching</a>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <h3>Activities & Events</h3>
+                                    <p>Browse and join local educational activities, field trips, and social events.</p>
+                                    <button class="btn-primary" onclick="goToActivities()">View Activities</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <h3>Find Teachers</h3>
+                                    <p>Discover qualified teachers for specialized subjects and one-on-one sessions.</p>
+                                    <button class="btn-primary" onclick="goToTeachers()">Browse Teachers</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-book"></i>
+                                    <h3>Curriculum Resources</h3>
+                                    <p>Access our library of educational materials, assessments, and learning tools.</p>
+                                    <button class="btn-primary" onclick="goToCurriculum()">Browse Resources</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-comments"></i>
+                                    <h3>Messages</h3>
+                                    <p>Communicate with other families, teachers, and venue hosts in your network.</p>
+                                    <button class="btn-primary" onclick="goToMessages()">View Messages</button>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'teacher':
+                        content = `
+                            <h3 style="color: var(--primary-blue); margin-bottom: 1.5rem; font-size: 1.8rem;">Teacher Dashboard</h3>
+                            <div class="dashboard-grid">
+                                <div class="dashboard-item">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <h3>My Classes</h3>
+                                    <p>View and manage your current classes, student rosters, and session schedules.</p>
+                                    <button class="btn-primary" onclick="goToClasses()">Manage Classes</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-calendar-plus"></i>
+                                    <h3>Create Session</h3>
+                                    <p>Schedule new teaching sessions, workshops, or educational activities.</p>
+                                    <button class="btn-primary" onclick="createSession()">Add Session</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-users"></i>
+                                    <h3>My Students</h3>
+                                    <p>Track student progress, provide feedback, and manage learning assessments.</p>
+                                    <button class="btn-primary" onclick="goToStudents()">View Students</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <h3>Earnings</h3>
+                                    <p>Track your teaching income, view payment history, and manage compensation.</p>
+                                    <button class="btn-primary" onclick="goToEarnings()">View Earnings</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-file-alt"></i>
+                                    <h3>Resources</h3>
+                                    <p>Create and share educational materials, lesson plans, and teaching resources.</p>
+                                    <button class="btn-primary" onclick="goToResources()">Manage Resources</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-star"></i>
+                                    <h3>Reviews</h3>
+                                    <p>View feedback from parents and students to improve your teaching approach.</p>
+                                    <button class="btn-primary" onclick="goToReviews()">View Reviews</button>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'venue':
+                        content = `
+                            <h3 style="color: var(--primary-blue); margin-bottom: 1.5rem; font-size: 1.8rem;">Venue Host Dashboard</h3>
+                            <div class="dashboard-grid">
+                                <div class="dashboard-item">
+                                    <i class="fas fa-home"></i>
+                                    <h3>My Venues</h3>
+                                    <p>Manage your registered venues, update information, and view venue status.</p>
+                                    <button class="btn-primary" onclick="goToVenues()">Manage Venues</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <h3>Add New Venue</h3>
+                                    <p>Register a new space for educational activities and community events.</p>
+                                    <button class="btn-primary" onclick="addVenue()">Add Venue</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <h3>Bookings</h3>
+                                    <p>View upcoming reservations, manage availability, and coordinate with organizers.</p>
+                                    <button class="btn-primary" onclick="goToBookings()">View Bookings</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <h3>Revenue</h3>
+                                    <p>Track venue rental income and view payment history from bookings.</p>
+                                    <button class="btn-primary" onclick="goToRevenue()">View Revenue</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <h3>Safety & Compliance</h3>
+                                    <p>Maintain safety certifications, insurance, and venue compliance status.</p>
+                                    <button class="btn-primary" onclick="goToSafety()">Safety Info</button>
+                                </div>
+                                <div class="dashboard-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    <h3>Analytics</h3>
+                                    <p>View venue usage statistics, popular time slots, and booking trends.</p>
+                                    <button class="btn-primary" onclick="goToAnalytics()">View Analytics</button>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    default:
+                        content = `
+                            <div class="dashboard-item" style="text-align: center; max-width: 600px; margin: 0 auto;">
+                                <i class="fas fa-user-circle"></i>
+                                <h3>Complete Your Profile</h3>
+                                <p>Please update your profile information to access role-specific features and connect with the community.</p>
+                                <button class="btn-primary" onclick="goToProfile()">Complete Profile</button>
+                            </div>
+                        `;
+                }
+                
+                contentArea.innerHTML = content;
             }
-        }
-        
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function(event) {
-            const userMenu = document.getElementById('userMenu');
-            const notificationPanel = document.getElementById('notificationPanel');
             
-            if (!event.target.closest('.relative')) {
-                userMenu.classList.add('hidden');
+            function showError(message) {
+                alert(message);
             }
             
-            if (!event.target.closest('#notificationPanel') && !event.target.closest('.fa-bell')) {
-                notificationPanel.classList.add('hidden');
-            }
+            // Event listeners
+            signOutBtn.addEventListener('click', async () => {
+                try {
+                    await window.curriculumSocial.signOut();
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error('Error signing out:', error);
+                }
+            });
+            
+            editProfileBtn.addEventListener('click', () => {
+                window.location.href = 'profile.html';
+            });
+            
+            // Navigation functions (placeholders for now)
+            window.goToStudents = () => alert('Student management coming soon!');
+            window.goToActivities = () => alert('Activity browser coming soon!');
+            window.goToTeachers = () => alert('Teacher directory coming soon!');
+            window.goToCurriculum = () => alert('Curriculum library coming soon!');
+            window.goToMessages = () => alert('Messaging system coming soon!');
+            window.goToClasses = () => alert('Class management coming soon!');
+            window.createSession = () => alert('Session creation coming soon!');
+            window.goToEarnings = () => alert('Earnings tracking coming soon!');
+            window.goToResources = () => alert('Resource management coming soon!');
+            window.goToReviews = () => alert('Review system coming soon!');
+            window.goToVenues = () => alert('Venue management coming soon!');
+            window.addVenue = () => alert('Add venue form coming soon!');
+            window.goToBookings = () => alert('Booking system coming soon!');
+            window.goToRevenue = () => alert('Revenue tracking coming soon!');
+            window.goToSafety = () => alert('Safety management coming soon!');
+            window.goToAnalytics = () => alert('Analytics dashboard coming soon!');
+            window.goToProfile = () => window.location.href = 'profile.html';
         });
     </script>
+    
+    <!-- Firebase configuration -->
     <script type="module" src="js/firebase-config.js"></script>
 </body>
 </html>
