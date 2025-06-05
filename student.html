@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Hub - Curriculum Social</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <script type="module" src="js/firebase-config.js"></script>
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --secondary-blue: #4285f4;
+            --primary-green: #34a853;
+            --secondary-green: #66bb6a;
+            --primary-purple: #9c27b0;
+            --secondary-purple: #ba68c8;
+            --light-blue: #e8f0fe;
+            --light-green: #e6f4ea;
+            --light-purple: #f3e5f5;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: #333;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-purple {
+            background-color: var(--primary-purple);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-purple:hover {
+            background-color: var(--secondary-purple);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section {
+            padding: 80px 0;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e8f0fe 50%, #e6f4ea 100%);
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 4px;
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold">
+                    <a href="https://curriculumsocial.com/" style="text-decoration: none; color: inherit;">
+                        <span style="color: var(--primary-green);">Curriculum</span> 
+                        <span style="color: var(--primary-blue);">Social</span>
+                    </a>
+                </h1>
+            </div>
+            <nav class="hidden md:flex items-center space-x-2">
+                <a href="https://curriculumsocial.com/" class="nav-link">Home</a>
+                <a href="https://curriculumsocial.com/parent.html" class="nav-link">Parents</a>
+                <a href="https://curriculumsocial.com/teacher.html" class="nav-link">Teachers</a>
+                <a href="https://curriculumsocial.com/student.html" class="nav-link" style="color: var(--primary-purple); background-color: var(--light-purple);">Students</a>
+                <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
+                <a href="https://curriculumsocial.com/login.html" class="nav-link">Login</a>
+            </nav>
+            <div class="flex items-center space-x-2">
+                <a href="https://curriculumsocial.com/signup.html" class="btn-primary hidden md:inline-block">Sign Up</a>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
+        <div class="px-4 py-2 space-y-2">
+            <a href="https://curriculumsocial.com/" class="block py-2 text-gray-700 hover:text-blue-600">Home</a>
+            <a href="https://curriculumsocial.com/parent.html" class="block py-2 text-gray-700 hover:text-blue-600">Parents</a>
+            <a href="https://curriculumsocial.com/teacher.html" class="block py-2 text-gray-700 hover:text-blue-600">Teachers</a>
+            <a href="https://curriculumsocial.com/student.html" class="block py-2 text-purple-600 font-semibold">Students</a>
+            <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
+            <a href="https://curriculumsocial.com/login.html" class="block py-2 text-gray-700 hover:text-blue-600">Login</a>
+            <div class="pt-2 border-t border-gray-200">
+                <a href="https://curriculumsocial.com/signup.html" class="btn-primary block text-center">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="w-full md:w-1/2 mb-8 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                        Your Learning, 
+                        <span style="color: var(--primary-purple);">Your Way</span>
+                    </h1>
+                    <p class="text-lg mb-8 text-gray-700 max-w-lg">
+                        Welcome to Curriculum Social, where you get to shape your own educational journey. Learn what interests you, at your own pace, with friends and mentors who support your growth.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#how-it-works" class="btn-purple">Explore Learning</a>
+                        <a href="https://curriculumsocial.com/signup.html" class="btn-secondary">Join Now</a>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 flex justify-center">
+                    <div class="relative">
+                        <div class="relative z-10 bg-white rounded-xl shadow-lg p-6 max-w-md">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-4">
+                                    <i class="fas fa-brain text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">AI-Powered Learning</h3>
+                                    <p class="text-sm text-gray-600">Adapts to how you learn best</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-4">
+                                    <i class="fas fa-user-friends text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">Expert Mentors</h3>
+                                    <p class="text-sm text-gray-600">Teachers who care about your goals</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
+                                    <i class="fas fa-users text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">Community</h3>
+                                    <p class="text-sm text-gray-600">Learn together, grow together</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="section">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">How Your Learning Journey Works</h2>
+                <p class="text-lg text-gray-700 max-w-2xl mx-auto">
+                    From choosing your path to mastering new skills, here's how Curriculum Social puts you in control of your education.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="card bg-white">
+                    <div class="p-6 text-center">
+                        <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mx-auto mb-6">
+                            <i class="fas fa-compass text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">1. Choose Your Path</h3>
+                        <p class="text-gray-700">
+                            Tell us what excites you! Whether it's science, art, coding, or anything else, we'll create a learning path that matches your interests and goals.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="card bg-white">
+                    <div class="p-6 text-center">
+                        <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600 mx-auto mb-6">
+                            <i class="fas fa-rocket text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">2. Learn & Explore</h3>
+                        <p class="text-gray-700">
+                            Dive into interactive lessons, hands-on projects, and real-world activities. Our AI helps you learn in the way that works best for you.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="card bg-white">
+                    <div class="p-6 text-center">
+                        <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mx-auto mb-6">
+                            <i class="fas fa-star text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">3. Share & Grow</h3>
+                        <p class="text-gray-700">
+                            Connect with other learners, share your projects, and even help teach subjects you've mastered. Your voice matters in our community!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Student Voice Section -->
+    <section class="section" style="background-color: var(--light-purple);">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Your Voice Shapes Our Community</h2>
+                <p class="text-lg text-gray-700 max-w-2xl mx-auto">
+                    At Curriculum Social, students aren't just learners - you're active contributors who help make our community better for everyone.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Student Leadership -->
+                <div class="card bg-white">
+                    <div class="p-6">
+                        <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mx-auto mb-6">
+                            <i class="fas fa-crown text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 text-center">Student Leadership</h3>
+                        <p class="text-gray-700 mb-4">
+                            As you grow and learn, you can take on leadership roles in our community. Help newer students, suggest improvements, and guide the direction of activities and courses.
+                        </p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-600 mt-1 mr-2"></i>
+                                <span>Mentor younger learners</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-600 mt-1 mr-2"></i>
+                                <span>Suggest new learning topics</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-600 mt-1 mr-2"></i>
+                                <span>Help plan community activities</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Curriculum Input -->
+                <div class="card bg-white">
+                    <div class="p-6">
+                        <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600 mx-auto mb-6">
+                            <i class="fas fa-lightbulb text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 text-center">Shape Your Curriculum</h3>
+                        <p class="text-gray-700 mb-4">
+                            Your interests and feedback directly influence what we teach and how we teach it. When you're passionate about something, we'll help you explore it deeply.
+                        </p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 mt-1 mr-2"></i>
+                                <span>Request new courses and topics</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 mt-1 mr-2"></i>
+                                <span>Customize your learning pace</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 mt-1 mr-2"></i>
+                                <span>Choose how you want to learn</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Areas Section -->
+    <section class="section">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">What Can You Learn?</h2>
+                <p class="text-lg text-gray-700 max-w-2xl mx-auto">
+                    Explore subjects that spark your curiosity, from core academics to creative pursuits and future skills.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- Learning Area Cards -->
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mx-auto mb-4">
+                        <i class="fas fa-calculator text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold">Math & Logic</h4>
+                </div>
+                
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600 mx-auto mb-4">
+                        <i class="fas fa-flask text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold">Science & Discovery</h4>
+                </div>
+                
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mx-auto mb-4">
+                        <i class="fas fa-palette text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold">Art & Creativity</h4>
+                </div>
+                
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mx-auto mb-4">
+                        <i class="fas fa-code text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold">Coding & Tech</h4>
+                </div>
+                
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center text-red-600 mx-auto mb-4">
+                        <i class="fas fa-book text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold">Language & Writing</h4>
+                </div>
+                
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mx-auto mb-4">
+                        <i class="fas fa-globe text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold">History & Culture</h4>
+                </div>
+                
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 mx-auto mb-4">
+                        <i class="fas fa-heart text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold">Life Skills</h4>
+                </div>
+                
+                <div class="text-center p-4">
+                    <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 mx-auto mb-4">
+                        <i class="fas fa-question text-2xl"></i>
+                    </div>
+                    <h4 class="font-semibold">What Interests You?</h4>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <a href="https://curriculumsocial.com/signup.html" class="btn-purple">Start Learning Today</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Student Stories Section -->
+    <section class="section" style="background-color: var(--light-blue);">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Student Success Stories</h2>
+                <p class="text-lg text-gray-700 max-w-2xl mx-auto">
+                    See how students just like you are achieving amazing things with Curriculum Social.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Story 1 -->
+                <div class="card bg-white">
+                    <div class="p-6">
+                        <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mx-auto mb-4">
+                            <i class="fas fa-user text-xl"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">Maya, Age 12</h4>
+                        <p class="text-sm text-gray-600 mb-4">Digital Art & Animation</p>
+                        <p class="text-gray-700">
+                            "I started learning digital art and now I'm teaching other students how to animate! My parents are amazed at what I can create."
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Story 2 -->
+                <div class="card bg-white">
+                    <div class="p-6">
+                        <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600 mx-auto mb-4">
+                            <i class="fas fa-user text-xl"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">Alex, Age 10</h4>
+                        <p class="text-sm text-gray-600 mb-4">Marine Biology Explorer</p>
+                        <p class="text-gray-700">
+                            "We live near the ocean and I got to design my own marine biology course. Now I know all about coral reefs and sea turtles!"
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Story 3 -->
+                <div class="card bg-white">
+                    <div class="p-6">
+                        <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mx-auto mb-4">
+                            <i class="fas fa-user text-xl"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">Sam, Age 14</h4>
+                        <p class="text-sm text-gray-600 mb-4">Young Entrepreneur</p>
+                        <p class="text-gray-700">
+                            "I wanted to learn about business, so I created a project selling handmade crafts. Now I'm helping other students start their own businesses!"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section">
+        <div class="container mx-auto px-4">
+            <div class="bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl p-8 md:p-12 text-white text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Start Your Learning Adventure?</h2>
+                <p class="text-lg mb-8 max-w-2xl mx-auto">
+                    Join thousands of students who are already discovering their passions and building their futures with Curriculum Social.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="https://curriculumsocial.com/signup.html" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all">Join Now</a>
+                    <a href="https://curriculumsocial.com/activities.html" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-all">Explore Activities</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Curriculum Social</h3>
+                    <p class="text-gray-400 mb-4">
+                        Your Learning, Your Way
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">
