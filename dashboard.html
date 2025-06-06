@@ -192,7 +192,7 @@
         </h1>
       </div>
   
-      <!-- DESKTOP NAV: hidden on mobile (<768px), visible at ≥768px -->
+      <!-- DESKTOP NAV: hidden on mobile (<768px), visible ≥768px -->
       <nav class="hidden md:flex items-center space-x-4">
         <a href="https://curriculumsocial.com/dashboard.html" class="nav-link active">Dashboard</a>
         <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
@@ -200,7 +200,7 @@
         <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
       </nav>
   
-      <!-- User Info / Logout / Hamburger -->
+      <!-- User Info / Logout / HAMBURGER -->
       <div class="flex items-center space-x-4">
         <div id="userInfo" class="hidden">
           <span id="userName" class="font-medium"></span>
@@ -233,6 +233,8 @@
     document.addEventListener('DOMContentLoaded', function() {
       const mobileMenuBtn = document.getElementById('mobileMenuBtn');
       const mobileMenu = document.getElementById('mobileMenu');
+      const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
   
       if (mobileMenuBtn && mobileMenu) {
         mobileMenuBtn.addEventListener('click', function() {
@@ -240,10 +242,9 @@
         });
       }
   
-      const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-      if (mobileLogoutBtn) {
+      if (mobileLogoutBtn && logoutBtn) {
         mobileLogoutBtn.addEventListener('click', function() {
-          document.getElementById('logoutBtn').click();
+          logoutBtn.click();
         });
       }
     });
