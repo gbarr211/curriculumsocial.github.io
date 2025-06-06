@@ -419,7 +419,7 @@
         // Firebase imports will be available from firebase-config.js
         let currentUser = null;
         let currentUserData = null;
-    
+
         // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Mobile menu toggle
@@ -431,56 +431,38 @@
                     mobileMenu.classList.toggle('hidden');
                 });
             }
-    
+
             // Initialize auth state listener
             initializeAuth();
         });
-    
+
         async function initializeAuth() {
-            // Use your existing Firebase auth state listener
-            window.auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    currentUser = user;
-                    console.log('User authenticated:', user.uid);
-                    
-                    // Get user profile data from Firestore
-                    const userProfile = await window.curriculumSocial.getUserProfile(user.uid);
-                    
-                    if (userProfile.success) {
-                        currentUserData = {
-                            uid: user.uid,
-                            email: user.email,
-                            displayName: user.displayName || userProfile.data.displayName || userProfile.data.name,
-                            ...userProfile.data
-                        };
-                        
-                        // Update UI with real user data
-                        updateUserInterface();
-                        
-                        // Hide loading, show dashboard
-                        document.getElementById('loadingState').classList.add('hidden');
-                        document.getElementById('dashboardContent').classList.remove('hidden');
-                    } else {
-                        console.error('Failed to load user profile:', userProfile.error);
-                        // Still show dashboard with basic user info
-                        currentUserData = {
-                            uid: user.uid,
-                            email: user.email,
-                            displayName: user.displayName || user.email,
-                            role: 'parent' // default role
-                        };
-                        updateUserInterface();
-                        document.getElementById('loadingState').classList.add('hidden');
-                        document.getElementById('dashboardContent').classList.remove('hidden');
-                    }
-                } else {
-                    // User is not logged in, redirect to login
-                    console.log('User not authenticated, redirecting to login');
-                    window.location.href = 'https://curriculumsocial.com/login.html';
-                }
-            });
+            // This would normally connect to your Firebase auth
+            // For now, we'll simulate with demo data
+            setTimeout(() => {
+                loadDemoData();
+            }, 1500);
         }
-    
+
+        function loadDemoData() {
+            // Simulate user data - replace with actual Firebase calls
+            currentUserData = {
+                uid: 'demo123',
+                displayName: 'Sarah Johnson',
+                email: 'sarah@example.com',
+                role: 'parent',
+                location: { city: 'Koh Samui', country: 'Thailand' },
+                createdAt: new Date()
+            };
+
+            // Update UI with user data
+            updateUserInterface();
+            
+            // Hide loading, show dashboard
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('dashboardContent').classList.remove('hidden');
+        }
+
         function updateUserInterface() {
             const userName = document.getElementById('userName');
             const userRole = document.getElementById('userRole');
@@ -488,33 +470,27 @@
             const logoutBtn = document.getElementById('logoutBtn');
             const welcomeName = document.getElementById('welcomeName');
             const welcomeMessage = document.getElementById('welcomeMessage');
-    
+
             if (currentUserData) {
                 // Update header
-                const displayName = currentUserData.displayName || currentUserData.name || currentUserData.email.split('@')[0];
-                userName.textContent = displayName;
-                
-                const role = currentUserData.role || 'parent';
-                userRole.textContent = role.charAt(0).toUpperCase() + role.slice(1);
-                userRole.className = role-badge role-${role};
+                userName.textContent = currentUserData.displayName;
+                userRole.textContent = currentUserData.role.charAt(0).toUpperCase() + currentUserData.role.slice(1);
+                userRole.className = `role-badge role-${currentUserData.role}`;
                 userInfo.classList.remove('hidden');
                 logoutBtn.classList.remove('hidden');
-    
+
                 // Update welcome section
-                welcomeName.textContent = displayName.split(' ')[0];
-                welcomeMessage.textContent = getWelcomeMessage(role);
-    
+                welcomeName.textContent = currentUserData.displayName.split(' ')[0];
+                welcomeMessage.textContent = getWelcomeMessage(currentUserData.role);
+
                 // Load role-specific content
                 loadRoleSpecificContent();
                 loadQuickActions();
                 loadRecentActivities();
                 loadUpcomingActivities();
-                
-                // Load real data from Firebase
-                loadUserStats();
             }
         }
-    
+
         function getWelcomeMessage(role) {
             const messages = {
                 parent: "Here's what's happening with your family's learning journey.",
@@ -523,9 +499,9 @@
             };
             return messages[role] || "Welcome to your learning community!";
         }
-    
+
         function loadRoleSpecificContent() {
-            const role = currentUserData.role || 'parent';
+            const role = currentUserData.role;
             
             // Show/hide role-specific sections
             if (role === 'parent') {
@@ -537,192 +513,43 @@
             } else if (role === 'student') {
                 document.getElementById('learningProgress').classList.remove('hidden');
             }
+
+            // Update stats based on role
+            updateStats(role);
         }
-    
-        async function loadUserStats() {
-            try {
-                // Get real stats from Firebase
-                const userId = currentUser.uid;
-                
-                // Get family connections (this would be based on your matching system)
-                let connections = 0;
-                
-                // Get activities the user has joined or created
-                let activities = 0;
-                const activitiesQuery = window.firebaseFirestore.query(
-                    window.firebaseFirestore.collection(window.db, 'activities'),
-                    window.firebaseFirestore.where('organizerId', '==', userId)
-                );
-                const activitiesSnapshot = await window.firebaseFirestore.getDocs(activitiesQuery);
-                activities = activitiesSnapshot.size;
-                
-                // Get learning hours (this would be tracked in a learning_sessions collection)
-                let learningHours = 0;
-                
-                // Get achievements (this would be tracked in an achievements collection)
-                let achievements = 0;
-                
-                // Update the stats display
-                document.getElementById('statConnections').textContent = connections;
-                document.getElementById('statActivities').textContent = activities;
-                document.getElementById('statLearning').textContent = learningHours;
-                document.getElementById('statAchievements').textContent = achievements;
-                
-                // Make stats clickable with modals
-                makeStatsClickable(connections, activities, learningHours, achievements);
-                
-            } catch (error) {
-                console.error('Error loading user stats:', error);
-                // Fall back to demo data
-                document.getElementById('statConnections').textContent = '8';
-                document.getElementById('statActivities').textContent = '12';
-                document.getElementById('statLearning').textContent = '45';
-                document.getElementById('statAchievements').textContent = '6';
-            }
+
+        function updateStats(role) {
+            // Demo stats - replace with actual data from Firebase
+            const stats = {
+                parent: { connections: 8, activities: 12, learning: 45, achievements: 6 },
+                teacher: { connections: 15, activities: 8, learning: 120, achievements: 12 },
+                student: { connections: 5, activities: 18, learning: 67, achievements: 9 }
+            };
+
+            const roleStats = stats[role] || stats.parent;
+            
+            document.getElementById('statConnections').textContent = roleStats.connections;
+            document.getElementById('statActivities').textContent = roleStats.activities;
+            document.getElementById('statLearning').textContent = roleStats.learning;
+            document.getElementById('statAchievements').textContent = roleStats.achievements;
         }
-    
-        function makeStatsClickable(connections, activities, learningHours, achievements) {
-            // Add click handlers to stat cards
-            const statCards = document.querySelectorAll('.stat-card');
-            
-            statCards[0].style.cursor = 'pointer';
-            statCards[0].addEventListener('click', () => showStatsModal('connections', connections));
-            
-            statCards[1].style.cursor = 'pointer';
-            statCards[1].addEventListener('click', () => showStatsModal('activities', activities));
-            
-            statCards[2].style.cursor = 'pointer';
-            statCards[2].addEventListener('click', () => showStatsModal('learning', learningHours));
-            
-            statCards[3].style.cursor = 'pointer';
-            statCards[3].addEventListener('click', () => showStatsModal('achievements', achievements));
-        }
-    
-        function showStatsModal(type, value) {
-            // Create modal content based on type
-            let content = '';
-            
-            switch(type) {
-                case 'connections':
-                    content = 
-                        <h3 class="text-xl font-bold mb-4">Family Connections (${value})</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
-                                <span>Johnson Family</span>
-                                <span class="text-sm text-gray-600">Connected 2 weeks ago</span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
-                                <span>Smith Family</span>
-                                <span class="text-sm text-gray-600">Connected 1 month ago</span>
-                            </div>
-                            <p class="text-center text-gray-600 mt-4">
-                                <a href="https://curriculumsocial.com/matching.html" class="text-blue-600 hover:underline">Find more families →</a>
-                            </p>
-                        </div>
-                    ;
-                    break;
-                case 'activities':
-                    content = 
-                        <h3 class="text-xl font-bold mb-4">Activities Joined (${value})</h3>
-                        <div class="space-y-3">
-                            <div class="p-3 bg-gray-50 rounded">
-                                <div class="font-semibold">Marine Biology Workshop</div>
-                                <div class="text-sm text-gray-600">Last week • 2 hours</div>
-                            </div>
-                            <div class="p-3 bg-gray-50 rounded">
-                                <div class="font-semibold">Math Circle</div>
-                                <div class="text-sm text-gray-600">2 weeks ago • 1.5 hours</div>
-                            </div>
-                            <p class="text-center text-gray-600 mt-4">
-                                <a href="https://curriculumsocial.com/activities.html" class="text-blue-600 hover:underline">View all activities →</a>
-                            </p>
-                        </div>
-                    ;
-                    break;
-                case 'learning':
-                    content = 
-                        <h3 class="text-xl font-bold mb-4">Learning Hours (${value})</h3>
-                        <div class="space-y-3">
-                            <div class="flex justify-between p-3 bg-gray-50 rounded">
-                                <span>Mathematics</span>
-                                <span class="font-semibold">15 hours</span>
-                            </div>
-                            <div class="flex justify-between p-3 bg-gray-50 rounded">
-                                <span>Science</span>
-                                <span class="font-semibold">12 hours</span>
-                            </div>
-                            <div class="flex justify-between p-3 bg-gray-50 rounded">
-                                <span>Art & Creativity</span>
-                                <span class="font-semibold">10 hours</span>
-                            </div>
-                            <div class="flex justify-between p-3 bg-gray-50 rounded">
-                                <span>Other</span>
-                                <span class="font-semibold">8 hours</span>
-                            </div>
-                        </div>
-                    ;
-                    break;
-                case 'achievements':
-                    content = 
-                        <h3 class="text-xl font-bold mb-4">Achievements (${value})</h3>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="text-center p-3 bg-yellow-50 rounded">
-                                <div class="text-2xl mb-2">🏆</div>
-                                <div class="font-semibold text-sm">First Activity</div>
-                            </div>
-                            <div class="text-center p-3 bg-blue-50 rounded">
-                                <div class="text-2xl mb-2">🌊</div>
-                                <div class="font-semibold text-sm">Marine Expert</div>
-                            </div>
-                            <div class="text-center p-3 bg-green-50 rounded">
-                                <div class="text-2xl mb-2">🤝</div>
-                                <div class="font-semibold text-sm">Community Builder</div>
-                            </div>
-                            <div class="text-center p-3 bg-purple-50 rounded">
-                                <div class="text-2xl mb-2">📚</div>
-                                <div class="font-semibold text-sm">Learner</div>
-                            </div>
-                        </div>
-                    ;
-                    break;
-            }
-            
-            // Create and show modal
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-            modal.innerHTML = 
-                <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
-                    ${content}
-                    <button onclick="this.closest('.fixed').remove()" class="mt-4 btn-primary w-full">Close</button>
-                </div>
-            ;
-            
-            document.body.appendChild(modal);
-            
-            // Close on background click
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.remove();
-                }
-            });
-        }
-    
+
         function loadQuickActions() {
             const quickActions = document.getElementById('quickActions');
-            const role = currentUserData.role || 'parent';
+            const role = currentUserData.role;
             
             let actions = [];
             
             if (role === 'parent') {
                 actions = [
-                    { icon: 'fas fa-users', text: 'Find Families', link: 'https://curriculumsocial.com/matching.html' },
-                    { icon: 'fas fa-calendar-plus', text: 'Create Activity', link: 'https://curriculumsocial.com/activities.html' },
-                    { icon: 'fas fa-user-plus', text: 'Add Student', link: 'https://curriculumsocial.com/profile.html' },
+                    { icon: 'fas fa-users', text: 'Find Families', link: 'matching.html' },
+                    { icon: 'fas fa-calendar-plus', text: 'Create Activity', link: 'activities.html' },
+                    { icon: 'fas fa-user-plus', text: 'Add Student', link: 'profile.html' },
                     { icon: 'fas fa-comments', text: 'Messages', link: '#' }
                 ];
             } else if (role === 'teacher') {
                 actions = [
-                    { icon: 'fas fa-chalkboard-teacher', text: 'Create Class', link: 'https://curriculumsocial.com/activities.html' },
+                    { icon: 'fas fa-chalkboard-teacher', text: 'Create Class', link: 'activities.html' },
                     { icon: 'fas fa-users', text: 'My Students', link: '#' },
                     { icon: 'fas fa-file-alt', text: 'Lesson Plans', link: '#' },
                     { icon: 'fas fa-chart-line', text: 'Analytics', link: '#' }
@@ -730,162 +557,129 @@
             } else if (role === 'student') {
                 actions = [
                     { icon: 'fas fa-book', text: 'Start Learning', link: '#' },
-                    { icon: 'fas fa-calendar', text: 'Join Activity', link: 'https://curriculumsocial.com/activities.html' },
-                    { icon: 'fas fa-user-friends', text: 'Find Friends', link: 'https://curriculumsocial.com/matching.html' },
+                    { icon: 'fas fa-calendar', text: 'Join Activity', link: 'activities.html' },
+                    { icon: 'fas fa-user-friends', text: 'Find Friends', link: 'matching.html' },
                     { icon: 'fas fa-trophy', text: 'Achievements', link: '#' }
                 ];
             }
-    
-            quickActions.innerHTML = actions.map(action => 
+
+            quickActions.innerHTML = actions.map(action => `
                 <div class="quick-action" onclick="window.location.href='${action.link}'">
                     <i class="${action.icon} text-2xl text-blue-500 mb-2"></i>
                     <p class="font-medium">${action.text}</p>
                 </div>
-            ).join('');
+            `).join('');
         }
-    
-        async function loadStudentsList() {
+
+        function loadStudentsList() {
             const studentsList = document.getElementById('studentsList');
             
-            try {
-                // Get students from Firebase
-                const studentsQuery = window.firebaseFirestore.query(
-                    window.firebaseFirestore.collection(window.db, 'students'),
-                    window.firebaseFirestore.where('parentId', '==', currentUser.uid)
-                );
-                
-                const studentsSnapshot = await window.firebaseFirestore.getDocs(studentsQuery);
-                const students = studentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
-                if (students.length > 0) {
-                    studentsList.innerHTML = students.map(student => 
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div>
-                                <h3 class="font-semibold">${student.name}</h3>
-                                <p class="text-sm text-gray-600">Age ${student.age || 'N/A'}</p>
-                            </div>
-                            <button class="btn-outline" onclick="window.location.href='https://curriculumsocial.com/profile.html'">View</button>
-                        </div>
-                    ).join('');
-                } else {
-                    studentsList.innerHTML = 
-                        <div class="text-center p-4 text-gray-600">
-                            <p>No students added yet</p>
-                            <a href="https://curriculumsocial.com/profile.html" class="btn-primary mt-2">Add Student</a>
-                        </div>
-                    ;
-                }
-            } catch (error) {
-                console.error('Error loading students:', error);
-                studentsList.innerHTML = 
-                    <div class="text-center p-4 text-gray-600">
-                        <p>Unable to load students</p>
-                        <a href="https://curriculumsocial.com/profile.html" class="btn-primary mt-2">Manage Students</a>
+            // Demo students data - replace with Firebase query
+            const students = [
+                { name: 'Emma Johnson', age: 10, lastActivity: 'Math Practice' },
+                { name: 'Jake Johnson', age: 8, lastActivity: 'Art Workshop' }
+            ];
+
+            studentsList.innerHTML = students.map(student => `
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                        <h3 class="font-semibold">${student.name}</h3>
+                        <p class="text-sm text-gray-600">Age ${student.age} • ${student.lastActivity}</p>
                     </div>
-                ;
-            }
+                    <button class="btn-outline">View</button>
+                </div>
+            `).join('');
         }
-    
+
         function loadLearningProgress() {
             // This function would load actual learning progress from Firebase
             // For now, it shows the demo data already in the HTML
             document.getElementById('learningProgress').classList.remove('hidden');
         }
-    
-        async function loadRecentActivities() {
+
+        function loadRecentActivities() {
             const recentActivities = document.getElementById('recentActivities');
             
-            try {
-                // Get recent activities from Firebase
-                const activitiesQuery = window.firebaseFirestore.query(
-                    window.firebaseFirestore.collection(window.db, 'activities'),
-                    window.firebaseFirestore.orderBy('dateTime', 'desc'),
-                    window.firebaseFirestore.limit(3)
-                );
-                
-                const activitiesSnapshot = await window.firebaseFirestore.getDocs(activitiesQuery);
-                const activities = activitiesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
-                if (activities.length > 0) {
-                    recentActivities.innerHTML = activities.map(activity => {
-                        const date = activity.dateTime?.toDate ? activity.dateTime.toDate() : new Date(activity.dateTime);
-                        const isUpcoming = date > new Date();
-                        
-                        return 
-                            <div class="activity-card">
-                                <div class="flex items-start justify-between">
-                                    <div class="flex-1">
-                                        <h3 class="font-semibold text-lg">${activity.title}</h3>
-                                        <p class="text-sm text-gray-600 mt-1">
-                                            <i class="fas fa-clock mr-1"></i> ${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                        </p>
-                                        ${activity.location ? 
-                                            <p class="text-sm text-gray-600">
-                                                <i class="fas fa-map-marker-alt mr-1"></i> ${activity.location.address || 'Location TBD'}
-                                            </p>
-                                         : ''}
-                                    </div>
-                                    <div class="ml-4">
-                                        ${isUpcoming ? 
-                                            '<span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Upcoming</span>' :
-                                            '<span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">Past</span>'
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        ;
-                    }).join('');
-                } else {
-                    recentActivities.innerHTML = 
-                        <div class="text-center p-8 text-gray-600">
-                            <i class="fas fa-calendar text-4xl mb-4 text-gray-400"></i>
-                            <p>No activities found</p>
-                            <a href="https://curriculumsocial.com/activities.html" class="btn-primary mt-4">Explore Activities</a>
-                        </div>
-                    ;
+            // Demo activities - replace with Firebase query
+            const activities = [
+                {
+                    title: 'Marine Biology Field Trip',
+                    date: 'Today, 2:00 PM',
+                    location: 'Lamai Beach',
+                    participants: 8,
+                    status: 'upcoming'
+                },
+                {
+                    title: 'Math Circle: Geometry Fun',
+                    date: 'Yesterday',
+                    location: 'Community Center',
+                    participants: 12,
+                    status: 'completed'
+                },
+                {
+                    title: 'Art & Science: Coral Drawing',
+                    date: '2 days ago',
+                    location: 'Beachside Studio',
+                    participants: 6,
+                    status: 'completed'
                 }
-            } catch (error) {
-                console.error('Error loading activities:', error);
-                recentActivities.innerHTML = 
-                    <div class="text-center p-8 text-gray-600">
-                        <p>Unable to load activities</p>
-                        <a href="https://curriculumsocial.com/activities.html" class="btn-primary mt-4">Try Again</a>
+            ];
+
+            recentActivities.innerHTML = activities.map(activity => `
+                <div class="activity-card">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-lg">${activity.title}</h3>
+                            <p class="text-sm text-gray-600 mt-1">
+                                <i class="fas fa-clock mr-1"></i> ${activity.date}
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                <i class="fas fa-map-marker-alt mr-1"></i> ${activity.location}
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                <i class="fas fa-users mr-1"></i> ${activity.participants} participants
+                            </p>
+                        </div>
+                        <div class="ml-4">
+                            ${activity.status === 'upcoming' ? 
+                                '<span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Upcoming</span>' :
+                                '<span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">Completed</span>'
+                            }
+                        </div>
                     </div>
-                ;
-            }
+                </div>
+            `).join('');
         }
-    
+
         function loadUpcomingActivities() {
             const upcomingActivities = document.getElementById('upcomingActivities');
             
-            // Demo upcoming activities - replace with Firebase query
+            // Demo upcoming activities
             const activities = [
                 { title: 'Beach Cleanup & Science', date: 'Saturday 9:00 AM' },
                 { title: 'Coding for Kids', date: 'Monday 3:00 PM' },
                 { title: 'Thai Language Circle', date: 'Wednesday 10:00 AM' }
             ];
-    
-            upcomingActivities.innerHTML = activities.map(activity => 
+
+            upcomingActivities.innerHTML = activities.map(activity => `
                 <div class="text-sm">
                     <p class="font-semibold">${activity.title}</p>
                     <p class="text-gray-600">${activity.date}</p>
                 </div>
-            ).join('');
+            `).join('');
         }
-    
-        // Logout functionality using your existing Firebase config
+
+        // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', logout);
         document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
-    
-        async function logout() {
-            try {
-                await window.curriculumSocial.signOut();
-                window.location.href = 'https://curriculumsocial.com/';
-            } catch (error) {
-                console.error('Error signing out:', error);
-            }
+
+        function logout() {
+            // Clear user data and redirect to login
+            currentUser = null;
+            currentUserData = null;
+            window.location.href = 'https://curriculumsocial.com/login.html';
         }
-    
+
         // Role switching functionality (for future multi-role users)
         document.getElementById('viewAsRole').addEventListener('change', function(e) {
             const selectedRole = e.target.value;
