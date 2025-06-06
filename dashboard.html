@@ -7,21 +7,24 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <script type="module" src="js/firebase-config.js"></script>
     <style>
         :root {
             --primary-blue: #1a73e8;
             --secondary-blue: #4285f4;
             --primary-green: #34a853;
             --secondary-green: #66bb6a;
+            --primary-purple: #9c27b0;
+            --secondary-purple: #ba68c8;
             --light-blue: #e8f0fe;
             --light-green: #e6f4ea;
+            --light-purple: #f3e5f5;
         }
         
         body {
             font-family: 'Open Sans', sans-serif;
             color: #333;
-            background: linear-gradient(135deg, #e8f0fe 0%, #e6f4ea 100%);
-            min-height: 100vh;
+            background-color: #f8fafc;
         }
         
         h1, h2, h3, h4, h5, h6 {
@@ -31,55 +34,48 @@
         .btn-primary {
             background-color: var(--primary-blue);
             color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
             transition: all 0.3s;
-            border: none;
-            cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            text-align: center;
+            font-size: 14px;
         }
         
         .btn-primary:hover {
             background-color: var(--secondary-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
         }
         
         .btn-secondary {
             background-color: var(--primary-green);
             color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
             transition: all 0.3s;
-            border: none;
-            cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            text-align: center;
+            font-size: 14px;
         }
         
         .btn-secondary:hover {
             background-color: var(--secondary-green);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
         }
         
         .btn-outline {
-            border: 2px solid var(--primary-blue);
+            border: 1px solid var(--primary-blue);
             color: var(--primary-blue);
             background-color: transparent;
-            padding: 10px 22px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 7px 15px;
+            border-radius: 6px;
+            font-weight: 500;
             transition: all 0.3s;
-            cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            text-align: center;
+            font-size: 14px;
         }
         
         .btn-outline:hover {
@@ -87,485 +83,611 @@
         }
         
         .card {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
             background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
         }
         
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .text-primary {
-            color: var(--primary-blue);
-        }
-        
-        .text-secondary {
-            color: var(--primary-green);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         
         .nav-link {
             position: relative;
             padding: 8px 16px;
-            margin: 0 8px;
-            font-weight: 500;
+            margin: 0 4px;
             color: #4a5568;
-            transition: all 0.3s;
             text-decoration: none;
-        }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: var(--primary-blue);
-            transition: all 0.3s;
-            transform: translateX(-50%);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
         }
         
         .nav-link:hover {
             color: var(--primary-blue);
+            background-color: var(--light-blue);
         }
         
-        .nav-link:hover::after {
-            width: 80%;
+        .nav-link.active {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
         }
         
-        .user-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--primary-blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-right: 1.5rem;
+        .role-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
         }
         
-        .user-avatar img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 4rem;
-            font-size: 1.2rem;
+        .role-parent {
+            background-color: var(--light-blue);
             color: var(--primary-blue);
         }
         
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-        
-        .dashboard-item {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .dashboard-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .dashboard-item i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        .role-teacher {
+            background-color: var(--light-green);
             color: var(--primary-green);
         }
         
-        .dashboard-item h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+        .role-student {
+            background-color: var(--light-purple);
+            color: var(--primary-purple);
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
             color: var(--primary-blue);
+            margin-bottom: 0.5rem;
         }
         
-        .dashboard-item p {
-            color: #666;
-            margin-bottom: 1.5rem;
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
         }
         
-        .welcome-banner {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        .activity-card {
+            padding: 1rem;
+            border-left: 4px solid var(--primary-green);
         }
         
-        .user-info {
+        .quick-action {
+            padding: 1rem;
+            text-align: center;
+            border: 2px dashed #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .quick-action:hover {
+            border-color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+        
+        .loading {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
+            justify-content: center;
+            min-height: 200px;
         }
         
-        .user-details h2 {
-            font-size: 2rem;
-            color: var(--primary-blue);
-            margin: 0;
-        }
-        
-        .user-details p {
-            color: #666;
-            margin: 0.5rem 0 0 0;
-            text-transform: capitalize;
-        }
-
-        @media (max-width: 768px) {
-            .user-info {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header & Navigation -->
     <header class="sticky top-0 bg-white z-50 shadow-sm">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
-                <h1 class="text-2xl font-bold text-primary">
-                    <a href="/" style="text-decoration: none; color: inherit;">
-                        <span class="text-secondary">Curriculum</span> Social
+                <h1 class="text-2xl font-bold">
+                    <a href="https://curriculumsocial.com/" style="text-decoration: none; color: inherit;">
+                        <span style="color: var(--primary-green);">Curriculum</span> 
+                        <span style="color: var(--primary-blue);">Social</span>
                     </a>
                 </h1>
             </div>
-            <nav class="hidden md:flex">
-                <a href="/" class="nav-link">Home</a>
-                <a href="profile.html" class="nav-link">Profile</a>
-                <a href="matching.html" class="nav-link">Find Families</a>
-                <a href="#" class="nav-link" id="dashboardLink">Dashboard</a>
+            <nav class="hidden md:flex items-center space-x-2">
+                <a href="https://curriculumsocial.com/dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
+                <a href="https://curriculumsocial.com/matching.html" class="nav-link">Find Families</a>
+                <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
             </nav>
-            <div>
-                <button id="signOutBtn" class="btn-outline hidden md:inline-block">Sign Out</button>
-                <button class="md:hidden text-gray-700">
+            <div class="flex items-center space-x-4">
+                <div id="userInfo" class="hidden">
+                    <span id="userName" class="font-medium"></span>
+                    <span id="userRole" class="role-badge"></span>
+                </div>
+                <button id="logoutBtn" class="btn-outline hidden">Logout</button>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
         </div>
     </header>
 
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
+        <div class="px-4 py-2 space-y-2">
+            <a href="https://curriculumsocial.com/dashboard.html" class="block py-2 text-blue-600 font-semibold">Dashboard</a>
+            <a href="https://curriculumsocial.com/profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
+            <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
+            <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
+            <div class="pt-2 border-t border-gray-200">
+                <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Loading State -->
     <div id="loadingState" class="loading">
-        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
-        <p>Loading your dashboard...</p>
+        <div class="text-center">
+            <i class="fas fa-spinner fa-spin text-4xl text-blue-500 mb-4"></i>
+            <p class="text-gray-600">Loading your dashboard...</p>
+        </div>
     </div>
 
     <!-- Main Dashboard Content -->
-    <main id="dashboardContent" class="container mx-auto px-4 py-8" style="display: none;">
-        <!-- Welcome Banner -->
-        <div class="welcome-banner">
-            <div class="user-info">
-                <div style="display: flex; align-items: center;">
-                    <div class="user-avatar" id="userAvatar">
-                        U
+    <div id="dashboardContent" class="hidden">
+        <!-- Welcome Section -->
+        <section class="bg-gradient-to-r from-blue-50 to-green-50 py-8">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-2">Welcome back, <span id="welcomeName"></span>!</h1>
+                        <p class="text-gray-600" id="welcomeMessage"></p>
                     </div>
-                    <div class="user-details">
-                        <h2 id="userName">Welcome!</h2>
-                        <p id="userRole">Loading...</p>
-                        <p id="userEmail" style="color: #999; font-size: 0.9rem;"></p>
+                    <div class="mt-4 md:mt-0">
+                        <div id="roleSelector" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">View as:</label>
+                            <select id="viewAsRole" class="border border-gray-300 rounded-md px-3 py-2 bg-white">
+                                <option value="self">Myself</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <button id="editProfileBtn" class="btn-secondary">Edit Profile</button>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Dashboard Content Area -->
-        <div id="roleSpecificContent">
-            <!-- Content will be loaded dynamically based on user role -->
-        </div>
-    </main>
+        <!-- Quick Stats -->
+        <section class="py-8">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="card stat-card">
+                        <div class="stat-number" id="statConnections">0</div>
+                        <div class="stat-label">Family Connections</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-number" id="statActivities">0</div>
+                        <div class="stat-label">Activities Joined</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-number" id="statLearning">0</div>
+                        <div class="stat-label">Learning Hours</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-number" id="statAchievements">0</div>
+                        <div class="stat-label">Achievements</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- Scripts -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loadingState = document.getElementById('loadingState');
-            const dashboardContent = document.getElementById('dashboardContent');
-            const signOutBtn = document.getElementById('signOutBtn');
-            const editProfileBtn = document.getElementById('editProfileBtn');
-            
-            // Check authentication state
-            window.firebaseAuth.onAuthStateChanged(window.auth, async (user) => {
-                if (user) {
-                    await loadUserDashboard(user);
-                } else {
-                    // Redirect to login if not authenticated
-                    window.location.href = 'login.html';
-                }
-            });
-            
-            async function loadUserDashboard(user) {
-                try {
-                    // Get user profile from Firestore
-                    const profileResult = await window.curriculumSocial.getUserProfile(user.uid);
+        <!-- Main Content Grid -->
+        <section class="pb-8">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     
-                    if (profileResult.success) {
-                        const userData = profileResult.data;
-                        displayUserInfo(user, userData);
-                        displayRoleSpecificContent(userData.role);
+                    <!-- Left Column - Main Content -->
+                    <div class="lg:col-span-2 space-y-6">
                         
-                        // Hide loading, show dashboard
-                        loadingState.style.display = 'none';
-                        dashboardContent.style.display = 'block';
-                    } else {
-                        // Profile doesn't exist - create basic profile
-                        const role = prompt("Welcome! Please select your role:\n1. parent\n2. teacher\n3. venue\n\nEnter one of the above:");
-                        
-                        if (role && ['parent', 'teacher', 'venue'].includes(role.toLowerCase())) {
-                            await window.curriculumSocial.createUserProfile(user.uid, {
-                                email: user.email,
-                                displayName: user.displayName || user.email.split('@')[0],
-                                role: role.toLowerCase(),
-                                emailVerified: user.emailVerified,
-                                photoURL: user.photoURL
-                            });
-                            location.reload();
-                        } else {
-                            alert('Please select a valid role');
-                            await window.curriculumSocial.signOut();
-                            window.location.href = 'login.html';
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error loading dashboard:', error);
-                    showError('Error loading dashboard. Please try refreshing the page.');
-                }
-            }
-            
-            function displayUserInfo(user, userData) {
-                const userName = document.getElementById('userName');
-                const userRole = document.getElementById('userRole');
-                const userEmail = document.getElementById('userEmail');
-                const userAvatar = document.getElementById('userAvatar');
-                
-                userName.textContent = `Welcome, ${userData.displayName || 'User'}!`;
-                userRole.textContent = `${userData.role || 'member'} • Member since ${new Date(userData.createdAt?.toDate() || new Date()).toLocaleDateString()}`;
-                userEmail.textContent = user.email;
-                
-                if (userData.photoURL) {
-                    userAvatar.innerHTML = `<img src="${userData.photoURL}" alt="Profile Picture">`;
-                } else {
-                    userAvatar.textContent = (userData.displayName || 'U').charAt(0).toUpperCase();
-                }
-            }
-            
-            function displayRoleSpecificContent(role) {
-                const contentArea = document.getElementById('roleSpecificContent');
-                let content = '';
-                
-                switch(role) {
-                    case 'parent':
-                        content = `
-                            <h3 style="color: var(--primary-blue); margin-bottom: 1.5rem; font-size: 1.8rem;">Parent Dashboard</h3>
-                            <div class="dashboard-grid">
-                                <div class="dashboard-item">
-                                    <i class="fas fa-child"></i>
-                                    <h3>My Children</h3>
-                                    <p>Manage your children's profiles, track their progress, and view their learning activities.</p>
-                                    <button class="btn-primary" onclick="goToStudents()">Manage Students</button>
+                        <!-- Recent Activities -->
+                        <div class="card">
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-6">
+                                    <h2 class="text-xl font-bold">Recent Activities</h2>
+                                    <a href="https://curriculumsocial.com/activities.html" class="btn-outline">View All</a>
                                 </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-users"></i>
-                                    <h3>Find Families</h3>
-                                    <p>Connect with like-minded families in your area based on educational philosophy and interests.</p>
-                                    <a href="matching.html" class="btn-primary">Start Matching</a>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <h3>Activities & Events</h3>
-                                    <p>Browse and join local educational activities, field trips, and social events.</p>
-                                    <button class="btn-primary" onclick="goToActivities()">View Activities</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-chalkboard-teacher"></i>
-                                    <h3>Find Teachers</h3>
-                                    <p>Discover qualified teachers for specialized subjects and one-on-one sessions.</p>
-                                    <button class="btn-primary" onclick="goToTeachers()">Browse Teachers</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-book"></i>
-                                    <h3>Curriculum Resources</h3>
-                                    <p>Access our library of educational materials, assessments, and learning tools.</p>
-                                    <button class="btn-primary" onclick="goToCurriculum()">Browse Resources</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-comments"></i>
-                                    <h3>Messages</h3>
-                                    <p>Communicate with other families, teachers, and venue hosts in your network.</p>
-                                    <button class="btn-primary" onclick="goToMessages()">View Messages</button>
+                                <div id="recentActivities" class="space-y-4">
+                                    <!-- Activities will be loaded here -->
                                 </div>
                             </div>
-                        `;
-                        break;
-                        
-                    case 'teacher':
-                        content = `
-                            <h3 style="color: var(--primary-blue); margin-bottom: 1.5rem; font-size: 1.8rem;">Teacher Dashboard</h3>
-                            <div class="dashboard-grid">
-                                <div class="dashboard-item">
-                                    <i class="fas fa-chalkboard-teacher"></i>
-                                    <h3>My Classes</h3>
-                                    <p>View and manage your current classes, student rosters, and session schedules.</p>
-                                    <button class="btn-primary" onclick="goToClasses()">Manage Classes</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-calendar-plus"></i>
-                                    <h3>Create Session</h3>
-                                    <p>Schedule new teaching sessions, workshops, or educational activities.</p>
-                                    <button class="btn-primary" onclick="createSession()">Add Session</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-users"></i>
-                                    <h3>My Students</h3>
-                                    <p>Track student progress, provide feedback, and manage learning assessments.</p>
-                                    <button class="btn-primary" onclick="goToStudents()">View Students</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-dollar-sign"></i>
-                                    <h3>Earnings</h3>
-                                    <p>Track your teaching income, view payment history, and manage compensation.</p>
-                                    <button class="btn-primary" onclick="goToEarnings()">View Earnings</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-file-alt"></i>
-                                    <h3>Resources</h3>
-                                    <p>Create and share educational materials, lesson plans, and teaching resources.</p>
-                                    <button class="btn-primary" onclick="goToResources()">Manage Resources</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-star"></i>
-                                    <h3>Reviews</h3>
-                                    <p>View feedback from parents and students to improve your teaching approach.</p>
-                                    <button class="btn-primary" onclick="goToReviews()">View Reviews</button>
+                        </div>
+
+                        <!-- Learning Progress (for students and parents viewing children) -->
+                        <div id="learningProgress" class="card hidden">
+                            <div class="p-6">
+                                <h2 class="text-xl font-bold mb-6">Learning Progress</h2>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h3 class="font-semibold">Mathematics</h3>
+                                            <p class="text-sm text-gray-600">Algebra & Geometry</p>
+                                        </div>
+                                        <div class="w-32">
+                                            <div class="bg-gray-200 rounded-full h-2">
+                                                <div class="bg-green-500 h-2 rounded-full" style="width: 75%"></div>
+                                            </div>
+                                            <span class="text-xs text-gray-600">75% Complete</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h3 class="font-semibold">Science</h3>
+                                            <p class="text-sm text-gray-600">Marine Biology</p>
+                                        </div>
+                                        <div class="w-32">
+                                            <div class="bg-gray-200 rounded-full h-2">
+                                                <div class="bg-blue-500 h-2 rounded-full" style="width: 60%"></div>
+                                            </div>
+                                            <span class="text-xs text-gray-600">60% Complete</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        `;
-                        break;
-                        
-                    case 'venue':
-                        content = `
-                            <h3 style="color: var(--primary-blue); margin-bottom: 1.5rem; font-size: 1.8rem;">Venue Host Dashboard</h3>
-                            <div class="dashboard-grid">
-                                <div class="dashboard-item">
-                                    <i class="fas fa-home"></i>
-                                    <h3>My Venues</h3>
-                                    <p>Manage your registered venues, update information, and view venue status.</p>
-                                    <button class="btn-primary" onclick="goToVenues()">Manage Venues</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-plus-circle"></i>
-                                    <h3>Add New Venue</h3>
-                                    <p>Register a new space for educational activities and community events.</p>
-                                    <button class="btn-primary" onclick="addVenue()">Add Venue</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-calendar-check"></i>
-                                    <h3>Bookings</h3>
-                                    <p>View upcoming reservations, manage availability, and coordinate with organizers.</p>
-                                    <button class="btn-primary" onclick="goToBookings()">View Bookings</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-dollar-sign"></i>
-                                    <h3>Revenue</h3>
-                                    <p>Track venue rental income and view payment history from bookings.</p>
-                                    <button class="btn-primary" onclick="goToRevenue()">View Revenue</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-shield-alt"></i>
-                                    <h3>Safety & Compliance</h3>
-                                    <p>Maintain safety certifications, insurance, and venue compliance status.</p>
-                                    <button class="btn-primary" onclick="goToSafety()">Safety Info</button>
-                                </div>
-                                <div class="dashboard-item">
-                                    <i class="fas fa-chart-line"></i>
-                                    <h3>Analytics</h3>
-                                    <p>View venue usage statistics, popular time slots, and booking trends.</p>
-                                    <button class="btn-primary" onclick="goToAnalytics()">View Analytics</button>
+                        </div>
+
+                        <!-- Teaching Schedule (for teachers) -->
+                        <div id="teachingSchedule" class="card hidden">
+                            <div class="p-6">
+                                <h2 class="text-xl font-bold mb-6">Your Teaching Schedule</h2>
+                                <div class="space-y-4">
+                                    <div class="border-l-4 border-green-500 pl-4">
+                                        <h3 class="font-semibold">Marine Biology Workshop</h3>
+                                        <p class="text-sm text-gray-600">Today, 2:00 PM - 4:00 PM</p>
+                                        <p class="text-sm text-gray-600">5 students enrolled</p>
+                                    </div>
+                                    <div class="border-l-4 border-blue-500 pl-4">
+                                        <h3 class="font-semibold">Math Tutoring</h3>
+                                        <p class="text-sm text-gray-600">Tomorrow, 10:00 AM - 11:00 AM</p>
+                                        <p class="text-sm text-gray-600">1-on-1 session</p>
+                                    </div>
                                 </div>
                             </div>
-                        `;
-                        break;
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Sidebar -->
+                    <div class="space-y-6">
                         
-                    default:
-                        content = `
-                            <div class="dashboard-item" style="text-align: center; max-width: 600px; margin: 0 auto;">
-                                <i class="fas fa-user-circle"></i>
-                                <h3>Complete Your Profile</h3>
-                                <p>Please update your profile information to access role-specific features and connect with the community.</p>
-                                <button class="btn-primary" onclick="goToProfile()">Complete Profile</button>
+                        <!-- Quick Actions -->
+                        <div class="card">
+                            <div class="p-6">
+                                <h2 class="text-xl font-bold mb-6">Quick Actions</h2>
+                                <div class="space-y-4" id="quickActions">
+                                    <!-- Quick actions will be loaded based on role -->
+                                </div>
                             </div>
-                        `;
-                }
-                
-                contentArea.innerHTML = content;
+                        </div>
+
+                        <!-- Family/Students Overview (for parents) -->
+                        <div id="familyOverview" class="card hidden">
+                            <div class="p-6">
+                                <h2 class="text-xl font-bold mb-6">Your Students</h2>
+                                <div id="studentsList" class="space-y-3">
+                                    <!-- Students will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Community Updates -->
+                        <div class="card">
+                            <div class="p-6">
+                                <h2 class="text-xl font-bold mb-6">Community Updates</h2>
+                                <div class="space-y-4">
+                                    <div class="text-sm">
+                                        <p class="font-semibold text-green-600">New Feature!</p>
+                                        <p class="text-gray-600">AI learning paths now available for all subjects</p>
+                                        <span class="text-xs text-gray-500">2 days ago</span>
+                                    </div>
+                                    <div class="text-sm">
+                                        <p class="font-semibold text-blue-600">Community Event</p>
+                                        <p class="text-gray-600">Beach cleanup & marine biology lesson this Saturday</p>
+                                        <span class="text-xs text-gray-500">5 days ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upcoming Activities -->
+                        <div class="card">
+                            <div class="p-6">
+                                <h2 class="text-xl font-bold mb-6">Upcoming Activities</h2>
+                                <div id="upcomingActivities" class="space-y-3">
+                                    <!-- Upcoming activities will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Firebase imports will be available from firebase-config.js
+        let currentUser = null;
+        let currentUserData = null;
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
             }
+
+            // Initialize auth state listener
+            initializeAuth();
+        });
+
+        async function initializeAuth() {
+            // This would normally connect to your Firebase auth
+            // For now, we'll simulate with demo data
+            setTimeout(() => {
+                loadDemoData();
+            }, 1500);
+        }
+
+        function loadDemoData() {
+            // Simulate user data - replace with actual Firebase calls
+            currentUserData = {
+                uid: 'demo123',
+                displayName: 'Sarah Johnson',
+                email: 'sarah@example.com',
+                role: 'parent',
+                location: { city: 'Koh Samui', country: 'Thailand' },
+                createdAt: new Date()
+            };
+
+            // Update UI with user data
+            updateUserInterface();
             
-            function showError(message) {
-                alert(message);
+            // Hide loading, show dashboard
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('dashboardContent').classList.remove('hidden');
+        }
+
+        function updateUserInterface() {
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            const userInfo = document.getElementById('userInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const welcomeName = document.getElementById('welcomeName');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+
+            if (currentUserData) {
+                // Update header
+                userName.textContent = currentUserData.displayName;
+                userRole.textContent = currentUserData.role.charAt(0).toUpperCase() + currentUserData.role.slice(1);
+                userRole.className = `role-badge role-${currentUserData.role}`;
+                userInfo.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+
+                // Update welcome section
+                welcomeName.textContent = currentUserData.displayName.split(' ')[0];
+                welcomeMessage.textContent = getWelcomeMessage(currentUserData.role);
+
+                // Load role-specific content
+                loadRoleSpecificContent();
+                loadQuickActions();
+                loadRecentActivities();
+                loadUpcomingActivities();
             }
+        }
+
+        function getWelcomeMessage(role) {
+            const messages = {
+                parent: "Here's what's happening with your family's learning journey.",
+                teacher: "Ready to inspire and educate today? Here's your teaching overview.",
+                student: "Time to explore, learn, and connect with your community!"
+            };
+            return messages[role] || "Welcome to your learning community!";
+        }
+
+        function loadRoleSpecificContent() {
+            const role = currentUserData.role;
             
-            // Event listeners
-            signOutBtn.addEventListener('click', async () => {
-                try {
-                    await window.curriculumSocial.signOut();
-                    window.location.href = 'login.html';
-                } catch (error) {
-                    console.error('Error signing out:', error);
+            // Show/hide role-specific sections
+            if (role === 'parent') {
+                document.getElementById('familyOverview').classList.remove('hidden');
+                loadStudentsList();
+                loadLearningProgress();
+            } else if (role === 'teacher') {
+                document.getElementById('teachingSchedule').classList.remove('hidden');
+            } else if (role === 'student') {
+                document.getElementById('learningProgress').classList.remove('hidden');
+            }
+
+            // Update stats based on role
+            updateStats(role);
+        }
+
+        function updateStats(role) {
+            // Demo stats - replace with actual data from Firebase
+            const stats = {
+                parent: { connections: 8, activities: 12, learning: 45, achievements: 6 },
+                teacher: { connections: 15, activities: 8, learning: 120, achievements: 12 },
+                student: { connections: 5, activities: 18, learning: 67, achievements: 9 }
+            };
+
+            const roleStats = stats[role] || stats.parent;
+            
+            document.getElementById('statConnections').textContent = roleStats.connections;
+            document.getElementById('statActivities').textContent = roleStats.activities;
+            document.getElementById('statLearning').textContent = roleStats.learning;
+            document.getElementById('statAchievements').textContent = roleStats.achievements;
+        }
+
+        function loadQuickActions() {
+            const quickActions = document.getElementById('quickActions');
+            const role = currentUserData.role;
+            
+            let actions = [];
+            
+            if (role === 'parent') {
+                actions = [
+                    { icon: 'fas fa-users', text: 'Find Families', link: 'matching.html' },
+                    { icon: 'fas fa-calendar-plus', text: 'Create Activity', link: 'activities.html' },
+                    { icon: 'fas fa-user-plus', text: 'Add Student', link: 'profile.html' },
+                    { icon: 'fas fa-comments', text: 'Messages', link: '#' }
+                ];
+            } else if (role === 'teacher') {
+                actions = [
+                    { icon: 'fas fa-chalkboard-teacher', text: 'Create Class', link: 'activities.html' },
+                    { icon: 'fas fa-users', text: 'My Students', link: '#' },
+                    { icon: 'fas fa-file-alt', text: 'Lesson Plans', link: '#' },
+                    { icon: 'fas fa-chart-line', text: 'Analytics', link: '#' }
+                ];
+            } else if (role === 'student') {
+                actions = [
+                    { icon: 'fas fa-book', text: 'Start Learning', link: '#' },
+                    { icon: 'fas fa-calendar', text: 'Join Activity', link: 'activities.html' },
+                    { icon: 'fas fa-user-friends', text: 'Find Friends', link: 'matching.html' },
+                    { icon: 'fas fa-trophy', text: 'Achievements', link: '#' }
+                ];
+            }
+
+            quickActions.innerHTML = actions.map(action => `
+                <div class="quick-action" onclick="window.location.href='${action.link}'">
+                    <i class="${action.icon} text-2xl text-blue-500 mb-2"></i>
+                    <p class="font-medium">${action.text}</p>
+                </div>
+            `).join('');
+        }
+
+        function loadStudentsList() {
+            const studentsList = document.getElementById('studentsList');
+            
+            // Demo students data - replace with Firebase query
+            const students = [
+                { name: 'Emma Johnson', age: 10, lastActivity: 'Math Practice' },
+                { name: 'Jake Johnson', age: 8, lastActivity: 'Art Workshop' }
+            ];
+
+            studentsList.innerHTML = students.map(student => `
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                        <h3 class="font-semibold">${student.name}</h3>
+                        <p class="text-sm text-gray-600">Age ${student.age} • ${student.lastActivity}</p>
+                    </div>
+                    <button class="btn-outline">View</button>
+                </div>
+            `).join('');
+        }
+
+        function loadLearningProgress() {
+            // This function would load actual learning progress from Firebase
+            // For now, it shows the demo data already in the HTML
+            document.getElementById('learningProgress').classList.remove('hidden');
+        }
+
+        function loadRecentActivities() {
+            const recentActivities = document.getElementById('recentActivities');
+            
+            // Demo activities - replace with Firebase query
+            const activities = [
+                {
+                    title: 'Marine Biology Field Trip',
+                    date: 'Today, 2:00 PM',
+                    location: 'Lamai Beach',
+                    participants: 8,
+                    status: 'upcoming'
+                },
+                {
+                    title: 'Math Circle: Geometry Fun',
+                    date: 'Yesterday',
+                    location: 'Community Center',
+                    participants: 12,
+                    status: 'completed'
+                },
+                {
+                    title: 'Art & Science: Coral Drawing',
+                    date: '2 days ago',
+                    location: 'Beachside Studio',
+                    participants: 6,
+                    status: 'completed'
                 }
-            });
+            ];
+
+            recentActivities.innerHTML = activities.map(activity => `
+                <div class="activity-card">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-lg">${activity.title}</h3>
+                            <p class="text-sm text-gray-600 mt-1">
+                                <i class="fas fa-clock mr-1"></i> ${activity.date}
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                <i class="fas fa-map-marker-alt mr-1"></i> ${activity.location}
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                <i class="fas fa-users mr-1"></i> ${activity.participants} participants
+                            </p>
+                        </div>
+                        <div class="ml-4">
+                            ${activity.status === 'upcoming' ? 
+                                '<span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Upcoming</span>' :
+                                '<span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">Completed</span>'
+                            }
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadUpcomingActivities() {
+            const upcomingActivities = document.getElementById('upcomingActivities');
             
-            editProfileBtn.addEventListener('click', () => {
-                window.location.href = 'profile.html';
-            });
-            
-            // Navigation functions (placeholders for now)
-            window.goToStudents = () => window.location.href = 'profile.html#students';
-            window.goToActivities = () => window.location.href = 'activities.html';
-            window.goToTeachers = () => alert('Teacher directory coming soon!');
-            window.goToCurriculum = () => alert('Curriculum library coming soon!');
-           window.goToMessages = () => window.location.href = 'matching.html';
-            window.goToClasses = () => alert('Class management coming soon!');
-            window.createSession = () => alert('Session creation coming soon!');
-            window.goToEarnings = () => alert('Earnings tracking coming soon!');
-            window.goToResources = () => alert('Resource management coming soon!');
-            window.goToReviews = () => alert('Review system coming soon!');
-            window.goToVenues = () => alert('Venue management coming soon!');
-            window.addVenue = () => alert('Add venue form coming soon!');
-            window.goToBookings = () => alert('Booking system coming soon!');
-            window.goToRevenue = () => alert('Revenue tracking coming soon!');
-            window.goToSafety = () => alert('Safety management coming soon!');
-            window.goToAnalytics = () => alert('Analytics dashboard coming soon!');
-            window.goToProfile = () => window.location.href = 'profile.html';
+            // Demo upcoming activities
+            const activities = [
+                { title: 'Beach Cleanup & Science', date: 'Saturday 9:00 AM' },
+                { title: 'Coding for Kids', date: 'Monday 3:00 PM' },
+                { title: 'Thai Language Circle', date: 'Wednesday 10:00 AM' }
+            ];
+
+            upcomingActivities.innerHTML = activities.map(activity => `
+                <div class="text-sm">
+                    <p class="font-semibold">${activity.title}</p>
+                    <p class="text-gray-600">${activity.date}</p>
+                </div>
+            `).join('');
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
+
+        function logout() {
+            // Clear user data and redirect to login
+            currentUser = null;
+            currentUserData = null;
+            window.location.href = 'https://curriculumsocial.com/login.html';
+        }
+
+        // Role switching functionality (for future multi-role users)
+        document.getElementById('viewAsRole').addEventListener('change', function(e) {
+            const selectedRole = e.target.value;
+            if (selectedRole !== 'self') {
+                // Switch view to selected role
+                // This would be implemented later for parent-teacher users
+            }
         });
     </script>
-    
-    <!-- Firebase configuration -->
-    <script type="module" src="js/firebase-config.js"></script>
 </body>
 </html>
