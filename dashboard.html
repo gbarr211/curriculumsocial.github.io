@@ -191,20 +191,15 @@
           </a>
         </h1>
       </div>
-
-      <nav class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
-        <a href="https://curriculumsocial.com/dashboard.html" class="nav-link active">Dashboard</a>
-        <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
-        <a href="https://curriculumsocial.com/matching.html" class="nav-link">Find Families</a>
-        <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
-      </nav>
+  
+      <!-- DESKTOP NAV: hidden on mobile (<768px), visible at ≥768px -->
       <nav class="hidden md:flex items-center space-x-4">
         <a href="https://curriculumsocial.com/dashboard.html" class="nav-link active">Dashboard</a>
         <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
         <a href="https://curriculumsocial.com/matching.html" class="nav-link">Find Families</a>
         <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
       </nav>
-
+  
       <!-- User Info / Logout / Hamburger -->
       <div class="flex items-center space-x-4">
         <div id="userInfo" class="hidden">
@@ -212,42 +207,47 @@
           <span id="userRole" class="role-badge"></span>
         </div>
         <button id="logoutBtn" class="btn-outline hidden">Logout</button>
-        <button id="mobileMenuBtn" class="sm:hidden text-gray-700">
+  
+        <!-- Hamburger (only visible on mobile <768px) -->
+        <button id="mobileMenuBtn" class="md:hidden text-gray-700">
           <i class="fas fa-bars text-xl"></i>
         </button>
       </div>
     </div>
   </header>
-
-  <!-- Mobile Menu (only shown <sm) -->
-  <div id="mobileMenu" class="sm:hidden bg-white shadow-lg hidden">
+  
+  <!-- MOBILE MENU: only shown on mobile (<768px) when toggled -->
+  <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
     <div class="px-4 py-2 space-y-2">
-      <a
-        href="https://curriculumsocial.com/dashboard.html"
-        class="block py-2 text-blue-600 font-semibold"
-        >Dashboard</a
-      >
-      <a
-        href="https://curriculumsocial.com/profile.html"
-        class="block py-2 text-gray-700 hover:text-blue-600"
-        >Profile</a
-      >
-      <a
-        href="https://curriculumsocial.com/matching.html"
-        class="block py-2 text-gray-700 hover:text-blue-600"
-        >Find Families</a
-      >
-      <a
-        href="https://curriculumsocial.com/activities.html"
-        class="block py-2 text-gray-700 hover:text-blue-600"
-        >Activities</a
-      >
+      <a href="https://curriculumsocial.com/dashboard.html" class="block py-2 text-blue-600 font-semibold">Dashboard</a>
+      <a href="https://curriculumsocial.com/profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
+      <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
+      <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
       <div class="pt-2 border-t border-gray-200">
         <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
       </div>
     </div>
   </div>
-
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+  
+      if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+  
+      const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+      if (mobileLogoutBtn) {
+        mobileLogoutBtn.addEventListener('click', function() {
+          document.getElementById('logoutBtn').click();
+        });
+      }
+    });
+  </script>
   <!-- Loading State -->
   <div id="loadingState" class="loading">
     <div class="text-center">
