@@ -189,46 +189,57 @@
 <body>
     <!-- Header & Navigation -->
     <header class="sticky top-0 bg-white z-50 shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center">
-                <h1 class="text-2xl font-bold">
-                    <a href="https://curriculumsocial.com/" style="text-decoration: none; color: inherit;">
-                        <span style="color: var(--primary-green);">Curriculum</span> 
-                        <span style="color: var(--primary-blue);">Social</span>
-                    </a>
-                </h1>
-            </div>
-            <nav class="hidden md:flex items-center space-x-2">
-                <a href="https://curriculumsocial.com/dashboard.html" class="nav-link active">Dashboard</a>
-                <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
-                <a href="https://curriculumsocial.com/matching.html" class="nav-link">Find Families</a>
-                <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
-            </nav>
-            <div class="flex items-center space-x-4">
-                <div id="userInfo" class="hidden">
-                    <span id="userName" class="font-medium"></span>
-                    <span id="userRole" class="role-badge"></span>
-                </div>
-                <button id="logoutBtn" class="btn-outline hidden">Logout</button>
-                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
+      <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold">
+            <a href="https://curriculumsocial.com/" style="text-decoration: none; color: inherit;">
+              <span style="color: var(--primary-green);">Curriculum</span>
+              <span style="color: var(--primary-blue);">Social</span>
+            </a>
+          </h1>
         </div>
-    </header>
-
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
+    
+        <!-- desktop nav -->
+        <nav class="hidden md:flex items-center space-x-2">
+          <a href="dashboard.html" class="nav-link active">Dashboard</a>
+          <a href="profile.html" class="nav-link">Profile</a>
+          <a href="matching.html" class="nav-link">Find Families</a>
+          <a href="activities.html" class="nav-link">Activities</a>
+        </nav>
+    
+        <div class="flex items-center space-x-4">
+          <div id="userInfo" class="hidden">
+            <span id="userName" class="font-medium"></span>
+            <span id="userRole" class="role-badge"></span>
+          </div>
+          <button id="logoutBtn" class="btn-outline hidden">Logout</button>
+    
+          <!-- mobile hamburger -->
+          <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    
+      <!-- mobile nav -->
+      <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
         <div class="px-4 py-2 space-y-2">
-            <a href="https://curriculumsocial.com/dashboard.html" class="block py-2 text-blue-600 font-semibold">Dashboard</a>
-            <a href="https://curriculumsocial.com/profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
-            <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
-            <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
-            <div class="pt-2 border-t border-gray-200">
-                <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
-            </div>
+          <a href="dashboard.html" class="block py-2 text-blue-600 font-semibold">Dashboard</a>
+          <a href="profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
+          <a href="matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
+          <a href="activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
+          <div class="pt-2 border-t border-gray-200">
+            <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
+          </div>
         </div>
-    </div>
+      </div>
+    </header>
+    
+    <script>
+      document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.toggle('hidden');
+      });
+    </script>
 
     <!-- Loading State -->
     <div id="loadingState" class="loading">
