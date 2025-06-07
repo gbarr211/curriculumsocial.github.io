@@ -262,3 +262,341 @@
                         </select>
                     </div>
                 </div>
+                    <div class="form-group">
+                        <label>Educational Philosophy</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="montessori" name="philosophy" value="montessori">
+                                <label for="montessori">Montessori</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="charlotte_mason" name="philosophy" value="charlotte_mason">
+                                <label for="charlotte_mason">Charlotte Mason</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="classical" name="philosophy" value="classical">
+                                <label for="classical">Classical</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="waldorf" name="philosophy" value="waldorf">
+                                <label for="waldorf">Waldorf</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="unschooling" name="philosophy" value="unschooling">
+                                <label for="unschooling">Unschooling</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="eclectic" name="philosophy" value="eclectic">
+                                <label for="eclectic">Eclectic</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                        <button type="button" id="cancelEditBtn" class="btn-outline">Cancel</button>
+                    </div>
+                </form>
+            </div>
+    
+            <!-- Students Section (for parents) -->
+            <div id="studentsSection" class="profile-card" style="display: none;">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-semibold" style="color: var(--primary-blue);">My Children</h3>
+                    <button id="addStudentBtn" class="btn-secondary">
+                        <i class="fas fa-plus mr-2"></i>Add Child
+                    </button>
+                </div>
+                
+                <div id="studentsList">
+                    <!-- Student cards will be populated here -->
+                </div>
+            </div>
+    
+            <!-- Add/Edit Student Modal -->
+            <div id="studentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+                <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                    <h3 class="text-xl font-semibold mb-4" style="color: var(--primary-blue);" id="studentModalTitle">Add Child</h3>
+                    
+                    <form id="studentForm">
+                        <div class="form-group">
+                            <label for="studentName">Name</label>
+                            <input type="text" id="studentName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="studentAge">Age</label>
+                            <input type="number" id="studentAge" min="0" max="18" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="studentGrade">Grade Level</label>
+                            <input type="text" id="studentGrade" placeholder="e.g., Kindergarten, Grade 3">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Interests</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="arts" name="interests" value="arts">
+                                    <label for="arts">Arts</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="music" name="interests" value="music">
+                                    <label for="music">Music</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="science" name="interests" value="science">
+                                    <label for="science">Science</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="nature" name="interests" value="nature">
+                                    <label for="nature">Nature</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="sports" name="interests" value="sports">
+                                    <label for="sports">Sports</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="reading" name="interests" value="reading">
+                                    <label for="reading">Reading</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <button type="submit" class="btn-primary flex-1">Save</button>
+                            <button type="button" id="cancelStudentBtn" class="btn-outline flex-1">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                let currentUser = null;
+                let currentStudentId = null;
+                
+                // Check authentication
+                window.firebaseAuth.onAuthStateChanged(window.auth, async (user) => {
+                    if (user) {
+                        currentUser = user;
+                        await loadProfile();
+                    } else {
+                        window.location.href = 'login.html';
+                    }
+                });
+                
+                async function loadProfile() {
+                    try {
+                        const profileResult = await window.curriculumSocial.getUserProfile(currentUser.uid);
+                        
+                        if (profileResult.success) {
+                            const userData = profileResult.data;
+                            displayProfile(userData);
+                            
+                            if (userData.role === 'parent') {
+                                document.getElementById('studentsSection').style.display = 'block';
+                                await loadStudents();
+                            }
+                            
+                            document.getElementById('loadingState').style.display = 'none';
+                            document.getElementById('profileContent').style.display = 'block';
+                        }
+                    } catch (error) {
+                        console.error('Error loading profile:', error);
+                    }
+                }
+                
+                function displayProfile(userData) {
+                    document.getElementById('profileName').textContent = userData.displayName || 'Your Name';
+                    document.getElementById('profileRole').textContent = userData.role || 'Member';
+                    
+                    // Update form fields
+                    document.getElementById('displayName').value = userData.displayName || '';
+                    document.getElementById('email').value = userData.email || '';
+                    document.getElementById('bio').value = userData.bio || '';
+                    document.getElementById('location').value = userData.location || '';
+                    document.getElementById('matchingRadius').value = userData.matchingRadius || '25';
+                    
+                    // Update philosophy checkboxes
+                    if (userData.philosophies) {
+                        userData.philosophies.forEach(philosophy => {
+                            const checkbox = document.getElementById(philosophy);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                    }
+                    
+                    // Update avatar
+                    const avatar = document.getElementById('profileAvatar');
+                    if (userData.photoURL) {
+                        avatar.innerHTML = `<img src="${userData.photoURL}" alt="Profile Picture">`;
+                    } else {
+                        avatar.textContent = (userData.displayName || 'U').charAt(0).toUpperCase();
+                    }
+                }
+                
+                async function loadStudents() {
+                    // In a real implementation, this would fetch from Firestore
+                    // For now, using sample data
+                    const sampleStudents = [
+                        {
+                            id: 'student1',
+                            name: 'Emma',
+                            age: 6,
+                            grade: 'Grade 1',
+                            interests: ['arts', 'nature', 'reading']
+                        }
+                    ];
+                    
+                    displayStudents(sampleStudents);
+                }
+                
+                function displayStudents(students) {
+                    const container = document.getElementById('studentsList');
+                    container.innerHTML = '';
+                    
+                    students.forEach(student => {
+                        const studentCard = document.createElement('div');
+                        studentCard.className = 'student-card';
+                        studentCard.innerHTML = `
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="text-lg font-semibold" style="color: var(--primary-blue);">${student.name}</h4>
+                                    <p class="text-gray-600">Age ${student.age} • ${student.grade}</p>
+                                    <p class="text-sm text-gray-500 mt-1">Interests: ${student.interests.join(', ')}</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="btn-outline" onclick="editStudent('${student.id}')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-outline" onclick="deleteStudent('${student.id}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(studentCard);
+                    });
+                }
+                
+                // Event listeners
+                document.getElementById('editModeBtn').addEventListener('click', () => {
+                    document.getElementById('profileForm').style.display = 'block';
+                    document.getElementById('editModeBtn').textContent = 'View Mode';
+                });
+                
+                document.getElementById('cancelEditBtn').addEventListener('click', () => {
+                    document.getElementById('profileForm').style.display = 'none';
+                    document.getElementById('editModeBtn').textContent = 'Edit Profile';
+                });
+                
+                document.getElementById('profileUpdateForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const philosophies = Array.from(document.querySelectorAll('input[name="philosophy"]:checked'))
+                        .map(cb => cb.value);
+                    
+                    const updateData = {
+                        displayName: document.getElementById('displayName').value,
+                        bio: document.getElementById('bio').value,
+                        location: document.getElementById('location').value,
+                        matchingRadius: parseInt(document.getElementById('matchingRadius').value),
+                        philosophies: philosophies
+                    };
+                    
+                    try {
+                        await window.curriculumSocial.updateUserProfile(currentUser.uid, updateData);
+                        alert('Profile updated successfully!');
+                        document.getElementById('profileForm').style.display = 'none';
+                        document.getElementById('editModeBtn').textContent = 'Edit Profile';
+                        await loadProfile();
+                    } catch (error) {
+                        alert('Error updating profile: ' + error.message);
+                    }
+                });
+                
+                // Student management
+                document.getElementById('addStudentBtn').addEventListener('click', () => {
+                    currentStudentId = null;
+                    document.getElementById('studentModalTitle').textContent = 'Add Child';
+                    document.getElementById('studentForm').reset();
+                    document.getElementById('studentModal').style.display = 'flex';
+                });
+                
+                document.getElementById('cancelStudentBtn').addEventListener('click', () => {
+                    document.getElementById('studentModal').style.display = 'none';
+                });
+                
+                document.getElementById('studentForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const interests = Array.from(document.querySelectorAll('input[name="interests"]:checked'))
+                        .map(cb => cb.value);
+                    
+                    const studentData = {
+                        name: document.getElementById('studentName').value,
+                        age: parseInt(document.getElementById('studentAge').value),
+                        grade: document.getElementById('studentGrade').value,
+                        interests: interests,
+                        parentId: currentUser.uid
+                    };
+                    
+                    // In real implementation, save to Firestore
+                    alert('Student saved successfully!');
+                    document.getElementById('studentModal').style.display = 'none';
+                    await loadStudents();
+                });
+                
+                // Photo upload
+                document.getElementById('photoUpload').addEventListener('change', async (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        try {
+                            const uploadResult = await window.curriculumSocial.uploadFile(
+                                file, 
+                                `profile-photos/${currentUser.uid}`
+                            );
+                            
+                            if (uploadResult.success) {
+                                await window.curriculumSocial.updateUserProfile(currentUser.uid, {
+                                    photoURL: uploadResult.url
+                                });
+                                
+                                document.getElementById('profileAvatar').innerHTML = 
+                                    `<img src="${uploadResult.url}" alt="Profile Picture">`;
+                            }
+                        } catch (error) {
+                            alert('Error uploading photo: ' + error.message);
+                        }
+                    }
+                });
+                
+                // Sign out
+                document.getElementById('signOutBtn').addEventListener('click', async () => {
+                    try {
+                        await window.curriculumSocial.signOut();
+                        window.location.href = 'login.html';
+                    } catch (error) {
+                        console.error('Error signing out:', error);
+                    }
+                });
+            });
+            
+            // Global functions
+            window.editStudent = function(studentId) {
+                alert('Edit student functionality coming soon!');
+            };
+            
+            window.deleteStudent = function(studentId) {
+                if (confirm('Are you sure you want to remove this child?')) {
+                    alert('Delete student functionality coming soon!');
+                }
+            };
+        </script>
+        
+        <script type="module" src="js/firebase-config.js"></script>
+    </body>
+    </html>
+    
