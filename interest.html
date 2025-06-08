@@ -365,7 +365,7 @@
             const successMessage = document.getElementById('form-success');
             const errorMessage = document.getElementById('form-error');
             
-            form.addEventListener('submit', function(event) {
+            form.addEventListener('submit', async function(event) {
                 event.preventDefault();
                 
                 // Basic form validation
@@ -382,28 +382,47 @@
                 });
                 
                 if (isValid) {
-                    // Hide form and show success message
-                    form.classList.add('hidden');
-                    successMessage.classList.remove('hidden');
-                    successMessage.classList.add('animated', 'fadeIn');
-                    
-                    // Here you would normally send the form data to your server
-                    console.log('Form submitted successfully');
-                    
-                    // For demo purposes, we're just showing a success message
-                    // In a real implementation, you would send this data to your server
-                    const formData = new FormData(form);
-                    const formValues = Object.fromEntries(formData.entries());
-                    console.log('Form values:', formValues);
+                    try {
+                        // Get form data
+                        const formData = new FormData(form);
+                        const formValues = Object.fromEntries(formData.entries());
+                        
+                        // Add timestamp and status
+                        const interestData = {
+                            ...formValues,
+                            timestamp: new Date(),
+                            status: 'new',
+                            emailUpdates: formData.get('email-updates') === 'on',
+                            newsletter: formData.get('newsletter') === 'on',
+                            eventInvites: formData.get('event-invites') === 'on'
+                        };
+                        
+                        // Save to Firebase
+                        const docRef = await window.firebaseFirestore.addDoc(
+                            window.firebaseFirestore.collection(window.db, 'interest_submissions'),
+                            interestData
+                        );
+                        
+                        // Hide form and show success message
+                        form.classList.add('hidden');
+                        successMessage.classList.remove('hidden');
+                        successMessage.classList.add('animated', 'fadeIn');
+                        
+                        // Reset form
+                        form.reset();
+                        stakeholderTypes.forEach(t => t.classList.remove('selected'));
+                        
+                        console.log('Interest submission saved with ID:', docRef.id);
+                    } catch (error) {
+                        console.error('Error saving interest submission:', error);
+                        errorMessage.querySelector('p.text-sm').textContent = 
+                            'There was an error submitting your information. Please try again later.';
+                        errorMessage.classList.remove('hidden');
+                    }
                 } else {
                     // Show error message
                     errorMessage.classList.remove('hidden');
                     errorMessage.classList.add('animated', 'fadeIn');
-                    
-                    // Hide error message after 3 seconds
-                    setTimeout(() => {
-                        errorMessage.classList.add('hidden');
-                    }, 3000);
                 }
             });
         });
@@ -456,6 +475,9 @@
             }
         }
     </script>
+    
+    <!-- Firebase configuration -->
+    <script type="module" src="js/firebase-config.js"></script>
 </body>
 </html>
     <script id="html_badge_script1">
