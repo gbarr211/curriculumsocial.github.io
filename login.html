@@ -6,33 +6,74 @@
     <title>Login - Curriculum Social</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 4px;
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-blue);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
     <!-- Header & Navigation -->
     <header class="sticky top-0 bg-white z-50 shadow-sm">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
-                <h1 class="text-2xl font-bold text-primary">
-                    <a href="index.html" style="text-decoration: none; color: inherit;">
-                        <span class="text-secondary">Curriculum</span> Social
+                <h1 class="text-2xl font-bold">
+                    <a href="/" style="text-decoration: none; color: inherit;">
+                        <span style="color: var(--primary-green);">Curriculum</span>
+                        <span style="color: var(--primary-blue);">Social</span>
                     </a>
                 </h1>
             </div>
+            <!-- Desktop nav -->
             <nav class="hidden md:flex items-center space-x-2">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="signup.html" class="nav-link">Sign Up</a>
+                <a href="profile.html" class="nav-link">Profile</a>
+                <a href="matching.html" class="nav-link">Find Families</a>
+                <a href="activities.html" class="nav-link">Activities</a>
+                <a href="#" class="nav-link" id="logoutNav">Logout</a>
             </nav>
-            <div>
+            <div class="flex items-center space-x-4">
+                <button id="logoutBtn" class="btn-outline hidden">Logout</button>
+                <!-- Mobile hamburger -->
                 <button id="mobileMenuBtn" class="md:hidden text-gray-700">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
         </div>
-        <!-- Mobile Menu -->
+        <!-- Mobile nav -->
         <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
             <div class="px-4 py-2 space-y-2">
-                <a href="index.html" class="block py-2 text-gray-700 hover:text-blue-600">Home</a>
-                <a href="signup.html" class="block py-2 text-gray-700 hover:text-blue-600">Sign Up</a>
+                <a href="profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
+                <a href="matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
+                <a href="activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
+                <a href="#" class="block py-2 text-gray-700 hover:text-blue-600" id="mobileLogoutNav">Logout</a>
             </div>
         </div>
     </header>

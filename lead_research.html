@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,21 +104,74 @@
         .animated-progress {
             transition: width 1s ease-in-out;
         }
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 4px;
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-blue);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
     </style>
 </head>
 <body>
-    <header class="py-4 px-6 text-white shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center">
-                <div class="mr-4 font-bold text-xl">Curriculum Social</div>
-                <div class="text-sm">Lead Research Tool</div>
-            </div>
-            <div>
-                <button type="button" class="bg-white text-blue-600 hover:bg-blue-50 py-2 px-4 rounded shadow" id="save-btn">
-                    <i class="fas fa-save mr-2"></i> Save Lead
-                </button>
-            </div>
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+      <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold">
+            <a href="/" style="text-decoration: none; color: inherit;">
+              <span style="color: var(--primary-green);">Curriculum</span>
+              <span style="color: var(--primary-blue);">Social</span>
+            </a>
+          </h1>
         </div>
+        <!-- Desktop nav -->
+        <nav class="hidden md:flex items-center space-x-2">
+          <a href="profile.html" class="nav-link">Profile</a>
+          <a href="matching.html" class="nav-link">Find Families</a>
+          <a href="activities.html" class="nav-link">Activities</a>
+          <a href="#" class="nav-link" id="logoutNav">Logout</a>
+        </nav>
+        <div class="flex items-center space-x-4">
+          <button id="logoutBtn" class="btn-outline hidden">Logout</button>
+          <!-- Mobile hamburger -->
+          <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <!-- Mobile nav -->
+      <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
+        <div class="px-4 py-2 space-y-2">
+          <a href="profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
+          <a href="matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
+          <a href="activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
+          <a href="#" class="block py-2 text-gray-700 hover:text-blue-600" id="mobileLogoutNav">Logout</a>
+        </div>
+      </div>
     </header>
     
     <main class="container mx-auto py-8 px-4 md:px-6">
