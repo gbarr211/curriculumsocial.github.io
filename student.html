@@ -127,43 +127,70 @@
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
                 <h1 class="text-2xl font-bold">
-                    <a href="https://curriculumsocial.com/" style="text-decoration: none; color: inherit;">
+                    <a href="index.html" style="text-decoration: none; color: inherit;">
                         <span style="color: var(--primary-green);">Curriculum</span> 
                         <span style="color: var(--primary-blue);">Social</span>
                     </a>
                 </h1>
             </div>
             <nav class="hidden md:flex items-center space-x-2">
-                <a href="https://curriculumsocial.com/" class="nav-link">Home</a>
-                <a href="https://curriculumsocial.com/parent.html" class="nav-link">Parents</a>
-                <a href="https://curriculumsocial.com/teacher.html" class="nav-link">Teachers</a>
-                <a href="https://curriculumsocial.com/student.html" class="nav-link" style="color: var(--primary-purple); background-color: var(--light-purple);">Students</a>
-                <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
-                <a href="https://curriculumsocial.com/login.html" class="nav-link">Login</a>
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="parent.html" class="nav-link">Parents</a>
+                <a href="teacher.html" class="nav-link">Teachers</a>
+                <a href="activities.html" class="nav-link">Activities</a>
+                <a href="login.html" class="nav-link">Login</a>
             </nav>
             <div class="flex items-center space-x-2">
-                <a href="https://curriculumsocial.com/signup.html" class="btn-primary hidden md:inline-block">Sign Up</a>
+                <a href="signup.html" class="btn-primary hidden md:inline-block">Sign Up</a>
                 <button id="mobileMenuBtn" class="md:hidden text-gray-700">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
         </div>
-    </header>
-
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
-        <div class="px-4 py-2 space-y-2">
-            <a href="https://curriculumsocial.com/" class="block py-2 text-gray-700 hover:text-blue-600">Home</a>
-            <a href="https://curriculumsocial.com/parent.html" class="block py-2 text-gray-700 hover:text-blue-600">Parents</a>
-            <a href="https://curriculumsocial.com/teacher.html" class="block py-2 text-gray-700 hover:text-blue-600">Teachers</a>
-            <a href="https://curriculumsocial.com/student.html" class="block py-2 text-purple-600 font-semibold">Students</a>
-            <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
-            <a href="https://curriculumsocial.com/login.html" class="block py-2 text-gray-700 hover:text-blue-600">Login</a>
-            <div class="pt-2 border-t border-gray-200">
-                <a href="https://curriculumsocial.com/signup.html" class="btn-primary block text-center">Sign Up</a>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
+            <div class="px-4 py-2 space-y-2">
+                <a href="index.html" class="block py-2 text-gray-700 hover:text-blue-600">Home</a>
+                <a href="parent.html" class="block py-2 text-gray-700 hover:text-blue-600">Parents</a>
+                <a href="teacher.html" class="block py-2 text-gray-700 hover:text-blue-600">Teachers</a>
+                <a href="activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
+                <a href="login.html" class="block py-2 text-gray-700 hover:text-blue-600">Login</a>
+                <div class="pt-2 border-t border-gray-200">
+                    <a href="signup.html" class="btn-primary block text-center">Sign Up</a>
+                </div>
             </div>
         </div>
-    </div>
+    </header>
+    <script>
+        // Hamburger menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const isVisible = mobileMenu.style.display !== 'none';
+            mobileMenu.style.display = isVisible ? 'none' : 'block';
+            // Toggle hamburger icon
+            const icon = this.querySelector('i');
+            icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+        });
+        // Close mobile menu when clicking on a link
+        document.getElementById('mobileMenu').addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                this.style.display = 'none';
+                document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
+            }
+        });
+        // Auto-close mobile menu on resize
+        window.addEventListener('resize', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (window.innerWidth >= 768) {
+                if (mobileMenu) mobileMenu.style.display = 'none';
+                if (mobileMenuBtn) {
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) icon.className = 'fas fa-bars text-xl';
+                }
+            }
+        });
+    </script>
 
     <!-- Hero Section -->
     <section class="hero">
