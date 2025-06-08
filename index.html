@@ -278,14 +278,8 @@
                 </h1>
             </div>
             <!-- Desktop nav -->
-            <nav class="hidden md:flex items-center space-x-2">
-                <a href="profile.html" class="nav-link">Profile</a>
-                <a href="matching.html" class="nav-link">Find Families</a>
-                <a href="activities.html" class="nav-link">Activities</a>
-                <a href="#" class="nav-link" id="logoutNav">Logout</a>
-            </nav>
+            <nav id="desktopNav" class="hidden md:flex items-center space-x-2"></nav>
             <div class="flex items-center space-x-4">
-                <button id="logoutBtn" class="btn-outline hidden">Logout</button>
                 <!-- Mobile hamburger -->
                 <button id="mobileMenuBtn" class="md:hidden text-gray-700">
                     <i class="fas fa-bars text-xl"></i>
@@ -294,12 +288,7 @@
         </div>
         <!-- Mobile nav -->
         <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
-            <div class="px-4 py-2 space-y-2">
-                <a href="profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
-                <a href="matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
-                <a href="activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
-                <a href="#" class="block py-2 text-gray-700 hover:text-blue-600" id="mobileLogoutNav">Logout</a>
-            </div>
+            <div id="mobileNavLinks" class="px-4 py-2 space-y-2"></div>
         </div>
     </header>
 
@@ -1009,6 +998,40 @@
             tabContents[index].classList.add('active');
         }
 
+        // Navigation links config
+        const navLinks = [
+            { href: 'dashboard.html', label: 'Dashboard' },
+            { href: 'profile.html', label: 'Profile' },
+            { href: 'matching.html', label: 'Find Families' },
+            { href: 'activities.html', label: 'Activities' }
+        ];
+        const currentPage = window.location.pathname.split('/').pop();
+        const isDashboard = currentPage === 'dashboard.html';
+        // Build nav links, excluding current page and dashboard on dashboard.html
+        function buildNavLinks(container, isMobile) {
+            container.innerHTML = '';
+            navLinks.forEach(link => {
+                if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
+                const a = document.createElement('a');
+                a.href = link.href;
+                a.textContent = link.label;
+                a.className = isMobile
+                    ? 'block py-2 text-gray-700 hover:text-blue-600'
+                    : 'nav-link';
+                container.appendChild(a);
+            });
+            // Add logout link
+            const logout = document.createElement('a');
+            logout.href = '#';
+            logout.textContent = 'Logout';
+            logout.className = isMobile
+                ? 'block py-2 text-gray-700 hover:text-blue-600'
+                : 'nav-link';
+            logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
+            container.appendChild(logout);
+        }
+        buildNavLinks(document.getElementById('desktopNav'), false);
+        buildNavLinks(document.getElementById('mobileNavLinks'), true);
         // Hamburger menu toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobileMenu');
@@ -1036,6 +1059,16 @@
                     if (icon) icon.className = 'fas fa-bars text-xl';
                 }
             }
+        });
+        // Logout functionality (replace with Firebase logic if available)
+        function handleLogout(e) {
+            e.preventDefault();
+            alert('Logging out... (replace with real logout logic)');
+            // Example: firebase.auth().signOut().then(() => { window.location.href = 'login.html'; });
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('logoutNav').addEventListener('click', handleLogout);
+            document.getElementById('mobileLogoutNav').addEventListener('click', handleLogout);
         });
     </script>
     
