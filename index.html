@@ -270,37 +270,35 @@
     <header class="sticky top-0 bg-white z-50 shadow-sm">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
-                <h1 class="text-2xl font-bold text-primary">
+                <h1 class="text-2xl font-bold">
                     <a href="/" style="text-decoration: none; color: inherit;">
-                        <span class="text-secondary">Curriculum</span> Social
+                        <span style="color: var(--primary-green);">Curriculum</span>
+                        <span style="color: var(--primary-blue);">Social</span>
                     </a>
                 </h1>
             </div>
+            <!-- Desktop nav -->
             <nav class="hidden md:flex items-center space-x-2">
-                <a href="#about" class="nav-link">About</a>
-                <a href="#pathways" class="nav-link">For You</a>
-                <a href="dashboard.html" class="nav-link">Dashboard</a>
-                <a href="#contact" class="nav-link">Contact</a>
-                <a href="login.html" class="nav-link">Login</a>
+                <a href="profile.html" class="nav-link">Profile</a>
+                <a href="matching.html" class="nav-link">Find Families</a>
+                <a href="activities.html" class="nav-link">Activities</a>
+                <a href="#" class="nav-link" id="logoutNav">Logout</a>
             </nav>
-            <div>
-                <a href="signup.html" class="btn-primary hidden md:inline-block">Sign Up</a>
+            <div class="flex items-center space-x-4">
+                <button id="logoutBtn" class="btn-outline hidden">Logout</button>
+                <!-- Mobile hamburger -->
                 <button id="mobileMenuBtn" class="md:hidden text-gray-700">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
         </div>
-        <!-- Mobile Menu -->
+        <!-- Mobile nav -->
         <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
             <div class="px-4 py-2 space-y-2">
-                <a href="#about" class="block py-2 text-gray-700 hover:text-blue-600">About</a>
-                <a href="#pathways" class="block py-2 text-gray-700 hover:text-blue-600">For You</a>
-                <a href="dashboard.html" class="block py-2 text-gray-700 hover:text-blue-600">Dashboard</a>
-                <a href="#contact" class="block py-2 text-gray-700 hover:text-blue-600">Contact</a>
-                <a href="login.html" class="block py-2 text-gray-700 hover:text-blue-600">Login</a>
-                <div class="pt-2 border-t border-gray-200">
-                    <a href="signup.html" class="btn-primary block text-center mb-2">Sign Up</a>
-                </div>
+                <a href="profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
+                <a href="matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
+                <a href="activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
+                <a href="#" class="block py-2 text-gray-700 hover:text-blue-600" id="mobileLogoutNav">Logout</a>
             </div>
         </div>
     </header>
