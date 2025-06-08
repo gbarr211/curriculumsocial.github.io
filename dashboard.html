@@ -220,6 +220,18 @@
                 document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
             }
         });
+        // Auto-close mobile menu on resize
+        window.addEventListener('resize', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (window.innerWidth >= 768) {
+                if (mobileMenu) mobileMenu.style.display = 'none';
+                if (mobileMenuBtn) {
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) icon.className = 'fas fa-bars text-xl';
+                }
+            }
+        });
     </script>
 
     <!-- Loading State -->
