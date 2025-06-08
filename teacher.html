@@ -191,10 +191,14 @@
             }
         });
         // Logout functionality (replace with Firebase logic if available)
-        function handleLogout(e) {
+        async function handleLogout(e) {
             e.preventDefault();
-            alert('Logging out... (replace with real logout logic)');
-            // Example: firebase.auth().signOut().then(() => { window.location.href = 'login.html'; });
+            const result = await window.curriculumSocial.signOut();
+            if (result.success) {
+                window.location.href = 'index.html';
+            } else {
+                alert('Logout failed: ' + result.error);
+            }
         }
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('logoutNav').addEventListener('click', handleLogout);

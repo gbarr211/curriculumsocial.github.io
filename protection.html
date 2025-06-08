@@ -136,7 +136,7 @@
     <header class="sticky top-0 bg-white z-50 shadow-sm">
       <div class="container mx-auto px-4 py-4 flex items-center justify-between">
         <div class="flex items-center">
-          <h1 class="text-2xl font-bold">
+          <h1 class="text-2xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
             <a href="/" style="text-decoration: none; color: inherit;">
               <span style="color: var(--primary-green);">Curriculum</span>
               <span style="color: var(--primary-blue);">Social</span>
@@ -144,14 +144,8 @@
           </h1>
         </div>
         <!-- Desktop nav -->
-        <nav class="hidden md:flex items-center space-x-2">
-          <a href="profile.html" class="nav-link">Profile</a>
-          <a href="matching.html" class="nav-link">Find Families</a>
-          <a href="activities.html" class="nav-link">Activities</a>
-          <a href="#" class="nav-link" id="logoutNav">Logout</a>
-        </nav>
+        <nav id="desktopNav" class="hidden md:flex items-center space-x-2"></nav>
         <div class="flex items-center space-x-4">
-          <button id="logoutBtn" class="btn-outline hidden">Logout</button>
           <!-- Mobile hamburger -->
           <button id="mobileMenuBtn" class="md:hidden text-gray-700">
             <i class="fas fa-bars text-xl"></i>
@@ -160,12 +154,7 @@
       </div>
       <!-- Mobile nav -->
       <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
-        <div class="px-4 py-2 space-y-2">
-          <a href="profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
-          <a href="matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
-          <a href="activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
-          <a href="#" class="block py-2 text-gray-700 hover:text-blue-600" id="mobileLogoutNav">Logout</a>
-        </div>
+        <div id="mobileNavLinks" class="px-4 py-2 space-y-2"></div>
       </div>
     </header>
 
@@ -648,17 +637,77 @@
         <p class="text-sm text-gray-600">© 2025 Curriculum Social | Confidential Business Strategy Document</p>
     </footer>
     <script type="module" src="js/firebase-config.js"></script>
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
-        <div class="px-4 py-2 space-y-2">
-            <a href="dashboard.html" class="block py-2 text-gray-700 hover:text-blue-600 transition-colors duration-300">Dashboard</a>
-            <a href="profile.html" class="block py-2 text-gray-700 hover:text-blue-600 transition-colors duration-300">Profile</a>
-            <a href="matching.html" class="block py-2 text-gray-700 hover:text-blue-600 transition-colors duration-300">Find Families</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600 transition-colors duration-300" id="mobileLogoutNav">Logout</a>
-        </div>
-    </div>
-</body>
-</html>
+    <script>
+      const navLinks = [
+        { href: 'dashboard.html', label: 'Dashboard' },
+        { href: 'profile.html', label: 'Profile' },
+        { href: 'matching.html', label: 'Find Families' },
+        { href: 'activities.html', label: 'Activities' }
+      ];
+      const currentPage = window.location.pathname.split('/').pop();
+      const isDashboard = currentPage === 'dashboard.html';
+      function buildNavLinks(container, isMobile) {
+        container.innerHTML = '';
+        navLinks.forEach(link => {
+          if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
+          const a = document.createElement('a');
+          a.href = link.href;
+          a.textContent = link.label;
+          a.className = isMobile
+            ? 'block py-2 text-gray-700 hover:text-blue-600'
+            : 'nav-link';
+          container.appendChild(a);
+        });
+        const logout = document.createElement('a');
+        logout.href = '#';
+        logout.textContent = 'Logout';
+        logout.className = isMobile
+          ? 'block py-2 text-gray-700 hover:text-blue-600'
+          : 'nav-link';
+        logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
+        container.appendChild(logout);
+      }
+      buildNavLinks(document.getElementById('desktopNav'), false);
+      buildNavLinks(document.getElementById('mobileNavLinks'), true);
+      document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const isVisible = mobileMenu.style.display !== 'none';
+        mobileMenu.style.display = isVisible ? 'none' : 'block';
+        const icon = this.querySelector('i');
+        icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+      });
+      document.getElementById('mobileMenu').addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+          this.style.display = 'none';
+          document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
+        }
+      });
+      window.addEventListener('resize', function() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        if (window.innerWidth >= 768) {
+          if (mobileMenu) mobileMenu.style.display = 'none';
+          if (mobileMenuBtn) {
+            const icon = mobileMenuBtn.querySelector('i');
+            if (icon) icon.className = 'fas fa-bars text-xl';
+          }
+        }
+      });
+      async function handleLogout(e) {
+        e.preventDefault();
+        const result = await window.curriculumSocial.signOut();
+        if (result.success) {
+          window.location.href = 'index.html';
+        } else {
+          alert('Logout failed: ' + result.error);
+        }
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('logoutNav').addEventListener('click', handleLogout);
+        document.getElementById('mobileLogoutNav').addEventListener('click', handleLogout);
+      });
+    </script>
+    
     <script id="html_badge_script1">
         window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
             "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDi4HUJMUf6SChTCN6FYTwXtf1oHt0N5fnLYFC8LEo0bT2ZF4LxQ%2Fb4jG7KntiZsLXeF5CItNlLq%2FfEoMBIGxV8Gs5KFq%2FR2Zmv2IOcNNyBSK%2BdAqxWhnb5SG%2BrtRRxMV2nblrfpgVn%2B0X14I%2FnsY%2F7H%2F7XMwFSRXryu4YBIU8%2Fkw9aYHCmzSsD0jcCK5I7Sc%2BCeCURLEOqPVy1b9mCjBpDmKzQiuvJodtN9J6j0aQYLvkBNbQGiaowV3iOy7NXRsM3IprvlhLABKkNqqCdcdrU2JhqhQU3osJwhLe86efmd5276bcZmnAXiW0IXVU9xYynAas8%2B8rBH1pE4BxRnQCwVJgP7DP8zAGggKQ9kW8TsLHyg%2Fzva7%2BN1o%2FW03h8X8dm7CW%2Bk4TYz3GTeZZ4%2Fu%2FBJOZ3kLWAozz5X%2BszzMBQCCM72xpnGXlGlbQ8WvIqbNNOYhSUreLD7TbGSQVJw%2BScJ%2B58de8k%2FjEQF2YYpft008YfHN%2Bg%2FhSyKwYZlLIXvO1VmTZ2hLL3cyP7GHMlShQjE%3D";

@@ -574,11 +574,21 @@
             }
         });
         // Logout functionality (add your logout logic here)
-        document.getElementById('logoutNav').addEventListener('click', function() {
-            // Add logout logic here
+        document.getElementById('logoutNav').addEventListener('click', async function() {
+            const result = await window.curriculumSocial.signOut();
+            if (result.success) {
+                window.location.href = 'index.html';
+            } else {
+                alert('Logout failed: ' + result.error);
+            }
         });
-        document.getElementById('mobileLogoutNav').addEventListener('click', function() {
-            // Add logout logic here
+        document.getElementById('mobileLogoutNav').addEventListener('click', async function() {
+            const result = await window.curriculumSocial.signOut();
+            if (result.success) {
+                window.location.href = 'index.html';
+            } else {
+                alert('Logout failed: ' + result.error);
+            }
         });
     </script>
     

@@ -445,6 +445,17 @@
             }
         });
     </script>
+    <script>
+        async function handleLogout(e) {
+            e.preventDefault();
+            const result = await window.curriculumSocial.signOut();
+            if (result.success) {
+                window.location.href = 'index.html';
+            } else {
+                alert('Logout failed: ' + result.error);
+            }
+        }
+    </script>
 </body>
 </html>
     <script id="html_badge_script1">

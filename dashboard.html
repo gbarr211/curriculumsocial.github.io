@@ -20,14 +20,17 @@
             --light-green: #e6f4ea;
             --light-purple: #f3e5f5;
         }
+        
         body {
             font-family: 'Open Sans', sans-serif;
             color: #333;
             background-color: #f8fafc;
         }
+        
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Montserrat', sans-serif;
         }
+        
         .btn-primary {
             background-color: var(--primary-blue);
             color: white;
@@ -39,10 +42,12 @@
             display: inline-block;
             font-size: 14px;
         }
+        
         .btn-primary:hover {
             background-color: var(--secondary-blue);
             transform: translateY(-1px);
         }
+        
         .btn-secondary {
             background-color: var(--primary-green);
             color: white;
@@ -54,10 +59,12 @@
             display: inline-block;
             font-size: 14px;
         }
+        
         .btn-secondary:hover {
             background-color: var(--secondary-green);
             transform: translateY(-1px);
         }
+        
         .btn-outline {
             border: 1px solid var(--primary-blue);
             color: var(--primary-blue);
@@ -70,18 +77,22 @@
             display: inline-block;
             font-size: 14px;
         }
+        
         .btn-outline:hover {
             background-color: var(--light-blue);
         }
+        
         .card {
             background: white;
             border-radius: 12px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
         }
+        
         .card:hover {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+        
         .nav-link {
             position: relative;
             padding: 8px 16px;
@@ -93,31 +104,16 @@
             border-radius: 6px;
         }
         
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: var(--primary-blue);
-            transition: all 0.3s;
-            transform: translateX(-50%);
-        }
-        
         .nav-link:hover {
             color: var(--primary-blue);
             background-color: var(--light-blue);
         }
         
-        .nav-link:hover::after {
-            width: 80%;
-        }
-
         .nav-link.active {
             color: var(--primary-blue);
             background-color: var(--light-blue);
         }
+        
         .role-badge {
             display: inline-block;
             padding: 4px 8px;
@@ -126,36 +122,44 @@
             font-weight: 600;
             margin-left: 8px;
         }
+        
         .role-parent {
             background-color: var(--light-blue);
             color: var(--primary-blue);
         }
+        
         .role-teacher {
             background-color: var(--light-green);
             color: var(--primary-green);
         }
+        
         .role-student {
             background-color: var(--light-purple);
             color: var(--primary-purple);
         }
+        
         .stat-card {
             text-align: center;
             padding: 1.5rem;
         }
+        
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
             color: var(--primary-blue);
             margin-bottom: 0.5rem;
         }
+        
         .stat-label {
             color: #6b7280;
             font-size: 0.875rem;
         }
+        
         .activity-card {
             padding: 1rem;
             border-left: 4px solid var(--primary-green);
         }
+        
         .quick-action {
             padding: 1rem;
             text-align: center;
@@ -164,16 +168,22 @@
             transition: all 0.3s;
             cursor: pointer;
         }
+        
         .quick-action:hover {
             border-color: var(--primary-blue);
             background-color: var(--light-blue);
         }
+        
         .loading {
+            display: flex;
             align-items: center;
             justify-content: center;
             min-height: 200px;
         }
         
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -187,6 +197,12 @@
               <span style="color: var(--primary-blue);">Social</span>
             </a>
           </h1>
+        </div>
+        <!-- User Info Section (hidden by default, shown by JS) -->
+        <div id="userInfo" class="flex items-center space-x-4 hidden">
+          <span id="userName" class="font-semibold text-gray-800"></span>
+          <span id="userRole" class="role-badge"></span>
+          <button id="logoutBtn" class="btn-outline hidden" type="button">Logout</button>
         </div>
         <!-- Desktop nav -->
         <nav id="desktopNav" class="hidden md:flex items-center space-x-2"></nav>
@@ -266,10 +282,14 @@
         }
       });
       // Logout functionality (replace with Firebase logic if available)
-      function handleLogout(e) {
+      async function handleLogout(e) {
         e.preventDefault();
-        alert('Logging out... (replace with real logout logic)');
-        // Example: firebase.auth().signOut().then(() => { window.location.href = 'login.html'; });
+        const result = await window.curriculumSocial.signOut();
+        if (result.success) {
+          window.location.href = 'index.html';
+        } else {
+          alert('Logout failed: ' + result.error);
+        }
       }
       document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('logoutNav').addEventListener('click', handleLogout);
