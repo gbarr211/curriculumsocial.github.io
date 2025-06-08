@@ -236,15 +236,24 @@
     </header>
     
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        if (mobileMenuBtn && mobileMenu) {
-          mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-          });
-        }
-      });
+        // Mobile menu functionality (match index.html)
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const isVisible = mobileMenu.style.display !== 'none';
+            mobileMenu.style.display = isVisible ? 'none' : 'block';
+            
+            // Toggle hamburger icon
+            const icon = this.querySelector('i');
+            icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+        });
+    
+        // Close mobile menu when clicking on a link
+        document.getElementById('mobileMenu').addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                this.style.display = 'none';
+                document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
+            }
+        });
     </script>
 
     <!-- Loading State -->
