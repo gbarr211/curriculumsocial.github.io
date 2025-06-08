@@ -20,17 +20,14 @@
             --light-green: #e6f4ea;
             --light-purple: #f3e5f5;
         }
-        
         body {
             font-family: 'Open Sans', sans-serif;
             color: #333;
             background-color: #f8fafc;
         }
-        
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Montserrat', sans-serif;
         }
-        
         .btn-primary {
             background-color: var(--primary-blue);
             color: white;
@@ -42,12 +39,10 @@
             display: inline-block;
             font-size: 14px;
         }
-        
         .btn-primary:hover {
             background-color: var(--secondary-blue);
             transform: translateY(-1px);
         }
-        
         .btn-secondary {
             background-color: var(--primary-green);
             color: white;
@@ -59,12 +54,10 @@
             display: inline-block;
             font-size: 14px;
         }
-        
         .btn-secondary:hover {
             background-color: var(--secondary-green);
             transform: translateY(-1px);
         }
-        
         .btn-outline {
             border: 1px solid var(--primary-blue);
             color: var(--primary-blue);
@@ -77,22 +70,18 @@
             display: inline-block;
             font-size: 14px;
         }
-        
         .btn-outline:hover {
             background-color: var(--light-blue);
         }
-        
         .card {
             background: white;
             border-radius: 12px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
         }
-        
         .card:hover {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
-        
         .nav-link {
             position: relative;
             padding: 8px 16px;
@@ -103,17 +92,14 @@
             transition: all 0.3s ease;
             border-radius: 6px;
         }
-        
         .nav-link:hover {
             color: var(--primary-blue);
             background-color: var(--light-blue);
         }
-        
         .nav-link.active {
             color: var(--primary-blue);
             background-color: var(--light-blue);
         }
-        
         .role-badge {
             display: inline-block;
             padding: 4px 8px;
@@ -122,44 +108,36 @@
             font-weight: 600;
             margin-left: 8px;
         }
-        
         .role-parent {
             background-color: var(--light-blue);
             color: var(--primary-blue);
         }
-        
         .role-teacher {
             background-color: var(--light-green);
             color: var(--primary-green);
         }
-        
         .role-student {
             background-color: var(--light-purple);
             color: var(--primary-purple);
         }
-        
         .stat-card {
             text-align: center;
             padding: 1.5rem;
         }
-        
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
             color: var(--primary-blue);
             margin-bottom: 0.5rem;
         }
-        
         .stat-label {
             color: #6b7280;
             font-size: 0.875rem;
         }
-        
         .activity-card {
             padding: 1rem;
             border-left: 4px solid var(--primary-green);
         }
-        
         .quick-action {
             padding: 1rem;
             text-align: center;
@@ -168,19 +146,16 @@
             transition: all 0.3s;
             cursor: pointer;
         }
-        
         .quick-action:hover {
             border-color: var(--primary-blue);
             background-color: var(--light-blue);
         }
-        
         .loading {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 200px;
         }
-        
         .hidden {
             display: none;
         }
@@ -198,31 +173,27 @@
             </a>
           </h1>
         </div>
-    
         <!-- Desktop nav -->
-        <nav class="md:flex items-center space-x-2">
+        <nav class="hidden md:flex items-center space-x-2">
           <a href="dashboard.html" class="nav-link active">Dashboard</a>
           <a href="profile.html" class="nav-link">Profile</a>
           <a href="matching.html" class="nav-link">Find Families</a>
           <a href="activities.html" class="nav-link">Activities</a>
         </nav>
-    
         <div class="flex items-center space-x-4">
           <div id="userInfo" class="hidden">
             <span id="userName" class="font-medium"></span>
             <span id="userRole" class="role-badge"></span>
           </div>
           <button id="logoutBtn" class="btn-outline hidden">Logout</button>
-    
           <!-- Mobile hamburger -->
           <button id="mobileMenuBtn" class="md:hidden text-gray-700">
             <i class="fas fa-bars text-xl"></i>
           </button>
         </div>
       </div>
-    
       <!-- Mobile nav -->
-      <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
+      <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
         <div class="px-4 py-2 space-y-2">
           <a href="dashboard.html" class="block py-2 text-blue-600 font-semibold">Dashboard</a>
           <a href="profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
@@ -234,19 +205,16 @@
         </div>
       </div>
     </header>
-    
     <script>
         // Mobile menu functionality (match index.html)
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobileMenu');
             const isVisible = mobileMenu.style.display !== 'none';
             mobileMenu.style.display = isVisible ? 'none' : 'block';
-            
             // Toggle hamburger icon
             const icon = this.querySelector('i');
             icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
         });
-    
         // Close mobile menu when clicking on a link
         document.getElementById('mobileMenu').addEventListener('click', function(e) {
             if (e.target.tagName === 'A') {
