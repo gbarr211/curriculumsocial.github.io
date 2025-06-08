@@ -110,11 +110,12 @@
         .nav-link {
             position: relative;
             padding: 8px 16px;
-            margin: 0 8px;
-            font-weight: 500;
+            margin: 0 4px;
             color: #4a5568;
-            transition: all 0.3s;
             text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
         }
         
         .nav-link::after {
@@ -131,6 +132,7 @@
         
         .nav-link:hover {
             color: var(--primary-blue);
+            background-color: var(--light-blue);
         }
         
         .nav-link:hover::after {
