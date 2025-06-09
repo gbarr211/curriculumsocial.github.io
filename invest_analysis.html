@@ -157,16 +157,6 @@
         .nav-link:hover::after {
             width: 80%;
         }
-
-        #mobileMenu {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            right: 0;
-            z-index: 40;
-            max-height: calc(100vh - 80px);
-            overflow-y: auto;
-        }
     </style>
 </head>
 <body>
@@ -188,8 +178,7 @@
           <a href="#" class="nav-link" id="logoutNav">Logout</a>
         </nav>
         <div class="flex items-center space-x-4">
-          <!-- Express Interest Button (desktop only, always visible) -->
-          <a href="interest.html" class="btn-secondary hidden md:inline-block">Express Interest</a>
+          <button id="logoutBtn" class="btn-outline hidden">Logout</button>
           <!-- Mobile hamburger -->
           <button id="mobileMenuBtn" class="md:hidden text-gray-700">
             <i class="fas fa-bars text-xl"></i>
@@ -197,15 +186,12 @@
         </div>
       </div>
       <!-- Mobile nav -->
-      <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
+      <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
         <div class="px-4 py-2 space-y-2">
           <a href="profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
           <a href="matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
           <a href="activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
           <a href="#" class="block py-2 text-gray-700 hover:text-blue-600" id="mobileLogoutNav">Logout</a>
-          <div class="pt-2 border-t border-gray-200">
-            <a href="interest.html" class="btn-secondary w-full block text-center mb-2">Express Interest</a>
-          </div>
         </div>
       </div>
     </header>
@@ -439,7 +425,7 @@
                         </ul>
                     </div>
                     
-                    <div class="risk-medium">
+                    <div class="risk-item risk-medium">
                         <h4 class="font-semibold">Medium Risk: Competitive Vulnerability</h4>
                         <p>Slower growth creates window for competitors to enter market with greater resources.</p>
                         <p class="font-semibold mt-2">Mitigation:</p>
@@ -476,7 +462,7 @@
                         </ul>
                     </div>
                     
-                    <div class="risk-low">
+                    <div class="risk-item risk-low">
                         <h4 class="font-semibold">Low Risk: Operational Autonomy</h4>
                         <p>Angels typically provide less operational oversight than VCs but may still influence decisions.</p>
                         <p class="font-semibold mt-2">Mitigation:</p>
@@ -502,7 +488,7 @@
                         </ul>
                     </div>
                     
-                    <div class="risk-high">
+                    <div class="risk-item risk-high">
                         <h4 class="font-semibold">High Risk: Growth Expectations</h4>
                         <p>VCs typically expect rapid scaling and may push for growth over sustainability.</p>
                         <p class="font-semibold mt-2">Mitigation:</p>
@@ -513,7 +499,7 @@
                         </ul>
                     </div>
                     
-                    <div class="risk-medium">
+                    <div class="risk-item risk-medium">
                         <h4 class="font-semibold">Medium Risk: Exit Pressure</h4>
                         <p>VCs have fixed fund lifecycles requiring exits, potentially forcing premature sale.</p>
                         <p class="font-semibold mt-2">Mitigation:</p>

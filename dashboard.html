@@ -114,16 +114,6 @@
             background-color: var(--light-blue);
         }
         
-        #mobileMenu {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            right: 0;
-            z-index: 40;
-            max-height: calc(100vh - 80px);
-            overflow-y: auto;
-        }
-        
         .role-badge {
             display: inline-block;
             padding: 4px 8px;
@@ -190,49 +180,128 @@
             justify-content: center;
             min-height: 200px;
         }
+        
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <!-- Header & Navigation -->
     <header class="sticky top-0 bg-white z-50 shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center">
-                <h1 class="text-2xl font-bold">
-                    <a href="https://curriculumsocial.com/" style="text-decoration: none; color: inherit;">
-                        <span style="color: var(--primary-green);">Curriculum</span> 
-                        <span style="color: var(--primary-blue);">Social</span>
-                    </a>
-                </h1>
-            </div>
-            <nav class="hidden md:flex items-center space-x-2">
-                <a href="https://curriculumsocial.com/dashboard.html" class="nav-link active">Dashboard</a>
-                <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
-                <a href="https://curriculumsocial.com/matching.html" class="nav-link">Find Families</a>
-                <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
-            </nav>
-            <div class="flex items-center space-x-4">
-                <div id="userInfo" class="hidden">
-                    <span id="userName" class="font-medium"></span>
-                    <span id="userRole" class="role-badge"></span>
-                </div>
-                <button id="logoutBtn" class="btn-outline hidden">Logout</button>
-                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
+      <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
+            <a href="/" style="text-decoration: none; color: inherit;">
+              <span style="color: var(--primary-green);">Curriculum</span>
+              <span style="color: var(--primary-blue);">Social</span>
+            </a>
+          </h1>
         </div>
+        <!-- User Info Section (hidden by default, shown by JS) -->
+        <div id="userInfo" class="flex items-center space-x-4 hidden">
+          <span id="userName" class="font-semibold text-gray-800"></span>
+          <span id="userRole" class="role-badge"></span>
+          <button id="logoutBtn" class="btn-outline hidden" type="button">Logout</button>
+        </div>
+        <!-- Desktop nav -->
+        <nav id="desktopNav" class="hidden md:flex items-center space-x-2"></nav>
+        <div class="flex items-center space-x-4">
+          <!-- Mobile hamburger -->
+          <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <!-- Mobile nav -->
+      <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
+        <div id="mobileNavLinks" class="px-4 py-2 space-y-2"></div>
+      </div>
     </header>
+    <script>
+      // Navigation links config
+      const navLinks = [
+        { href: 'dashboard.html', label: 'Dashboard' },
+        { href: 'profile.html', label: 'Profile' },
+        { href: 'matching.html', label: 'Find Families' },
+        { href: 'activities.html', label: 'Activities' }
+      ];
+      const currentPage = window.location.pathname.split('/').pop();
+      const isDashboard = currentPage === 'dashboard.html';
+      // Build nav links, excluding current page and dashboard on dashboard.html
+      function buildNavLinks(container, isMobile) {
+        container.innerHTML = '';
+        navLinks.forEach(link => {
+          if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
+          const a = document.createElement('a');
+          a.href = link.href;
+          a.textContent = link.label;
+          a.className = isMobile
+            ? 'block py-2 text-gray-700 hover:text-blue-600'
+            : 'nav-link';
+          container.appendChild(a);
+        });
+        // Add logout link
+        const logout = document.createElement('a');
+        logout.href = '#';
+        logout.textContent = 'Logout';
+        logout.className = isMobile
+          ? 'block py-2 text-gray-700 hover:text-blue-600'
+          : 'nav-link';
+        logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
+        container.appendChild(logout);
+      }
+      buildNavLinks(document.getElementById('desktopNav'), false);
+      buildNavLinks(document.getElementById('mobileNavLinks'), true);
+      // Hamburger menu toggle
+      document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const isVisible = mobileMenu.style.display !== 'none';
+        mobileMenu.style.display = isVisible ? 'none' : 'block';
+        // Toggle hamburger icon
+        const icon = this.querySelector('i');
+        icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+      });
+      // Close mobile menu when clicking on a link
+      document.getElementById('mobileMenu').addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+          this.style.display = 'none';
+          document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
+        }
+      });
+      // Auto-close mobile menu on resize
+      window.addEventListener('resize', function() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        if (window.innerWidth >= 768) {
+          if (mobileMenu) mobileMenu.style.display = 'none';
+          if (mobileMenuBtn) {
+            const icon = mobileMenuBtn.querySelector('i');
+            if (icon) icon.className = 'fas fa-bars text-xl';
+          }
+        }
+      });
+      // Logout functionality (replace with Firebase logic if available)
+      async function handleLogout(e) {
+        e.preventDefault();
+        const result = await window.curriculumSocial.signOut();
+        if (result.success) {
+          window.location.href = 'index.html';
+        } else {
+          alert('Logout failed: ' + result.error);
+        }
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('logoutNav').addEventListener('click', handleLogout);
+        document.getElementById('mobileLogoutNav').addEventListener('click', handleLogout);
+      });
+    </script>
 
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
-        <div class="px-4 py-2 space-y-2">
-            <a href="https://curriculumsocial.com/dashboard.html" class="block py-2 text-blue-600 font-semibold">Dashboard</a>
-            <a href="https://curriculumsocial.com/profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
-            <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
-            <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
-            <div class="pt-2 border-t border-gray-200">
-                <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
-            </div>
+    <!-- Loading State -->
+    <div id="loadingState" class="loading">
+        <div class="text-center">
+            <i class="fas fa-spinner fa-spin text-4xl text-blue-500 mb-4"></i>
+            <p class="text-gray-600">Loading your dashboard...</p>
         </div>
     </div>
 
@@ -455,7 +524,8 @@
                         // Update UI with real user data
                         updateUserInterface();
                         
-                        //show dashboard
+                        // Hide loading, show dashboard
+                        document.getElementById('loadingState').classList.add('hidden');
                         document.getElementById('dashboardContent').classList.remove('hidden');
                     } else {
                         console.error('Failed to load user profile:', userProfile.error);
@@ -467,6 +537,7 @@
                             role: 'parent' // default role
                         };
                         updateUserInterface();
+                        document.getElementById('loadingState').classList.add('hidden');
                         document.getElementById('dashboardContent').classList.remove('hidden');
                     }
                 } else {
@@ -508,8 +579,6 @@
                 
                 // Load real data from Firebase
                 loadUserStats();
-                // Hide loading state and show dashboard content
-                document.getElementById('dashboardContent').classList.remove('hidden');
             }
         }
     
