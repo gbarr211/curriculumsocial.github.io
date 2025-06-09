@@ -445,8 +445,7 @@
                         // Update UI with real user data
                         updateUserInterface();
                         
-                        // Hide loading, show dashboard
-                        document.getElementById('loadingState').classList.add('hidden');
+                        //show dashboard
                         document.getElementById('dashboardContent').classList.remove('hidden');
                     } else {
                         console.error('Failed to load user profile:', userProfile.error);
