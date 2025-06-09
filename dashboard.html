@@ -253,47 +253,47 @@
         logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
         container.appendChild(logout);
       }
-      buildNavLinks(document.getElementById('desktopNav'), false);
-      buildNavLinks(document.getElementById('mobileNavLinks'), true);
-      // Hamburger menu toggle
-      document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-        const mobileMenu = document.getElementById('mobileMenu');
-        const isVisible = mobileMenu.style.display !== 'none';
-        mobileMenu.style.display = isVisible ? 'none' : 'block';
-        // Toggle hamburger icon
-        const icon = this.querySelector('i');
-        icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
-      });
-      // Close mobile menu when clicking on a link
-      document.getElementById('mobileMenu').addEventListener('click', function(e) {
-        if (e.target.tagName === 'A') {
-          this.style.display = 'none';
-          document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
-        }
-      });
-      // Auto-close mobile menu on resize
-      window.addEventListener('resize', function() {
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        if (window.innerWidth >= 768) {
-          if (mobileMenu) mobileMenu.style.display = 'none';
-          if (mobileMenuBtn) {
-            const icon = mobileMenuBtn.querySelector('i');
-            if (icon) icon.className = 'fas fa-bars text-xl';
+      document.addEventListener('DOMContentLoaded', function() {
+        buildNavLinks(document.getElementById('desktopNav'), false);
+        buildNavLinks(document.getElementById('mobileNavLinks'), true);
+        // Hamburger menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+          const mobileMenu = document.getElementById('mobileMenu');
+          const isVisible = mobileMenu.style.display !== 'none';
+          mobileMenu.style.display = isVisible ? 'none' : 'block';
+          // Toggle hamburger icon
+          const icon = this.querySelector('i');
+          icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+        });
+        // Close mobile menu when clicking on a link
+        document.getElementById('mobileMenu').addEventListener('click', function(e) {
+          if (e.target.tagName === 'A') {
+            this.style.display = 'none';
+            document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
+          }
+        });
+        // Auto-close mobile menu on resize
+        window.addEventListener('resize', function() {
+          const mobileMenu = document.getElementById('mobileMenu');
+          const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+          if (window.innerWidth >= 768) {
+            if (mobileMenu) mobileMenu.style.display = 'none';
+            if (mobileMenuBtn) {
+              const icon = mobileMenuBtn.querySelector('i');
+              if (icon) icon.className = 'fas fa-bars text-xl';
+            }
+          }
+        });
+        // Logout functionality (replace with Firebase logic if available)
+        async function handleLogout(e) {
+          e.preventDefault();
+          const result = await window.curriculumSocial.signOut();
+          if (result.success) {
+            window.location.href = 'index.html';
+          } else {
+            alert('Logout failed: ' + result.error);
           }
         }
-      });
-      // Logout functionality (replace with Firebase logic if available)
-      async function handleLogout(e) {
-        e.preventDefault();
-        const result = await window.curriculumSocial.signOut();
-        if (result.success) {
-          window.location.href = 'index.html';
-        } else {
-          alert('Logout failed: ' + result.error);
-        }
-      }
-      document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('logoutNav').addEventListener('click', handleLogout);
         document.getElementById('mobileLogoutNav').addEventListener('click', handleLogout);
       });
