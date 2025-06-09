@@ -105,7 +105,16 @@
         .nav-link:hover::after {
             width: 80%;
         }
-        
+
+        #mobileMenu {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
         .profile-card {
             background: white;
             border-radius: 12px;
@@ -198,15 +207,6 @@
             color: var(--primary-blue);
         }
         
-        #mobileMenu {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            right: 0;
-            z-index: 40;
-            max-height: calc(100vh - 80px);
-            overflow-y: auto;
-        }
     </style>
 </head>
 <body>
