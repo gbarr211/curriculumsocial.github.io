@@ -71,6 +71,38 @@
             transform: translateY(-5px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 4px;
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-blue);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
         
         .stat-card {
             text-align: center;
@@ -220,37 +252,6 @@
             color: #6c757d;
         }
 
-        .nav-link {
-            position: relative;
-            padding: 8px 16px;
-            margin: 0 4px;
-            color: #4a5568;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border-radius: 6px;
-        }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: var(--primary-blue);
-            transition: all 0.3s;
-            transform: translateX(-50%);
-        }
-        
-        .nav-link:hover {
-            color: var(--primary-blue);
-            background-color: var(--light-blue);
-        }
-        
-        .nav-link:hover::after {
-            width: 80%;
-        }
     </style>
 </head>
 <body class="container mx-auto px-4 py-8">
