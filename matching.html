@@ -106,6 +106,18 @@
         .text-secondary {
             color: var(--primary-green);
         }
+
+        /* Mobile menu positioning fix */
+        #mobileMenu {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
         
         .nav-link {
             position: relative;
