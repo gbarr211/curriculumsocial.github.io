@@ -255,6 +255,8 @@
       }
       buildNavLinks(document.getElementById('desktopNav'), false);
       buildNavLinks(document.getElementById('mobileNavLinks'), true);
+      // Ensure desktop nav is visible
+      document.getElementById('desktopNav').classList.remove('hidden');
       // Hamburger menu toggle
       document.getElementById('mobileMenuBtn').addEventListener('click', function() {
         const mobileMenu = document.getElementById('mobileMenu');
