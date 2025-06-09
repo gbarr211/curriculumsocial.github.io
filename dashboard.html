@@ -230,7 +230,6 @@
       ];
       const currentPage = window.location.pathname.split('/').pop();
       const isDashboard = currentPage === 'dashboard.html';
-      // Build nav links, excluding current page and dashboard on dashboard.html
       function buildNavLinks(container, isMobile) {
         container.innerHTML = '';
         navLinks.forEach(link => {
@@ -284,7 +283,7 @@
             }
           }
         });
-        // Logout functionality (replace with Firebase logic if available)
+        // Logout functionality
         async function handleLogout(e) {
           e.preventDefault();
           const result = await window.curriculumSocial.signOut();
@@ -300,6 +299,8 @@
             handleLogout(e);
           }
         });
+        // Initialize auth state listener
+        initializeAuth();
       });
     </script>
 
@@ -492,22 +493,6 @@
         // Firebase imports will be available from firebase-config.js
         let currentUser = null;
         let currentUserData = null;
-    
-        // Initialize dashboard when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileMenu = document.getElementById('mobileMenu');
-            
-            if (mobileMenuBtn && mobileMenu) {
-                mobileMenuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
-    
-            // Initialize auth state listener
-            initializeAuth();
-        });
     
         async function initializeAuth() {
             // Use your existing Firebase auth state listener
