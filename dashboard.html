@@ -105,8 +105,8 @@
         }
         
         .nav-link:hover {
-            color: #1a73e8;
-            background-color: #e8f0fe;
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
         }
         
         .nav-link.active {
@@ -186,79 +186,49 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
     <!-- Header & Navigation -->
     <header class="sticky top-0 bg-white z-50 shadow-sm">
-      <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-        <div class="flex items-center">
-          <h1 class="text-2xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
-            <a href="/" style="text-decoration: none; color: inherit;">
-              <span style="color: #34a853;">Curriculum</span>
-              <span style="color: #1a73e8;">Social</span>
-            </a>
-          </h1>
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold">
+                    <a href="https://curriculumsocial.com/" style="text-decoration: none; color: inherit;">
+                        <span style="color: var(--primary-green);">Curriculum</span> 
+                        <span style="color: var(--primary-blue);">Social</span>
+                    </a>
+                </h1>
+            </div>
+            <nav class="hidden md:flex items-center space-x-2">
+                <a href="https://curriculumsocial.com/dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
+                <a href="https://curriculumsocial.com/matching.html" class="nav-link">Find Families</a>
+                <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <div id="userInfo" class="hidden">
+                    <span id="userName" class="font-medium"></span>
+                    <span id="userRole" class="role-badge"></span>
+                </div>
+                <button id="logoutBtn" class="btn-outline hidden">Logout</button>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
         </div>
-        <nav id="desktopNav" class="hidden md:flex items-center space-x-2">
-          <!-- Navigation links will be inserted here by JavaScript -->
-        </nav>
-        <div class="flex items-center space-x-4">
-          <button id="mobileMenuBtn" class="md:hidden text-gray-700">
-            <i class="fas fa-bars text-xl"></i>
-          </button>
-        </div>
-      </div>
-      <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
-        <div id="mobileNavLinks" class="px-4 py-2 space-y-2"></div>
-      </div>
     </header>
-    <script>
-      function buildNavLinks(container, isMobile) {
-        container.innerHTML = '';
-        const navLinks = [
-          { href: 'dashboard.html', label: 'Dashboard' },
-          { href: 'profile.html', label: 'Profile' },
-          { href: 'matching.html', label: 'Find Families' },
-          { href: 'activities.html', label: 'Activities' }
-        ];
-        const currentPage = window.location.pathname.split('/').pop();
-        const isDashboard = currentPage === 'dashboard.html';
-        navLinks.forEach(link => {
-          if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
-          const a = document.createElement('a');
-          a.href = link.href;
-          a.textContent = link.label;
-          a.className = isMobile
-            ? 'block py-2 text-gray-700 hover:text-blue-600'
-            : 'nav-link px-4 py-2 bg-blue-100 rounded';
-          container.appendChild(a);
-        });
-        // Add logout link
-        const logout = document.createElement('a');
-        logout.href = '#';
-        logout.textContent = 'Logout';
-        logout.className = isMobile
-          ? 'block py-2 text-gray-700 hover:text-blue-600'
-          : 'nav-link px-4 py-2 bg-blue-100 rounded';
-        logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
-        container.appendChild(logout);
-      }
-      document.addEventListener('DOMContentLoaded', function() {
-        buildNavLinks(document.getElementById('desktopNav'), false);
-        buildNavLinks(document.getElementById('mobileNavLinks'), true);
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-          const mobileMenu = document.getElementById('mobileMenu');
-          mobileMenu.classList.toggle('hidden');
-        });
-        // Event delegation for logout
-        document.addEventListener('click', function(e) {
-          if (e.target && (e.target.id === 'logoutNav' || e.target.id === 'mobileLogoutNav')) {
-            e.preventDefault();
-            // Your logout logic here
-            alert('Logout clicked!');
-          }
-        });
-      });
-    </script>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
+        <div class="px-4 py-2 space-y-2">
+            <a href="https://curriculumsocial.com/dashboard.html" class="block py-2 text-blue-600 font-semibold">Dashboard</a>
+            <a href="https://curriculumsocial.com/profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
+            <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
+            <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
+            <div class="pt-2 border-t border-gray-200">
+                <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Loading State -->
     <div id="loadingState" class="loading">
@@ -449,6 +419,22 @@
         // Firebase imports will be available from firebase-config.js
         let currentUser = null;
         let currentUserData = null;
+    
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+    
+            // Initialize auth state listener
+            initializeAuth();
+        });
     
         async function initializeAuth() {
             // Use your existing Firebase auth state listener
@@ -885,6 +871,19 @@
                     <p class="text-gray-600">${activity.date}</p>
                 </div>
             `).join('');
+        }
+    
+        // Logout functionality using your existing Firebase config
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
+    
+        async function logout() {
+            try {
+                await window.curriculumSocial.signOut();
+                window.location.href = 'https://curriculumsocial.com/';
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
         }
     
         // Role switching functionality (for future multi-role users)
