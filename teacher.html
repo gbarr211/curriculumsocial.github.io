@@ -7,71 +7,103 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <script type="module" src="js/firebase-config.js"></script>
     <style>
-
+        :root {
+            --primary-blue: #1a73e8;
+            --secondary-blue: #4285f4;
+            --primary-green: #34a853;
+            --secondary-green: #66bb6a;
+            --primary-purple: #9c27b0;
+            --secondary-purple: #ba68c8;
+            --light-blue: #e8f0fe;
+            --light-green: #e6f4ea;
+            --light-purple: #f3e5f5;
+        }
+        
         body {
             font-family: 'Open Sans', sans-serif;
             color: #333;
-            background-color: #f9fafb;
-            line-height: 1.6;
         }
-        h1, h2, h3, h4 {
+        
+        h1, h2, h3, h4, h5, h6 {
             font-family: 'Montserrat', sans-serif;
         }
-        .header-bg {
-            background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
-        }
-        .section-card {
-            border-top: 4px solid #10b981;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-        .section-header {
-            border-bottom: 2px solid rgba(16, 185, 129, 0.2);
-        }
-        .feature-item {
-            border-left: 3px solid #3b82f6;
-        }
-        .testimonial {
-            background-color: rgba(59, 130, 246, 0.05);
-            border-left: 4px solid #3b82f6;
-        }
-        .icon-bg {
-            background-color: rgba(16, 185, 129, 0.1);
-        }
+        
         .btn-primary {
-            background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
-            transition: all 0.3s ease;
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
+        
         .btn-primary:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #059669 100%);
-            transform: translateY(-1px);
+            background-color: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .highlight {
-            background: linear-gradient(transparent 70%, rgba(16, 185, 129, 0.3) 30%);
-            display: inline;
+        
+        .btn-secondary {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
-        .compensation-card {
-            border: 1px solid rgba(59, 130, 246, 0.3);
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .compensation-card-header {
-            background-color: rgba(59, 130, 246, 0.1);
+        
+        .btn-purple {
+            background-color: var(--primary-purple);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
-        table {
-            border-collapse: collapse;
-            width: 100%;
+        
+        .btn-purple:hover {
+            background-color: var(--secondary-purple);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        th {
-            background-color: rgba(16, 185, 129, 0.1);
-            text-align: left;
-            padding: 12px;
+        
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
         }
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
         }
-        tr:nth-child(even) {
-            background-color: #f9fafb;
+        
+        .section {
+            padding: 80px 0;
         }
+        
+        .hero {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e8f0fe 50%, #e6f4ea 100%);
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
         .nav-link {
             position: relative;
             padding: 8px 16px;
@@ -82,6 +114,7 @@
             transition: all 0.3s ease;
             border-radius: 6px;
         }
+        
         .nav-link::after {
             content: '';
             position: absolute;
@@ -93,10 +126,12 @@
             transition: all 0.3s;
             transform: translateX(-50%);
         }
+        
         .nav-link:hover {
             color: var(--primary-blue);
             background-color: var(--light-blue);
         }
+        
         .nav-link:hover::after {
             width: 80%;
         }
