@@ -92,7 +92,18 @@
         .card:hover {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
-        
+
+        /* Mobile menu positioning fix */
+        #mobileMenu {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
         .nav-link {
             position: relative;
             padding: 8px 16px;
