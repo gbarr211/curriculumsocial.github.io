@@ -457,7 +457,6 @@
                             role: 'parent' // default role
                         };
                         updateUserInterface();
-                        document.getElementById('loadingState').classList.add('hidden');
                         document.getElementById('dashboardContent').classList.remove('hidden');
                     }
                 } else {
@@ -500,7 +499,6 @@
                 // Load real data from Firebase
                 loadUserStats();
                 // Hide loading state and show dashboard content
-                document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('dashboardContent').classList.remove('hidden');
             }
         }
