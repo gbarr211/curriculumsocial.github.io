@@ -294,8 +294,12 @@
             alert('Logout failed: ' + result.error);
           }
         }
-        document.getElementById('logoutNav').addEventListener('click', handleLogout);
-        document.getElementById('mobileLogoutNav').addEventListener('click', handleLogout);
+        // Use event delegation for logout buttons
+        document.addEventListener('click', function(e) {
+          if (e.target && (e.target.id === 'logoutNav' || e.target.id === 'mobileLogoutNav')) {
+            handleLogout(e);
+          }
+        });
       });
     </script>
 
@@ -940,19 +944,6 @@
                     <p class="text-gray-600">${activity.date}</p>
                 </div>
             `).join('');
-        }
-    
-        // Logout functionality using your existing Firebase config
-        document.getElementById('logoutBtn').addEventListener('click', logout);
-        document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
-    
-        async function logout() {
-            try {
-                await window.curriculumSocial.signOut();
-                window.location.href = 'https://curriculumsocial.com/';
-            } catch (error) {
-                console.error('Error signing out:', error);
-            }
         }
     
         // Role switching functionality (for future multi-role users)
