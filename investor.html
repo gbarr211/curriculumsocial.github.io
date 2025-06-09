@@ -8,103 +8,218 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script type="module" src="js/firebase-config.js"></script>
     <style>
         :root {
-            --primary-blue: #1a73e8;
-            --secondary-blue: #4285f4;
-            --primary-green: #34a853;
-            --secondary-green: #66bb6a;
-            --primary-purple: #9c27b0;
-            --secondary-purple: #ba68c8;
-            --light-blue: #e8f0fe;
-            --light-green: #e6f4ea;
-            --light-purple: #f3e5f5;
+            --primary-blue: #2c7da0;
+            --secondary-blue: #468faf;
+            --primary-green: #2a9d8f;
+            --secondary-green: #57cc99;
+            --light-blue: #a9d6e5;
+            --light-green: #c7f9cc;
+            --dark-text: #2c3e50;
+            --light-text: #f8f9fa;
+            --background: #f8f9fa;
         }
         
         body {
-            font-family: 'Open Sans', sans-serif;
-            color: #333;
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
             font-family: 'Montserrat', sans-serif;
+            color: var(--dark-text);
+            background-color: var(--background);
+            line-height: 1.6;
         }
         
-        .btn-primary {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 12px 24px;
+        .section {
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
             border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--secondary-blue);
-            transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: white;
         }
         
-        .btn-secondary {
-            background-color: var(--primary-green);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
+        .section-title {
+            color: var(--primary-blue);
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
             font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
         }
         
-        .btn-secondary:hover {
-            background-color: var(--secondary-green);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-purple {
-            background-color: var(--primary-purple);
+        .gradient-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-green) 100%);
             color: white;
-            padding: 12px 24px;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
             border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .btn-purple:hover {
-            background-color: var(--secondary-purple);
-            transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
         .card {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            height: 100%;
+            transition: transform 0.3s ease;
+            border-top: 4px solid var(--primary-blue);
+        }
+
+        .card.green {
+            border-top: 4px solid var(--primary-green);
         }
         
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .section {
-            padding: 80px 0;
+        .stat-card {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--light-blue);
+            border-radius: 8px;
+            margin-bottom: 1rem;
         }
         
-        .hero {
-            background: linear-gradient(135deg, #f3e5f5 0%, #e8f0fe 50%, #e6f4ea 100%);
-            padding: 120px 0 80px;
+        .stat-card.green {
+            background-color: var(--light-green);
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card.green .stat-number {
+            color: var(--primary-green);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+        
+        .chart-container {
             position: relative;
-            overflow: hidden;
+            margin: 2rem auto;
+            height: 400px;
+            width: 100%;
         }
         
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--primary-green);
+            border: 2px solid white;
+            z-index: 1;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 16px;
+            height: calc(100% + 2rem);
+            width: 2px;
+            background-color: var(--light-green);
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        .timeline-date {
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+        
+        .risk-item {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-blue);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .mitigation-item {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-green);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .tier-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background-color: white;
+        }
+        
+        .tier-header {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-blue);
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+        
+        .tier-price {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+        }
+        
+        .tier-feature {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .tier-feature i {
+            color: var(--primary-green);
+            margin-right: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
         .nav-link {
             position: relative;
             padding: 8px 16px;
@@ -172,29 +287,6 @@
             </div>
         </div>
     </header>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const menuBtn = document.getElementById('mobileMenuBtn');
-          const mobileMenu = document.getElementById('mobileMenu');
-    
-          if (menuBtn && mobileMenu) {
-            menuBtn.addEventListener('click', function () {
-              const isVisible = mobileMenu.style.display !== 'none';
-              mobileMenu.style.display = isVisible ? 'none' : 'block';
-    
-              const icon = this.querySelector('i');
-              icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
-            });
-    
-            mobileMenu.addEventListener('click', function (e) {
-              if (e.target.tagName === 'A') {
-                mobileMenu.style.display = 'none';
-                menuBtn.querySelector('i').className = 'fas fa-bars text-xl';
-              }
-            });
-          }
-        });
-    </script>
     <script>
         // Navigation links config
         const navLinks = [

@@ -9,103 +9,73 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <script type="module" src="js/firebase-config.js"></script>
     <style>
-        :root {
-            --primary-blue: #1a73e8;
-            --secondary-blue: #4285f4;
-            --primary-green: #34a853;
-            --secondary-green: #66bb6a;
-            --primary-purple: #9c27b0;
-            --secondary-purple: #ba68c8;
-            --light-blue: #e8f0fe;
-            --light-green: #e6f4ea;
-            --light-purple: #f3e5f5;
-        }
-        
         body {
             font-family: 'Open Sans', sans-serif;
             color: #333;
+            background-color: #f9f9f9;
         }
-        
-        h1, h2, h3, h4, h5, h6 {
+        h1, h2, h3, h4 {
             font-family: 'Montserrat', sans-serif;
         }
-        
-        .btn-primary {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
+        .bg-primary-light {
+            background-color: #e0f7fa;
         }
-        
-        .btn-primary:hover {
-            background-color: var(--secondary-blue);
-            transform: translateY(-2px);
+        .bg-primary {
+            background-color: #00acc1;
+        }
+        .bg-secondary-light {
+            background-color: #e8f5e9;
+        }
+        .bg-secondary {
+            background-color: #66bb6a;
+        }
+        .text-primary {
+            color: #00838f;
+        }
+        .text-secondary {
+            color: #388e3c;
+        }
+        .section {
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
-        .btn-secondary {
-            background-color: var(--primary-green);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .btn-secondary:hover {
-            background-color: var(--secondary-green);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-purple {
-            background-color: var(--primary-purple);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .btn-purple:hover {
-            background-color: var(--secondary-purple);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
         .card {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
-        
-        .section {
-            padding: 80px 0;
+        .pricing-card {
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
-        .hero {
-            background: linear-gradient(135deg, #f3e5f5 0%, #e8f0fe 50%, #e6f4ea 100%);
-            padding: 120px 0 80px;
+        .pricing-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        .step-card {
             position: relative;
-            overflow: hidden;
+            padding-left: 3.5rem;
         }
-        
+        .step-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
         .nav-link {
             position: relative;
             padding: 8px 16px;
@@ -116,7 +86,6 @@
             transition: all 0.3s ease;
             border-radius: 6px;
         }
-        
         .nav-link::after {
             content: '';
             position: absolute;
@@ -128,12 +97,10 @@
             transition: all 0.3s;
             transform: translateX(-50%);
         }
-        
         .nav-link:hover {
             color: var(--primary-blue);
             background-color: var(--light-blue);
         }
-        
         .nav-link:hover::after {
             width: 80%;
         }
