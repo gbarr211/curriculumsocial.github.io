@@ -344,7 +344,29 @@
             </div>
         </div>
     </main>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const menuBtn = document.getElementById('mobileMenuBtn');
+          const mobileMenu = document.getElementById('mobileMenu');
+    
+          if (menuBtn && mobileMenu) {
+            menuBtn.addEventListener('click', function () {
+              const isVisible = mobileMenu.style.display !== 'none';
+              mobileMenu.style.display = isVisible ? 'none' : 'block';
+    
+              const icon = this.querySelector('i');
+              icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+            });
+    
+            mobileMenu.addEventListener('click', function (e) {
+              if (e.target.tagName === 'A') {
+                mobileMenu.style.display = 'none';
+                menuBtn.querySelector('i').className = 'fas fa-bars text-xl';
+              }
+            });
+          }
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // No auth check needed for activities page
