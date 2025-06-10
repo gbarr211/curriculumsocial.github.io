@@ -182,14 +182,13 @@
                 <a href="https://curriculumsocial.com/activities.html" class="nav-link active">Activities</a>
             </nav>
             <div class="flex items-center space-x-4">
-                <!-- Express Interest Button (desktop only, always visible) -->
-                <a href="interest.html" class="btn-secondary hidden md:inline-block">Express Interest</a>
+                <!-- Express Interest Button (visible on all screen sizes) -->
+                <a href="interest.html" class="btn-secondary">Express Interest</a>
                 <div id="userInfo" class="hidden">
                     <span id="userName" class="font-medium"></span>
                     <span id="userRole" class="role-badge"></span>
                 </div>
-                <button id="logoutBtn" class="btn-outline hidden">Logout</button>
-                <!-- Mobile hamburger -->
+                <button id="logoutBtn" class="btn-outline hidden md:block">Logout</button>
                 <button id="mobileMenuBtn" class="md:hidden text-gray-700">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
