@@ -191,6 +191,12 @@
             justify-content: center;
             min-height: 200px;
         }
+
+        @media (min-width: 768px) {
+            #logoutBtn {
+                display: inline-block !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -218,7 +224,7 @@
                     <span id="userName" class="font-medium"></span>
                     <span id="userRole" class="role-badge"></span>
                 </div>
-                <button id="logoutBtn" class="hidden md:inline-block btn-outline">Logout</button>
+                <button id="logoutBtn" class="btn-outline" style="display:none;">Logout</button>
                 <button id="mobileMenuBtn" class="md:hidden text-gray-700 ml-2">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
