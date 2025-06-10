@@ -151,7 +151,7 @@
             </div>
             <!-- Desktop nav -->
             <nav id="desktopNav" class="hidden md:flex items-center space-x-2">
-                <!-- Add your nav links here if not present -->
+                <!-- Nav links will be injected by JS -->
             </nav>
             <div class="flex items-center space-x-4">
                 <!-- Express Interest Button (desktop only, always visible) -->
@@ -163,15 +163,11 @@
             </div>
         </div>
         <!-- Mobile nav -->
-        <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
+        <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
             <div id="mobileNavLinks" class="px-4 py-2 space-y-2">
-                <!-- Add your mobile nav links here if not present -->
+                <!-- Nav links will be injected by JS -->
                 <div class="pt-2 border-t border-gray-200">
                     <a href="interest.html" class="btn-secondary w-full block text-center mb-2">Express Interest</a>
-                    <ul class="menu-items">
-                      <li><a href="index.html">Home</a></li>
-                      <li><a href="apply.html" class="express-interest">Express Interest</a></li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -242,12 +238,8 @@
         // Logout functionality (replace with Firebase logic if available)
         async function handleLogout(e) {
             e.preventDefault();
-            const result = await window.curriculumSocial.signOut();
-            if (result.success) {
-                window.location.href = 'index.html';
-            } else {
-                alert('Logout failed: ' + result.error);
-            }
+            // Add your logout logic here
+            window.location.href = 'index.html';
         }
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('logoutNav').addEventListener('click', handleLogout);
