@@ -151,17 +151,35 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            object-fit: cover;
             border: 3px solid var(--light-blue);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
         }
         
         .child-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            object-fit: cover;
             border: 2px solid white;
             margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .boy-avatar {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .girl-avatar {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
         }
         
         .approach-badge {
@@ -333,7 +351,6 @@
                 <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
             </nav>
             <div class="flex items-center space-x-4">
-                <!-- Express Interest Button (visible on all screen sizes) -->
                 <a href="interest.html" class="btn-secondary">Express Interest</a>
                 <div id="userInfo" class="hidden md:inline-block">
                     <span id="userName" class="font-medium"></span>
@@ -436,7 +453,7 @@
         <!-- Stats Summary -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="card p-4 text-center">
-                <div class="text-2xl font-bold text-blue-600" id="totalFamilies">12</div>
+                <div class="text-2xl font-bold text-blue-600" id="totalFamilies">6</div>
                 <div class="text-sm text-gray-600">Families Found</div>
             </div>
             <div class="card p-4 text-center">
@@ -448,7 +465,7 @@
                 <div class="text-sm text-gray-600">Pending</div>
             </div>
             <div class="card p-4 text-center">
-                <div class="text-2xl font-bold text-purple-600" id="newMatches">8</div>
+                <div class="text-2xl font-bold text-purple-600" id="newMatches">2</div>
                 <div class="text-sm text-gray-600">New Matches</div>
             </div>
         </div>
@@ -593,52 +610,7 @@
         }
 
         function loadFamilies() {
-            // Demo data for testing
-            allFamilies = [
-                {
-                    id: '1',
-                    familyName: 'The Smiths',
-                    parentNames: ['John', 'Jane'],
-                    profilePhoto: 'https://via.placeholder.com/150',
-                    location: 'Bangkok',
-                    distance: 5,
-                    joinedDate: '2023-01-01',
-                    connectionCount: 10,
-                    activityCount: 5,
-                    bio: 'We love outdoor activities and educational games.',
-                    children: [
-                        { name: 'Tom', age: 8, avatar: 'https://via.placeholder.com/50', interests: ['sports', 'science'] }
-                    ],
-                    educationalApproach: ['montessori', 'outdoor-learning'],
-                    languages: ['English', 'Thai'],
-                    availability: ['Weekends', 'Evenings'],
-                    verified: true
-                },
-                {
-                    id: '2',
-                    familyName: 'The Lees',
-                    parentNames: ['Mike', 'Sarah'],
-                    profilePhoto: 'https://via.placeholder.com/150',
-                    location: 'Chiang Mai',
-                    distance: 10,
-                    joinedDate: '2023-02-01',
-                    connectionCount: 8,
-                    activityCount: 3,
-                    bio: 'We focus on creative arts and language learning.',
-                    children: [
-                        { name: 'Emma', age: 6, avatar: 'https://via.placeholder.com/50', interests: ['arts', 'music'] }
-                    ],
-                    educationalApproach: ['waldorf', 'arts-integrated'],
-                    languages: ['English', 'Chinese'],
-                    availability: ['Weekdays', 'Mornings'],
-                    verified: false
-                }
-            ];
-            filteredFamilies = [...allFamilies];
-            displayFamilies(filteredFamilies);
-            updateStats();
-            document.getElementById('loadingState').classList.add('hidden');
-            document.getElementById('mainContent').classList.remove('hidden');
+            loadDemoFamilies();
         }
 
         function loadDemoFamilies() {
@@ -648,14 +620,14 @@
                     id: 'family1',
                     familyName: 'The Martinez Family',
                     parentNames: ['Sofia Martinez', 'Carlos Martinez'],
-                    profilePhoto: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=150&h=150&fit=crop&crop=face',
+                    profilePhoto: 'family',
                     location: 'Chaweng, Koh Samui',
                     distance: 3.2,
                     educationalApproach: ['montessori', 'nature-based'],
                     bio: 'Digital nomad family from Spain. We believe in hands-on learning and outdoor exploration. Our kids love marine biology and art.',
                     children: [
-                        { name: 'Luna', age: 8, interests: ['art', 'science', 'swimming'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&backgroundColor=b6e3f4' },
-                        { name: 'Diego', age: 6, interests: ['nature', 'building', 'soccer'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Diego&backgroundColor=c6f6d5' }
+                        { name: 'Luna', age: 8, interests: ['art', 'science', 'swimming'], avatar: 'girl' },
+                        { name: 'Diego', age: 6, interests: ['nature', 'building', 'soccer'], avatar: 'boy' }
                     ],
                     languages: ['Spanish', 'English'],
                     availability: ['mornings', 'weekends'],
@@ -669,14 +641,14 @@
                     id: 'family2',
                     familyName: 'The Chen Family',
                     parentNames: ['Li Chen', 'Wei Chen'],
-                    profilePhoto: 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=150&h=150&fit=crop&crop=face',
+                    profilePhoto: 'family',
                     location: 'Lamai, Koh Samui',
                     distance: 5.8,
                     educationalApproach: ['traditional', 'stem'],
                     bio: 'Tech entrepreneurs who relocated to Samui for better work-life balance. Strong focus on STEM education and multilingual learning.',
                     children: [
-                        { name: 'Emma', age: 10, interests: ['coding', 'math', 'music'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma&backgroundColor=ffdfba' },
-                        { name: 'Alex', age: 7, interests: ['robotics', 'chess', 'reading'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&backgroundColor=ffd93d' }
+                        { name: 'Emma', age: 10, interests: ['coding', 'math', 'music'], avatar: 'girl' },
+                        { name: 'Alex', age: 7, interests: ['robotics', 'chess', 'reading'], avatar: 'boy' }
                     ],
                     languages: ['Mandarin', 'English'],
                     availability: ['afternoons', 'weekends'],
@@ -690,13 +662,13 @@
                     id: 'family3',
                     familyName: 'The Johnson Family',
                     parentNames: ['Sarah Johnson'],
-                    profilePhoto: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+                    profilePhoto: 'family',
                     location: 'Bophut, Koh Samui',
                     distance: 7.1,
                     educationalApproach: ['unschooling', 'child-led'],
                     bio: 'Single mom and freelance writer. We follow our curiosity and learn through real-world experiences. Always up for adventures and new friendships.',
                     children: [
-                        { name: 'Maya', age: 9, interests: ['writing', 'photography', 'animals'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maya&backgroundColor=d1c4e9' }
+                        { name: 'Maya', age: 9, interests: ['writing', 'photography', 'animals'], avatar: 'girl' }
                     ],
                     languages: ['English'],
                     availability: ['flexible'],
@@ -710,15 +682,15 @@
                     id: 'family4',
                     familyName: 'The Thompson Family',
                     parentNames: ['Michael Thompson', 'Jessica Thompson'],
-                    profilePhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+                    profilePhoto: 'family',
                     location: 'Maenam, Koh Samui',
                     distance: 12.3,
                     educationalApproach: ['waldorf', 'arts-focused'],
                     bio: 'Former teachers turned digital nomads. We love creative arts, storytelling, and building community. Our home always has art supplies ready!',
                     children: [
-                        { name: 'Oliver', age: 11, interests: ['drawing', 'theater', 'history'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver&backgroundColor=a8e6cf' },
-                        { name: 'Sophia', age: 8, interests: ['dance', 'crafts', 'gardening'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia&backgroundColor=ff8b94' },
-                        { name: 'Jack', age: 5, interests: ['blocks', 'stories', 'sandbox'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack&backgroundColor=88d8c0' }
+                        { name: 'Oliver', age: 11, interests: ['drawing', 'theater', 'history'], avatar: 'boy' },
+                        { name: 'Sophia', age: 8, interests: ['dance', 'crafts', 'gardening'], avatar: 'girl' },
+                        { name: 'Jack', age: 5, interests: ['blocks', 'stories', 'sandbox'], avatar: 'boy' }
                     ],
                     languages: ['English'],
                     availability: ['mornings', 'evenings'],
@@ -732,14 +704,14 @@
                     id: 'family5',
                     familyName: 'The Kumar Family',
                     parentNames: ['Priya Kumar', 'Raj Kumar'],
-                    profilePhoto: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+                    profilePhoto: 'family',
                     location: 'Fisherman\'s Village, Koh Samui',
                     distance: 8.9,
                     educationalApproach: ['eclectic', 'multicultural'],
                     bio: 'Startup founders embracing slow living. We blend Indian traditions with global perspectives. Love cooking, yoga, and mindful learning.',
                     children: [
-                        { name: 'Arjun', age: 12, interests: ['yoga', 'cooking', 'languages'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun&backgroundColor=ffd1dc' },
-                        { name: 'Anaya', age: 9, interests: ['dance', 'math', 'meditation'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Anaya&backgroundColor=b19cd9' }
+                        { name: 'Arjun', age: 12, interests: ['yoga', 'cooking', 'languages'], avatar: 'boy' },
+                        { name: 'Anaya', age: 9, interests: ['dance', 'math', 'meditation'], avatar: 'girl' }
                     ],
                     languages: ['Hindi', 'English', 'Thai'],
                     availability: ['early mornings', 'evenings'],
@@ -753,14 +725,14 @@
                     id: 'family6',
                     familyName: 'The Anderson Family',
                     parentNames: ['Lisa Anderson', 'Tom Anderson'],
-                    profilePhoto: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+                    profilePhoto: 'family',
                     location: 'Choeng Mon, Koh Samui',
                     distance: 15.2,
                     educationalApproach: ['charlotte-mason', 'nature-study'],
                     bio: 'Homeschooling family focused on nature study and living books. We love hiking, beach exploring, and building connections with local culture.',
                     children: [
-                        { name: 'Grace', age: 13, interests: ['photography', 'marine-biology', 'writing'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Grace&backgroundColor=ffb3ba' },
-                        { name: 'Noah', age: 10, interests: ['fishing', 'nature', 'geography'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Noah&backgroundColor=bae1ff' }
+                        { name: 'Grace', age: 13, interests: ['photography', 'marine-biology', 'writing'], avatar: 'girl' },
+                        { name: 'Noah', age: 10, interests: ['fishing', 'nature', 'geography'], avatar: 'boy' }
                     ],
                     languages: ['English'],
                     availability: ['mornings', 'weekends'],
