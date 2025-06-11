@@ -7,21 +7,23 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <script type="module" src="js/firebase-config.js"></script>
     <style>
         :root {
             --primary-blue: #1a73e8;
             --secondary-blue: #4285f4;
             --primary-green: #34a853;
             --secondary-green: #66bb6a;
+            --primary-purple: #9c27b0;
             --light-blue: #e8f0fe;
             --light-green: #e6f4ea;
+            --light-purple: #f3e5f5;
         }
         
         body {
             font-family: 'Open Sans', sans-serif;
             color: #333;
-            background: linear-gradient(135deg, #e8f0fe 0%, #e6f4ea 100%);
-            min-height: 100vh;
+            background-color: #f8fafc;
         }
         
         h1, h2, h3, h4, h5, h6 {
@@ -31,46 +33,59 @@
         .btn-primary {
             background-color: var(--primary-blue);
             color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            font-size: 14px;
         }
         
         .btn-primary:hover {
             background-color: var(--secondary-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
         }
         
         .btn-secondary {
             background-color: var(--primary-green);
             color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-1px);
         }
         
         .btn-outline {
-            border: 2px solid var(--primary-blue);
+            border: 1px solid var(--primary-blue);
             color: var(--primary-blue);
             background-color: transparent;
-            padding: 10px 22px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 7px 15px;
+            border-radius: 6px;
+            font-weight: 500;
             transition: all 0.3s;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            font-size: 14px;
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--light-blue);
         }
         
         .nav-link {
@@ -84,59 +99,81 @@
             border-radius: 6px;
         }
         
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: var(--primary-blue);
-            transition: all 0.3s;
-            transform: translateX(-50%);
-        }
-        
         .nav-link:hover {
             color: var(--primary-blue);
             background-color: var(--light-blue);
         }
         
-        .nav-link:hover::after {
-            width: 80%;
+        .nav-link.active {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         
         .activity-card {
             background: white;
             border-radius: 12px;
             padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
+            margin-bottom: 1rem;
         }
         
         .activity-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         
-        .activity-type {
-            background: var(--light-green);
-            color: var(--primary-green);
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
+        .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        
+        .category-science { background: #e3f2fd; color: #1565c0; }
+        .category-arts { background: #f3e5f5; color: #7b1fa2; }
+        .category-sports { background: #e8f5e8; color: #2e7d32; }
+        .category-social { background: #fff3e0; color: #ef6c00; }
+        .category-technology { background: #e1f5fe; color: #0277bd; }
+        .category-nature { background: #f1f8e9; color: #558b2f; }
+        .category-cultural { background: #fce4ec; color: #c2185b; }
+        .category-educational { background: #e8eaf6; color: #3f51b5; }
+        
+        .age-badge {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 600;
         }
         
-        .calendar-view {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        .cost-display {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+        
+        .participants-info {
+            font-size: 14px;
+            color: #6b7280;
         }
         
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
         
         .form-group label {
@@ -144,6 +181,7 @@
             margin-bottom: 0.5rem;
             font-weight: 600;
             color: #374151;
+            font-size: 14px;
         }
         
         .form-group input,
@@ -153,12 +191,84 @@
             padding: 0.75rem;
             border: 1px solid #d1d5db;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 14px;
+            transition: border-color 0.3s;
         }
         
-        .participants-count {
-            color: var(--primary-blue);
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
             font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .role-parent {
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+        }
+        
+        .role-teacher {
+            background-color: var(--light-green);
+            color: var(--primary-green);
+        }
+        
+        .role-student {
+            background-color: var(--light-purple);
+            color: var(--primary-purple);
         }
     </style>
 </head>
@@ -167,14 +277,13 @@
     <header class="sticky top-0 bg-white z-50 shadow-sm">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
-                <h1 class="text-2xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
-                    <a href="/" style="text-decoration: none; color: inherit;">
-                        <span style="color: var(--primary-green);">Curriculum</span>
+                <h1 class="text-2xl font-bold">
+                    <a href="https://curriculumsocial.com/" style="text-decoration: none; color: inherit;">
+                        <span style="color: var(--primary-green);">Curriculum</span> 
                         <span style="color: var(--primary-blue);">Social</span>
                     </a>
                 </h1>
             </div>
-            <!-- Desktop nav -->
             <nav class="hidden md:flex items-center space-x-2">
                 <a href="https://curriculumsocial.com/dashboard.html" class="nav-link">Dashboard</a>
                 <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
@@ -182,519 +291,944 @@
                 <a href="https://curriculumsocial.com/activities.html" class="nav-link active">Activities</a>
             </nav>
             <div class="flex items-center space-x-4">
-                <!-- Express Interest Button (visible on all screen sizes) -->
-                <a href="interest.html" class="btn-secondary">Express Interest</a>
+                <a href="https://curriculumsocial.com/interest.html" class="btn-secondary hidden md:inline-block">Express Interest</a>
                 <div id="userInfo" class="hidden">
                     <span id="userName" class="font-medium"></span>
                     <span id="userRole" class="role-badge"></span>
                 </div>
-                <button id="logoutBtn" class="hidden md:block">Logout</button>
-                <button id="mobileMenuBtn" class="md:hidden text-gray-700 ml-2">
+                <button id="logoutBtn" class="btn-outline hidden">Logout</button>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
         </div>
-        <!-- Mobile nav -->
-        <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
-            <div class="px-4 py-2 space-y-2">
-                <a href="https://curriculumsocial.com/dashboard.html" class="block py-2 text-gray-700 hover:text-blue-600">Dashboard</a>
-                <a href="https://curriculumsocial.com/profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
-                <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
-                <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-blue-600 font-semibold">Activities</a>
-                <div class="pt-2 border-t border-gray-200">
-                    <a href="interest.html" class="btn-secondary w-full block text-center mb-2">Express Interest</a>
-                    <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
-                </div>
-            </div>
-        </div>
     </header>
 
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
+        <div class="px-4 py-2 space-y-2">
+            <a href="https://curriculumsocial.com/dashboard.html" class="block py-2 text-gray-700 hover:text-blue-600">Dashboard</a>
+            <a href="https://curriculumsocial.com/profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
+            <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
+            <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-blue-600 font-semibold">Activities</a>
+            <div class="pt-2 border-t border-gray-200">
+                <a href="https://curriculumsocial.com/interest.html" class="btn-secondary block w-full text-center mb-2">Express Interest</a>
+                <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="loading">
+        <div class="text-center">
+            <i class="fas fa-spinner fa-spin text-4xl text-blue-500 mb-4"></i>
+            <p class="text-gray-600">Loading activities...</p>
+        </div>
+    </div>
+
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+    <main id="mainContent" class="container mx-auto px-4 py-8 hidden">
+        <!-- Header Section -->
         <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold mb-4" style="color: var(--primary-blue);">Educational Activities</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Discover and join local educational activities, field trips, and learning experiences in your community.</p>
+            <h2 class="text-3xl font-bold mb-4" style="color: var(--primary-blue);">Community Activities</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto mb-6">
+                Discover educational activities, social events, and learning experiences in your community. 
+                Connect with other families while exploring new interests together.
+            </p>
+            <button id="createActivityBtn" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i>Create Activity
+            </button>
         </div>
 
-        <!-- Filters -->
-        <div class="bg-white rounded-12 p-6 mb-8 shadow-sm">
+        <!-- Filters Section -->
+        <div class="card p-6 mb-8">
+            <h3 class="text-lg font-semibold mb-4">Find Activities</h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Activity Type</label>
-                    <select id="typeFilter" class="w-full p-2 border border-gray-300 rounded-md">
-                        <option value="">All Types</option>
-                        <option value="field_trip">Field Trip</option>
-                        <option value="workshop">Workshop</option>
-                        <option value="playgroup">Playgroup</option>
-                        <option value="academic">Academic Session</option>
-                        <option value="sports">Sports</option>
-                        <option value="arts">Arts & Crafts</option>
+                <div class="form-group">
+                    <label for="categoryFilter">Category</label>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="science">Science & Discovery</option>
+                        <option value="arts">Arts & Creativity</option>
+                        <option value="sports">Sports & Games</option>
+                        <option value="social">Social & Play</option>
+                        <option value="technology">Technology & Coding</option>
+                        <option value="nature">Nature & Outdoors</option>
+                        <option value="cultural">Cultural & Language</option>
+                        <option value="educational">Educational Workshops</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Age Group</label>
-                    <select id="ageFilter" class="w-full p-2 border border-gray-300 rounded-md">
+                <div class="form-group">
+                    <label for="ageFilter">Age Range</label>
+                    <select id="ageFilter">
                         <option value="">All Ages</option>
-                        <option value="0-3">0-3 years</option>
-                        <option value="3-6">3-6 years</option>
-                        <option value="6-12">6-12 years</option>
-                        <option value="12+">12+ years</option>
+                        <option value="all">All Ages</option>
+                        <option value="4+">4+</option>
+                        <option value="8+">8+</option>
+                        <option value="12+">12+</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
-                    <input type="date" id="dateFilter" class="w-full p-2 border border-gray-300 rounded-md">
+                <div class="form-group">
+                    <label for="dateFilter">Date</label>
+                    <input type="date" id="dateFilter">
                 </div>
-                <div class="flex items-end">
-                    <button id="filterBtn" class="btn-primary w-full">Filter Activities</button>
+                <div class="form-group">
+                    <label for="costFilter">Cost</label>
+                    <select id="costFilter">
+                        <option value="">Any Cost</option>
+                        <option value="free">Free Only</option>
+                        <option value="paid">Cost Sharing</option>
+                    </select>
                 </div>
+            </div>
+            <div class="flex gap-4 mt-4">
+                <button id="applyFiltersBtn" class="btn-primary">Apply Filters</button>
+                <button id="clearFiltersBtn" class="btn-outline">Clear All</button>
             </div>
         </div>
 
         <!-- Activities List -->
-        <div id="activitiesList" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Sample activities will be loaded here -->
-        </div>
-
-        <!-- Create Activity Modal -->
-        <div id="createModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
-            <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-90vh overflow-y-auto">
-                <h3 class="text-xl font-semibold mb-4" style="color: var(--primary-blue);">Create New Activity</h3>
-                
-                <form id="activityForm">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="form-group">
-                            <label for="activityTitle">Activity Title</label>
-                            <input type="text" id="activityTitle" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="activityType">Type</label>
-                            <select id="activityType" required>
-                                <option value="">Select Type</option>
-                                <option value="field_trip">Field Trip</option>
-                                <option value="workshop">Workshop</option>
-                                <option value="playgroup">Playgroup</option>
-                                <option value="academic">Academic Session</option>
-                                <option value="sports">Sports</option>
-                                <option value="arts">Arts & Crafts</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="activityDescription">Description</label>
-                        <textarea id="activityDescription" rows="3" required></textarea>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="form-group">
-                            <label for="activityDate">Date</label>
-                            <input type="date" id="activityDate" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="activityTime">Time</label>
-                            <input type="time" id="activityTime" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="activityDuration">Duration (hours)</label>
-                            <input type="number" id="activityDuration" min="0.5" max="8" step="0.5" required>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="form-group">
-                            <label for="activityLocation">Location</label>
-                            <input type="text" id="activityLocation" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="maxParticipants">Max Participants</label>
-                            <input type="number" id="maxParticipants" min="1" max="50" required>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="form-group">
-                            <label for="ageRange">Age Range</label>
-                            <select id="ageRange" required>
-                                <option value="">Select Age Range</option>
-                                <option value="0-3">0-3 years</option>
-                                <option value="3-6">3-6 years</option>
-                                <option value="6-12">6-12 years</option>
-                                <option value="12+">12+ years</option>
-                                <option value="all">All Ages</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="costPerChild">Cost per Child ($)</label>
-                            <input type="number" id="costPerChild" min="0" step="0.01">
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-4">
-                        <button type="submit" class="btn-primary flex-1">Create Activity</button>
-                        <button type="button" id="cancelCreateBtn" class="btn-outline flex-1">Cancel</button>
-                    </div>
-                </form>
+        <div id="activitiesContainer">
+            <div id="activitiesList" class="space-y-6">
+                <!-- Activities will be loaded here -->
+            </div>
+            <div id="noActivities" class="text-center py-12 hidden">
+                <i class="fas fa-calendar-times text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">No Activities Found</h3>
+                <p class="text-gray-500 mb-4">Try adjusting your filters or be the first to create an activity!</p>
+                <button onclick="document.getElementById('createActivityBtn').click()" class="btn-primary">
+                    <i class="fas fa-plus mr-2"></i>Create Activity
+                </button>
             </div>
         </div>
     </main>
+
+    <!-- Create Activity Modal -->
+    <div id="createActivityModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold" style="color: var(--primary-blue);">Create New Activity</h3>
+                <button id="closeCreateModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="createActivityForm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="form-group">
+                        <label for="activityTitle">Activity Title *</label>
+                        <input type="text" id="activityTitle" required placeholder="e.g., Beach Nature Study">
+                    </div>
+                    <div class="form-group">
+                        <label for="activityCategory">Category *</label>
+                        <select id="activityCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="science">Science & Discovery</option>
+                            <option value="arts">Arts & Creativity</option>
+                            <option value="sports">Sports & Games</option>
+                            <option value="social">Social & Play</option>
+                            <option value="technology">Technology & Coding</option>
+                            <option value="nature">Nature & Outdoors</option>
+                            <option value="cultural">Cultural & Language</option>
+                            <option value="educational">Educational Workshops</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="activityDescription">Description *</label>
+                    <textarea id="activityDescription" rows="3" required 
+                              placeholder="Describe what participants will do and learn..."></textarea>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div class="form-group">
+                        <label for="activityDate">Date *</label>
+                        <input type="date" id="activityDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="activityTime">Start Time *</label>
+                        <input type="time" id="activityTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="activityDuration">Duration (hours) *</label>
+                        <input type="number" id="activityDuration" min="0.5" max="8" step="0.5" required>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="form-group">
+                        <label for="activityLocation">Location *</label>
+                        <input type="text" id="activityLocation" required 
+                               placeholder="e.g., Chaweng Beach, Community Center">
+                    </div>
+                    <div class="form-group">
+                        <label for="activityAddress">Full Address</label>
+                        <input type="text" id="activityAddress" 
+                               placeholder="Full address for navigation">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="form-group">
+                        <label for="ageRange">Age Range *</label>
+                        <select id="ageRange" required>
+                            <option value="">Select Age Range</option>
+                            <option value="all">All Ages</option>
+                            <option value="4+">4+</option>
+                            <option value="8+">8+</option>
+                            <option value="12+">12+</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="maxParticipants">Max Participants *</label>
+                        <input type="number" id="maxParticipants" min="2" max="50" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="requirements">Requirements/What to Bring</label>
+                    <textarea id="requirements" rows="2" 
+                              placeholder="e.g., Bring sun protection, water bottle, notebook..."></textarea>
+                </div>
+                
+                <!-- Optional Costs Section -->
+                <div class="form-group">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="hasCosts" class="mr-2">
+                        This activity has optional cost sharing for materials/venues
+                    </label>
+                </div>
+                
+                <div id="costsSection" class="hidden">
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <h4 class="font-semibold mb-2">Optional Costs</h4>
+                        <p class="text-sm text-gray-600 mb-3">
+                            Add costs that families can choose to participate in. All costs are optional.
+                        </p>
+                        <div id="costItems">
+                            <!-- Cost items will be added here -->
+                        </div>
+                        <button type="button" id="addCostItem" class="btn-outline">
+                            <i class="fas fa-plus mr-1"></i>Add Cost Item
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 mt-6">
+                    <button type="submit" class="btn-primary flex-1">Create Activity</button>
+                    <button type="button" id="cancelCreate" class="btn-outline flex-1">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Activity Details Modal -->
+    <div id="activityDetailsModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="activityDetailsTitle" class="text-2xl font-bold" style="color: var(--primary-blue);"></h3>
+                <button id="closeDetailsModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="activityDetailsContent">
+                <!-- Activity details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const menuBtn = document.getElementById('mobileMenuBtn');
-          const mobileMenu = document.getElementById('mobileMenu');
-    
-          if (menuBtn && mobileMenu) {
-            menuBtn.addEventListener('click', function () {
-              const isVisible = mobileMenu.style.display !== 'none';
-              mobileMenu.style.display = isVisible ? 'none' : 'block';
-    
-              const icon = this.querySelector('i');
-              icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
-            });
-    
-            mobileMenu.addEventListener('click', function (e) {
-              if (e.target.tagName === 'A') {
-                mobileMenu.style.display = 'none';
-                menuBtn.querySelector('i').className = 'fas fa-bars text-xl';
-              }
-            });
-          }
-        });
-    </script>
-    <script>
+        // Global variables
+        let currentUser = null;
+        let currentUserData = null;
+        let allActivities = [];
+        let filteredActivities = [];
+
+        // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
-            // No auth check needed for activities page
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
             
-            // Sample activities data
-            const sampleActivities = [
-                {
-                    id: 'activity1',
-                    title: 'Beach Nature Study',
-                    type: 'field_trip',
-                    description: 'Explore marine life and coastal ecosystems at Chaweng Beach. Children will collect shells, observe tide pools, and learn about ocean conservation.',
-                    date: '2025-01-15',
-                    time: '09:00',
-                    duration: 3,
-                    location: 'Chaweng Beach, Koh Samui',
-                    organizer: 'Sarah Johnson',
-                    maxParticipants: 12,
-                    currentParticipants: 8,
-                    ageRange: '3-12',
-                    cost: 15.00,
-                    verified: true
-                },
-                {
-                    id: 'activity2',
-                    title: 'Thai Cooking Workshop',
-                    type: 'workshop',
-                    description: 'Learn to cook traditional Thai dishes with local ingredients. A cultural and practical life skills experience for the whole family.',
-                    date: '2025-01-18',
-                    time: '14:00',
-                    duration: 2.5,
-                    location: 'Samui Cooking School, Bophut',
-                    organizer: 'The Martinez Family',
-                    maxParticipants: 8,
-                    currentParticipants: 5,
-                    ageRange: '6+',
-                    cost: 25.00,
-                    verified: true
-                },
-                {
-                    id: 'activity3',
-                    title: 'Morning Montessori Playgroup',
-                    type: 'playgroup',
-                    description: 'Structured play session focusing on practical life activities, sensorial exploration, and social interaction for young children.',
-                    date: '2025-01-20',
-                    time: '10:00',
-                    duration: 2,
-                    location: 'Community Center, Lamai',
-                    organizer: 'Emma Kumar',
-                    maxParticipants: 10,
-                    currentParticipants: 7,
-                    ageRange: '2-6',
-                    cost: 0,
-                    verified: true
-                },
-                {
-                    id: 'activity4',
-                    title: 'Science Experiment Lab',
-                    type: 'academic',
-                    description: 'Hands-on science experiments covering basic chemistry and physics concepts. Age-appropriate activities to spark curiosity.',
-                    date: '2025-01-22',
-                    time: '15:30',
-                    duration: 1.5,
-                    location: 'Williams Home School, Nathon',
-                    organizer: 'Dr. Williams',
-                    maxParticipants: 6,
-                    currentParticipants: 4,
-                    ageRange: '8-14',
-                    cost: 20.00,
-                    verified: true
-                }
-            ];
-            
-            function loadActivities() {
-                displayActivities(sampleActivities);
-            }
-            
-            function displayActivities(activities) {
-                const container = document.getElementById('activitiesList');
-                container.innerHTML = '';
-                
-                activities.forEach(activity => {
-                    const activityCard = createActivityCard(activity);
-                    container.appendChild(activityCard);
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
                 });
             }
+
+            // Initialize Firebase auth
+            initializeAuth();
             
-            function createActivityCard(activity) {
-                const card = document.createElement('div');
-                card.className = 'activity-card';
-              
-                const spotsLeft = activity.maxParticipants - activity.currentParticipants;
-                const isFull = spotsLeft <= 0;
-                
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="activity-type">${activity.type.replace('_', ' ')}</span>
-                                ${activity.verified ? '<i class="fas fa-check-circle text-green-500" title="Verified Organizer"></i>' : ''}
-                            </div>
-                            <h3 class="text-xl font-semibold mb-2" style="color: var(--primary-blue);">${activity.title}</h3>
-                            <p class="text-gray-600 mb-3">${activity.description}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
-                        <div>
-                            <i class="fas fa-calendar-alt text-gray-400 mr-2"></i>
-                            <span>${new Date(activity.date).toLocaleDateString()}</span>
-                        </div>
-                        <div>
-                            <i class="fas fa-clock text-gray-400 mr-2"></i>
-                            <span>${activity.time} (${activity.duration}h)</span>
-                        </div>
-                        <div>
-                            <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
-                            <span>${activity.location}</span>
-                        </div>
-                        <div>
-                            <i class="fas fa-user text-gray-400 mr-2"></i>
-                            <span>Ages ${activity.ageRange}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-center mb-4">
-                        <div>
-                            <span class="text-sm text-gray-600">Organized by: </span>
-                            <span class="font-medium">${activity.organizer}</span>
-                        </div>
-                        <div class="text-right">
-                            <div class="participants-count">${activity.currentParticipants}/${activity.maxParticipants} joined</div>
-                            <div class="text-sm text-gray-600">${spotsLeft} spots left</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-center">
-                        <div class="text-lg font-semibold" style="color: var(--primary-green);">
-                            ${activity.cost > 0 ? `$${activity.cost.toFixed(2)}` : 'Free'}
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="btn-outline" onclick="viewActivity('${activity.id}')">
-                                <i class="fas fa-eye mr-1"></i>Details
-                            </button>
-                            <button class="btn-primary ${isFull ? 'opacity-50 cursor-not-allowed' : ''}" 
-                                    onclick="joinActivity('${activity.id}')" 
-                                    ${isFull ? 'disabled' : ''}>
-                                <i class="fas fa-user-plus mr-1"></i>
-                                ${isFull ? 'Full' : 'Join'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                return card;
-            }
-            
-            // Filter functionality
-            document.getElementById('filterBtn').addEventListener('click', function() {
-                const typeFilter = document.getElementById('typeFilter').value;
-                const ageFilter = document.getElementById('ageFilter').value;
-                const dateFilter = document.getElementById('dateFilter').value;
-                
-                let filteredActivities = sampleActivities.filter(activity => {
-                    // Type filter
-                    if (typeFilter && activity.type !== typeFilter) return false;
-                    
-                    // Age filter
-                    if (ageFilter && !activity.ageRange.includes(ageFilter.split('-')[0])) return false;
-                    
-                    // Date filter
-                    if (dateFilter && activity.date !== dateFilter) return false;
-                    
-                    return true;
-                });
-                
-                displayActivities(filteredActivities);
-            });
-            
-            // Create activity modal
-            document.getElementById('createActivityBtn').addEventListener('click', function() {
-                document.getElementById('createModal').style.display = 'flex';
-            });
-            
-            document.getElementById('cancelCreateBtn').addEventListener('click', function() {
-                document.getElementById('createModal').style.display = 'none';
-            });
-            
-            document.getElementById('activityForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const activityData = {
-                    title: document.getElementById('activityTitle').value,
-                    type: document.getElementById('activityType').value,
-                    description: document.getElementById('activityDescription').value,
-                    date: document.getElementById('activityDate').value,
-                    time: document.getElementById('activityTime').value,
-                    duration: parseFloat(document.getElementById('activityDuration').value),
-                    location: document.getElementById('activityLocation').value,
-                    maxParticipants: parseInt(document.getElementById('maxParticipants').value),
-                    ageRange: document.getElementById('ageRange').value,
-                    cost: parseFloat(document.getElementById('costPerChild').value) || 0,
-                    organizer: currentUser.displayName || currentUser.email,
-                    organizerId: currentUser.uid,
-                    currentParticipants: 0,
-                    createdAt: new Date(),
-                    verified: false
-                };
-                
-                try {
-                    // In real implementation, save to Firestore
-                    // await window.firebaseFirestore.addDoc(window.firebaseFirestore.collection(window.db, 'activities'), activityData);
-                    
-                    alert('Activity created successfully! It will be visible once approved.');
-                    document.getElementById('createModal').style.display = 'none';
-                    document.getElementById('activityForm').reset();
-                    
-                    // Reload activities
-                    loadActivities();
-                } catch (error) {
-                    alert('Error creating activity: ' + error.message);
-                }
-            });
-            
-            // Sign out functionality
-            document.getElementById('signOutBtn').addEventListener('click', async () => {
-                try {
-                    await window.curriculumSocial.signOut();
-                    window.location.href = 'login.html';
-                } catch (error) {
-                    console.error('Error signing out:', error);
-                }
-            });
+            // Set up event listeners
+            setupEventListeners();
             
             // Set minimum date to today
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('activityDate').min = today;
             document.getElementById('dateFilter').min = today;
         });
-        
-        // Global functions
-        window.viewActivity = function(activityId) {
-            alert(`Viewing detailed information for activity ${activityId}. Full activity details coming soon!`);
-        };
-        
-        window.joinActivity = function(activityId) {
-            if (confirm('Would you like to join this activity? The organizer will be notified of your interest.')) {
-                alert('Join request sent! The organizer will contact you with further details.');
-                // In real implementation, this would update the database and send notifications
-            }
-        };
 
-        // Navigation links config
-        const navLinks = [
-            { href: 'dashboard.html', label: 'Dashboard' },
-            { href: 'profile.html', label: 'Profile' },
-            { href: 'matching.html', label: 'Find Families' },
-            { href: 'activities.html', label: 'Activities' }
-        ];
-        const currentPage = window.location.pathname.split('/').pop();
-        const isDashboard = currentPage === 'dashboard.html';
-        // Build nav links, excluding current page and dashboard on dashboard.html
-        function buildNavLinks(container, isMobile) {
-            container.innerHTML = '';
-            navLinks.forEach(link => {
-                if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
-                const a = document.createElement('a');
-                a.href = link.href;
-                a.textContent = link.label;
-                a.className = isMobile
-                    ? 'block py-2 text-gray-700 hover:text-blue-600'
-                    : 'nav-link';
-                container.appendChild(a);
-            });
-            // Add logout link
-            const logout = document.createElement('a');
-            logout.href = '#';
-            logout.textContent = 'Logout';
-            logout.className = isMobile
-                ? 'block py-2 text-gray-700 hover:text-blue-600'
-                : 'nav-link';
-            logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
-            container.appendChild(logout);
-        }
-        buildNavLinks(document.getElementById('desktopNav'), false);
-        buildNavLinks(document.getElementById('mobileNavLinks'), true);
-        // Hamburger menu toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const isVisible = mobileMenu.style.display !== 'none';
-            mobileMenu.style.display = isVisible ? 'none' : 'block';
-            // Toggle hamburger icon
-            const icon = this.querySelector('i');
-            icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
-        });
-        // Close mobile menu when clicking on a link
-        document.getElementById('mobileMenu').addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-                this.style.display = 'none';
-                document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
+        async function initializeAuth() {
+            if (window.auth) {
+                window.auth.onAuthStateChanged(async (user) => {
+                    if (user) {
+                        currentUser = user;
+                        
+                        // Get user profile data
+                        const userProfile = await window.curriculumSocial.getUserProfile(user.uid);
+                        
+                        if (userProfile.success) {
+                            currentUserData = {
+                                uid: user.uid,
+                                email: user.email,
+                                displayName: user.displayName || userProfile.data.displayName || userProfile.data.name,
+                                ...userProfile.data
+                            };
+                        } else {
+                            currentUserData = {
+                                uid: user.uid,
+                                email: user.email,
+                                displayName: user.displayName || user.email.split('@')[0],
+                                role: 'parent'
+                            };
+                        }
+                        
+                        updateUserInterface();
+                        loadActivities();
+                        
+                        // Hide loading, show content
+                        document.getElementById('loadingState').classList.add('hidden');
+                        document.getElementById('mainContent').classList.remove('hidden');
+                    } else {
+                        // Redirect to login if not authenticated
+                        window.location.href = 'https://curriculumsocial.com/login.html';
+                    }
+                });
+            } else {
+                // Fallback: show demo data without auth
+                setTimeout(() => {
+                    loadDemoActivities();
+                    document.getElementById('loadingState').classList.add('hidden');
+                    document.getElementById('mainContent').classList.remove('hidden');
+                }, 1000);
             }
-        });
-        // Auto-close mobile menu on resize
-        window.addEventListener('resize', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            if (window.innerWidth >= 768) {
-                if (mobileMenu) mobileMenu.style.display = 'none';
-                if (mobileMenuBtn) {
-                    const icon = mobileMenuBtn.querySelector('i');
-                    if (icon) icon.className = 'fas fa-bars text-xl';
+        }
+
+        function updateUserInterface() {
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            const userInfo = document.getElementById('userInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            if (currentUserData && userName && userRole) {
+                const displayName = currentUserData.displayName || currentUserData.email.split('@')[0];
+                userName.textContent = displayName;
+                
+                const role = currentUserData.role || 'parent';
+                userRole.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+                userRole.className = `role-badge role-${role}`;
+                
+                userInfo.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+            }
+        }
+
+        function setupEventListeners() {
+            // Create activity button
+            document.getElementById('createActivityBtn').addEventListener('click', openCreateModal);
+            
+            // Modal close buttons
+            document.getElementById('closeCreateModal').addEventListener('click', closeCreateModal);
+            document.getElementById('cancelCreate').addEventListener('click', closeCreateModal);
+            document.getElementById('closeDetailsModal').addEventListener('click', closeDetailsModal);
+            
+            // Form submission
+            document.getElementById('createActivityForm').addEventListener('submit', handleCreateActivity);
+            
+            // Filter controls
+            document.getElementById('applyFiltersBtn').addEventListener('click', applyFilters);
+            document.getElementById('clearFiltersBtn').addEventListener('click', clearFilters);
+            
+            // Optional costs toggle
+            document.getElementById('hasCosts').addEventListener('change', toggleCostsSection);
+            document.getElementById('addCostItem').addEventListener('click', addCostItem);
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            document.getElementById('mobileLogoutBtn').addEventListener('click', handleLogout);
+            
+            // Close modals when clicking outside
+            document.getElementById('createActivityModal').addEventListener('click', function(e) {
+                if (e.target === this) closeCreateModal();
+            });
+            
+            document.getElementById('activityDetailsModal').addEventListener('click', function(e) {
+                if (e.target === this) closeDetailsModal();
+            });
+        }
+
+        async function loadActivities() {
+            try {
+                if (window.db && window.firebaseFirestore) {
+                    // Load real activities from Firebase
+                    const activitiesQuery = window.firebaseFirestore.query(
+                        window.firebaseFirestore.collection(window.db, 'activities'),
+                        window.firebaseFirestore.orderBy('dateTime', 'asc')
+                    );
+                    
+                    const querySnapshot = await window.firebaseFirestore.getDocs(activitiesQuery);
+                    allActivities = querySnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data(),
+                        dateTime: doc.data().dateTime?.toDate ? doc.data().dateTime.toDate() : new Date(doc.data().dateTime)
+                    }));
+                } else {
+                    // Fallback to demo data
+                    loadDemoActivities();
+                    return;
+                }
+            } catch (error) {
+                console.error('Error loading activities:', error);
+                loadDemoActivities();
+                return;
+            }
+            
+            // Filter out past activities
+            const now = new Date();
+            allActivities = allActivities.filter(activity => activity.dateTime > now);
+            
+            filteredActivities = [...allActivities];
+            displayActivities(filteredActivities);
+        }
+
+        function loadDemoActivities() {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(10, 0, 0, 0);
+            
+            const nextWeek = new Date();
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            nextWeek.setHours(14, 0, 0, 0);
+            
+            const dayAfter = new Date();
+            dayAfter.setDate(dayAfter.getDate() + 3);
+            dayAfter.setHours(9, 30, 0, 0);
+
+            allActivities = [
+                {
+                    id: 'demo1',
+                    title: 'Marine Biology Beach Exploration',
+                    description: 'Discover marine life and coastal ecosystems at Lamai Beach. Kids will collect shells, observe tide pools, and learn about ocean conservation.',
+                    category: 'science',
+                    organizerId: 'demo-user',
+                    organizerName: 'Sarah Johnson',
+                    dateTime: tomorrow,
+                    endTime: new Date(tomorrow.getTime() + 3 * 60 * 60 * 1000),
+                    location: { venue: 'Lamai Beach', address: 'Lamai Beach Road, Koh Samui' },
+                    ageRange: '4+',
+                    maxParticipants: 12,
+                    currentParticipants: ['user1', 'user2', 'user3'],
+                    requirements: 'Bring sun protection, water bottle, and curiosity!',
+                    costs: { baseFee: 0, optionalCosts: [] },
+                    status: 'published',
+                    educationalFocus: true
+                },
+                {
+                    id: 'demo2', 
+                    title: 'Thai Cooking Adventure',
+                    description: 'Learn to cook traditional Thai dishes with local ingredients. A fun cultural experience for the whole family.',
+                    category: 'cultural',
+                    organizerId: 'demo-user2',
+                    organizerName: 'Chef Malee',
+                    dateTime: nextWeek,
+                    endTime: new Date(nextWeek.getTime() + 2.5 * 60 * 60 * 1000),
+                    location: { venue: 'Samui Cooking School', address: 'Bophut, Koh Samui' },
+                    ageRange: '8+',
+                    maxParticipants: 8,
+                    currentParticipants: ['user4', 'user5'],
+                    requirements: 'Bring appetite and willingness to learn!',
+                    costs: { 
+                        baseFee: 0, 
+                        optionalCosts: [
+                            { item: 'Cooking ingredients', amount: 300, currency: 'THB', required: false }
+                        ] 
+                    },
+                    status: 'published',
+                    educationalFocus: true
+                },
+                {
+                    id: 'demo3',
+                    title: 'Beach Day & Sand Castle Building',
+                    description: 'Relaxed beach day for families with sand castle building competition, beach games, and socializing.',
+                    category: 'social',
+                    organizerId: 'demo-user3',
+                    organizerName: 'The Martinez Family',
+                    dateTime: dayAfter,
+                    endTime: new Date(dayAfter.getTime() + 4 * 60 * 60 * 1000),
+                    location: { venue: 'Chaweng Beach', address: 'Chaweng Beach Road, Koh Samui' },
+                    ageRange: 'all',
+                    maxParticipants: 20,
+                    currentParticipants: ['user6', 'user7', 'user8', 'user9'],
+                    requirements: 'Bring beach toys, towels, and sun protection',
+                    costs: { 
+                        baseFee: 0, 
+                        optionalCosts: [
+                            { item: 'Shared snacks & drinks', amount: 100, currency: 'THB', required: false }
+                        ] 
+                    },
+                    status: 'published',
+                    educationalFocus: false
+                }
+            ];
+            
+            filteredActivities = [...allActivities];
+            displayActivities(filteredActivities);
+        }
+
+        function displayActivities(activities) {
+            const container = document.getElementById('activitiesList');
+            const noActivitiesMsg = document.getElementById('noActivities');
+            
+            if (activities.length === 0) {
+                container.innerHTML = '';
+                noActivitiesMsg.classList.remove('hidden');
+                return;
+            }
+            
+            noActivitiesMsg.classList.add('hidden');
+            container.innerHTML = '';
+            
+            activities.forEach(activity => {
+                const activityCard = createActivityCard(activity);
+                container.appendChild(activityCard);
+            });
+        }
+
+        function createActivityCard(activity) {
+            const card = document.createElement('div');
+            card.className = 'activity-card';
+            
+            const spotsLeft = activity.maxParticipants - activity.currentParticipants.length;
+            const isFull = spotsLeft <= 0;
+            const isUserJoined = currentUser && activity.currentParticipants.includes(currentUser.uid);
+            
+            const hasOptionalCosts = activity.costs && activity.costs.optionalCosts && activity.costs.optionalCosts.length > 0;
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="category-badge category-${activity.category}">${activity.category.replace('_', ' ')}</span>
+                            <span class="age-badge">${activity.ageRange}</span>
+                            ${activity.educationalFocus ? '<i class="fas fa-graduation-cap text-blue-500" title="Educational Focus"></i>' : ''}
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2" style="color: var(--primary-blue);">${activity.title}</h3>
+                        <p class="text-gray-600 mb-3">${activity.description}</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+                    <div>
+                        <i class="fas fa-calendar-alt text-gray-400 mr-2"></i>
+                        <span>${activity.dateTime.toLocaleDateString()}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-clock text-gray-400 mr-2"></i>
+                        <span>${activity.dateTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+                        <span>${activity.location.venue}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-users text-gray-400 mr-2"></i>
+                        <span>${activity.currentParticipants.length}/${activity.maxParticipants} joined</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <span class="text-sm text-gray-600">Organized by: </span>
+                        <span class="font-medium">${activity.organizerName}</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="cost-display">
+                            ${hasOptionalCosts ? 'Free + Optional Costs' : 'Free'}
+                        </div>
+                        ${spotsLeft > 0 ? 
+                            `<div class="participants-info">${spotsLeft} spots left</div>` :
+                            `<div class="participants-info text-red-600">Full</div>`
+                        }
+                    </div>
+                </div>
+                
+                ${activity.requirements ? `
+                    <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                        <i class="fas fa-info-circle text-gray-500 mr-2"></i>
+                        <span class="text-sm text-gray-700">${activity.requirements}</span>
+                    </div>
+                ` : ''}
+                
+                <div class="flex gap-2">
+                    <button class="btn-outline flex-1" onclick="viewActivityDetails('${activity.id}')">
+                        <i class="fas fa-eye mr-1"></i>Details
+                    </button>
+                    ${isUserJoined ? 
+                        `<button class="btn-secondary flex-1" onclick="leaveActivity('${activity.id}')">
+                            <i class="fas fa-user-minus mr-1"></i>Leave
+                        </button>` :
+                        `<button class="btn-primary flex-1 ${isFull ? 'opacity-50 cursor-not-allowed' : ''}" 
+                                onclick="joinActivity('${activity.id}')" 
+                                ${isFull ? 'disabled' : ''}>
+                            <i class="fas fa-user-plus mr-1"></i>
+                            ${isFull ? 'Full' : 'Join'}
+                        </button>`
+                    }
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function applyFilters() {
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const ageFilter = document.getElementById('ageFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            const costFilter = document.getElementById('costFilter').value;
+            
+            filteredActivities = allActivities.filter(activity => {
+                // Category filter
+                if (categoryFilter && activity.category !== categoryFilter) return false;
+                
+                // Age filter
+                if (ageFilter && ageFilter !== 'all' && activity.ageRange !== ageFilter) return false;
+                
+                // Date filter
+                if (dateFilter) {
+                    const filterDate = new Date(dateFilter);
+                    const activityDate = new Date(activity.dateTime);
+                    if (activityDate.toDateString() !== filterDate.toDateString()) return false;
+                }
+                
+                // Cost filter
+                if (costFilter === 'free' && activity.costs?.optionalCosts?.length > 0) return false;
+                if (costFilter === 'paid' && (!activity.costs?.optionalCosts || activity.costs.optionalCosts.length === 0)) return false;
+                
+                return true;
+            });
+            
+            displayActivities(filteredActivities);
+        }
+
+        function clearFilters() {
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('ageFilter').value = '';
+            document.getElementById('dateFilter').value = '';
+            document.getElementById('costFilter').value = '';
+            
+            filteredActivities = [...allActivities];
+            displayActivities(filteredActivities);
+        }
+
+        function openCreateModal() {
+            if (!currentUser) {
+                alert('Please log in to create activities.');
+                return;
+            }
+            document.getElementById('createActivityModal').classList.remove('hidden');
+        }
+
+        function closeCreateModal() {
+            document.getElementById('createActivityModal').classList.add('hidden');
+            document.getElementById('createActivityForm').reset();
+            document.getElementById('costsSection').classList.add('hidden');
+            document.getElementById('hasCosts').checked = false;
+            document.getElementById('costItems').innerHTML = '';
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('activityDetailsModal').classList.add('hidden');
+        }
+
+        function toggleCostsSection() {
+            const costsSection = document.getElementById('costsSection');
+            const hasCosts = document.getElementById('hasCosts').checked;
+            
+            if (hasCosts) {
+                costsSection.classList.remove('hidden');
+            } else {
+                costsSection.classList.add('hidden');
+                document.getElementById('costItems').innerHTML = '';
+            }
+        }
+
+        function addCostItem() {
+            const costItems = document.getElementById('costItems');
+            const itemIndex = costItems.children.length;
+            
+            const costItem = document.createElement('div');
+            costItem.className = 'cost-item';
+            costItem.innerHTML = `
+                <div class="flex-1 grid grid-cols-2 gap-2">
+                    <input type="text" placeholder="Item name (e.g., Art supplies)" 
+                           name="costItem${itemIndex}" required>
+                    <input type="number" placeholder="Amount (THB)" 
+                           name="costAmount${itemIndex}" min="0" required>
+                </div>
+                <button type="button" onclick="this.parentElement.remove()" 
+                        class="text-red-500 hover:text-red-700 ml-2">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            
+            costItems.appendChild(costItem);
+        }
+
+        async function handleCreateActivity(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                alert('Please log in to create activities.');
+                return;
+            }
+            
+            const formData = new FormData(e.target);
+            
+            // Collect cost items
+            const costItems = [];
+            const costItemsContainer = document.getElementById('costItems');
+            for (let i = 0; i < costItemsContainer.children.length; i++) {
+                const itemName = formData.get(`costItem${i}`);
+                const itemAmount = formData.get(`costAmount${i}`);
+                if (itemName && itemAmount) {
+                    costItems.push({
+                        item: itemName,
+                        amount: parseFloat(itemAmount),
+                        currency: 'THB',
+                        required: false
+                    });
                 }
             }
-        });
-        // Logout functionality (replace with Firebase logic if available)
-        async function handleLogout(e) {
-            e.preventDefault();
-            const result = await window.curriculumSocial.signOut();
-            if (result.success) {
-                window.location.href = 'index.html';
-            } else {
-                alert('Logout failed: ' + result.error);
+            
+            // Create activity object
+            const activityDate = new Date(`${document.getElementById('activityDate').value}T${document.getElementById('activityTime').value}`);
+            const duration = parseFloat(document.getElementById('activityDuration').value);
+            const endTime = new Date(activityDate.getTime() + duration * 60 * 60 * 1000);
+            
+            const activityData = {
+                title: document.getElementById('activityTitle').value,
+                description: document.getElementById('activityDescription').value,
+                category: document.getElementById('activityCategory').value,
+                organizerId: currentUser.uid,
+                organizerName: currentUserData.displayName || currentUser.email.split('@')[0],
+                dateTime: activityDate,
+                endTime: endTime,
+                location: {
+                    venue: document.getElementById('activityLocation').value,
+                    address: document.getElementById('activityAddress').value || document.getElementById('activityLocation').value
+                },
+                ageRange: document.getElementById('ageRange').value,
+                maxParticipants: parseInt(document.getElementById('maxParticipants').value),
+                currentParticipants: [],
+                requirements: document.getElementById('requirements').value,
+                costs: {
+                    baseFee: 0,
+                    optionalCosts: costItems
+                },
+                status: 'published',
+                educationalFocus: ['science', 'educational', 'technology'].includes(document.getElementById('activityCategory').value),
+                createdAt: new Date()
+            };
+            
+            try {
+                if (window.db && window.firebaseFirestore) {
+                    // Save to Firebase
+                    await window.firebaseFirestore.addDoc(
+                        window.firebaseFirestore.collection(window.db, 'activities'), 
+                        activityData
+                    );
+                    alert('Activity created successfully!');
+                } else {
+                    // Demo mode - add to local array
+                    activityData.id = 'demo' + Date.now();
+                    allActivities.unshift(activityData);
+                    filteredActivities = [...allActivities];
+                    displayActivities(filteredActivities);
+                    alert('Activity created successfully! (Demo mode)');
+                }
+                
+                closeCreateModal();
+                
+                // Reload activities if using Firebase
+                if (window.db) {
+                    loadActivities();
+                }
+            } catch (error) {
+                console.error('Error creating activity:', error);
+                alert('Error creating activity: ' + error.message);
             }
         }
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('logoutNav').addEventListener('click', handleLogout);
-            document.getElementById('mobileLogoutNav').addEventListener('click', handleLogout);
-        });
+
+        function viewActivityDetails(activityId) {
+            const activity = allActivities.find(a => a.id === activityId);
+            if (!activity) return;
+            
+            const modal = document.getElementById('activityDetailsModal');
+            const title = document.getElementById('activityDetailsTitle');
+            const content = document.getElementById('activityDetailsContent');
+            
+            title.textContent = activity.title;
+            
+            const hasOptionalCosts = activity.costs?.optionalCosts?.length > 0;
+            
+            content.innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-semibold mb-2">Description</h4>
+                        <p class="text-gray-700">${activity.description}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold mb-2">When</h4>
+                            <p class="text-gray-700">${activity.dateTime.toLocaleDateString()}</p>
+                            <p class="text-gray-700">${activity.dateTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${activity.endTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-2">Where</h4>
+                            <p class="text-gray-700">${activity.location.venue}</p>
+                            ${activity.location.address ? `<p class="text-sm text-gray-600">${activity.location.address}</p>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold mb-2">Age Range</h4>
+                            <p class="text-gray-700">${activity.ageRange}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-2">Participants</h4>
+                            <p class="text-gray-700">${activity.currentParticipants.length} / ${activity.maxParticipants}</p>
+                        </div>
+                    </div>
+                    
+                    ${activity.requirements ? `
+                        <div>
+                            <h4 class="font-semibold mb-2">What to Bring</h4>
+                            <p class="text-gray-700">${activity.requirements}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${hasOptionalCosts ? `
+                        <div>
+                            <h4 class="font-semibold mb-2">Optional Costs</h4>
+                            <div class="space-y-2">
+                                ${activity.costs.optionalCosts.map(cost => `
+                                    <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                        <span>${cost.item}</span>
+                                        <span class="font-medium">${cost.amount} ${cost.currency}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">All costs are optional - families can choose to participate or bring their own items.</p>
+                        </div>
+                    ` : ''}
+                    
+                    <div>
+                        <h4 class="font-semibold mb-2">Organizer</h4>
+                        <p class="text-gray-700">${activity.organizerName}</p>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+        }
+
+        function joinActivity(activityId) {
+            if (!currentUser) {
+                alert('Please log in to join activities.');
+                return;
+            }
+            
+            const activity = allActivities.find(a => a.id === activityId);
+            if (!activity) return;
+            
+            if (activity.currentParticipants.includes(currentUser.uid)) {
+                alert('You are already joined to this activity.');
+                return;
+            }
+            
+            if (activity.currentParticipants.length >= activity.maxParticipants) {
+                alert('This activity is full.');
+                return;
+            }
+            
+            if (confirm(`Join "${activity.title}"? The organizer will be notified.`)) {
+                // Update locally first
+                activity.currentParticipants.push(currentUser.uid);
+                displayActivities(filteredActivities);
+                
+                // Update in Firebase if available
+                if (window.db && window.firebaseFirestore) {
+                    const activityRef = window.firebaseFirestore.doc(window.db, 'activities', activityId);
+                    window.firebaseFirestore.updateDoc(activityRef, {
+                        currentParticipants: activity.currentParticipants
+                    }).catch(error => {
+                        console.error('Error joining activity:', error);
+                        // Revert local change on error
+                        activity.currentParticipants = activity.currentParticipants.filter(id => id !== currentUser.uid);
+                        displayActivities(filteredActivities);
+                        alert('Error joining activity. Please try again.');
+                    });
+                }
+                
+                alert('Successfully joined the activity!');
+            }
+        }
+
+        function leaveActivity(activityId) {
+            if (!currentUser) return;
+            
+            const activity = allActivities.find(a => a.id === activityId);
+            if (!activity) return;
+            
+            if (confirm(`Leave "${activity.title}"?`)) {
+                // Update locally first
+                activity.currentParticipants = activity.currentParticipants.filter(id => id !== currentUser.uid);
+                displayActivities(filteredActivities);
+                
+                // Update in Firebase if available
+                if (window.db && window.firebaseFirestore) {
+                    const activityRef = window.firebaseFirestore.doc(window.db, 'activities', activityId);
+                    window.firebaseFirestore.updateDoc(activityRef, {
+                        currentParticipants: activity.currentParticipants
+                    }).catch(error => {
+                        console.error('Error leaving activity:', error);
+                        alert('Error leaving activity. Please try again.');
+                    });
+                }
+                
+                alert('You have left the activity.');
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                if (window.curriculumSocial) {
+                    await window.curriculumSocial.signOut();
+                }
+                window.location.href = 'https://curriculumsocial.com/';
+            } catch (error) {
+                console.error('Error signing out:', error);
+                alert('Error signing out. Please try again.');
+            }
+        }
+
+        // Make functions globally available
+        window.viewActivityDetails = viewActivityDetails;
+        window.joinActivity = joinActivity;
+        window.leaveActivity = leaveActivity;
     </script>
-    
-    <script type="module" src="js/firebase-config.js"></script>
 </body>
 </html>
