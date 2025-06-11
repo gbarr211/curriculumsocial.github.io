@@ -592,33 +592,53 @@
             document.getElementById('mobileLogoutBtn').addEventListener('click', handleLogout);
         }
 
-        async function loadFamilies() {
-            try {
-                if (window.db && window.firebaseFirestore) {
-                    // Load real families from Firebase
-                    const familiesQuery = window.firebaseFirestore.collection(window.db, 'users');
-                    const querySnapshot = await window.firebaseFirestore.getDocs(familiesQuery);
-                    
-                    allFamilies = querySnapshot.docs
-                        .map(doc => ({ id: doc.id, ...doc.data() }))
-                        .filter(family => family.role === 'parent' && family.id !== currentUser.uid);
-                } else {
-                    // Fallback to demo data
-                    loadDemoFamilies();
-                    return;
+        function loadFamilies() {
+            // Demo data for testing
+            allFamilies = [
+                {
+                    id: '1',
+                    familyName: 'The Smiths',
+                    parentNames: ['John', 'Jane'],
+                    profilePhoto: 'https://via.placeholder.com/150',
+                    location: 'Bangkok',
+                    distance: 5,
+                    joinedDate: '2023-01-01',
+                    connectionCount: 10,
+                    activityCount: 5,
+                    bio: 'We love outdoor activities and educational games.',
+                    children: [
+                        { name: 'Tom', age: 8, avatar: 'https://via.placeholder.com/50', interests: ['sports', 'science'] }
+                    ],
+                    educationalApproach: ['montessori', 'outdoor-learning'],
+                    languages: ['English', 'Thai'],
+                    availability: ['Weekends', 'Evenings'],
+                    verified: true
+                },
+                {
+                    id: '2',
+                    familyName: 'The Lees',
+                    parentNames: ['Mike', 'Sarah'],
+                    profilePhoto: 'https://via.placeholder.com/150',
+                    location: 'Chiang Mai',
+                    distance: 10,
+                    joinedDate: '2023-02-01',
+                    connectionCount: 8,
+                    activityCount: 3,
+                    bio: 'We focus on creative arts and language learning.',
+                    children: [
+                        { name: 'Emma', age: 6, avatar: 'https://via.placeholder.com/50', interests: ['arts', 'music'] }
+                    ],
+                    educationalApproach: ['waldorf', 'arts-integrated'],
+                    languages: ['English', 'Chinese'],
+                    availability: ['Weekdays', 'Mornings'],
+                    verified: false
                 }
-            } catch (error) {
-                console.error('Error loading families:', error);
-                loadDemoFamilies();
-                return;
-            }
-            
-            // Load connections data
-            await loadConnections();
-            
+            ];
             filteredFamilies = [...allFamilies];
             displayFamilies(filteredFamilies);
             updateStats();
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
         }
 
         function loadDemoFamilies() {
@@ -698,7 +718,6 @@
                     children: [
                         { name: 'Oliver', age: 11, interests: ['drawing', 'theater', 'history'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver&backgroundColor=a8e6cf' },
                         { name: 'Sophia', age: 8, interests: ['dance', 'crafts', 'gardening'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia&backgroundColor=ff8b94' },
-                        { name: 'Jack', age: 5, interests: ['blocks', 'stories', 'sandbox'], avatar: 'https://api.dicebear.com/7.x/avat
                         { name: 'Jack', age: 5, interests: ['blocks', 'stories', 'sandbox'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack&backgroundColor=88d8c0' }
                     ],
                     languages: ['English'],
