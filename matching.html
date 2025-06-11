@@ -803,11 +803,29 @@
             const connection = connections.find(c => c.familyId === family.id);
             const connectionStatus = connection ? connection.status : 'none';
 
+            // Generate family avatar
+            const familyAvatar = `<div class="family-photo mr-4">
+                <i class="fas fa-users"></i>
+            </div>`;
+
+            // Generate child avatars
+            const childAvatars = family.children.map(child => `
+                <div class="flex items-center mr-4 mb-2">
+                    <div class="child-avatar ${child.avatar}-avatar">
+                        ${child.avatar === 'boy' ? '<i class="fas fa-mars"></i>' : '<i class="fas fa-venus"></i>'}
+                    </div>
+                    <div class="text-xs">
+                        <div class="font-medium">${child.name}, ${child.age}</div>
+                        <div class="text-gray-500">${child.interests.slice(0,2).join(', ')}</div>
+                    </div>
+                </div>
+            `).join('');
+
             card.innerHTML = `
                 <div class="compatibility-score">${compatibilityScore}% match</div>
                 
                 <div class="flex items-start mb-4">
-                    <img src="${family.profilePhoto}" alt="${family.familyName}" class="family-photo mr-4">
+                    ${familyAvatar}
                     <div class="flex-1">
                         <div class="flex items-center mb-2">
                             <h3 class="text-xl font-semibold">${family.familyName}</h3>
@@ -837,15 +855,7 @@
                 <div class="mb-4">
                     <div class="text-sm font-semibold mb-2">Children (${family.children.length}):</div>
                     <div class="flex items-center flex-wrap">
-                        ${family.children.map(child => `
-                            <div class="flex items-center mr-4 mb-2">
-                                <img src="${child.avatar}" alt="${child.name}" class="child-avatar">
-                                <div class="text-xs">
-                                    <div class="font-medium">${child.name}, ${child.age}</div>
-                                    <div class="text-gray-500">${child.interests.slice(0,2).join(', ')}</div>
-                                </div>
-                            </div>
-                        `).join('')}
+                        ${childAvatars}
                     </div>
                 </div>
 
@@ -992,7 +1002,9 @@
             content.innerHTML = `
                 <div class="space-y-6">
                     <div class="flex items-start">
-                        <img src="${family.profilePhoto}" alt="${family.familyName}" class="w-24 h-24 rounded-full mr-6">
+                        <div class="family-photo mr-6">
+                            <i class="fas fa-users"></i>
+                        </div>
                         <div class="flex-1">
                             <div class="flex items-center mb-2">
                                 <h4 class="text-lg font-semibold">${family.parentNames.join(' & ')}</h4>
@@ -1020,7 +1032,9 @@
                         <div class="space-y-3">
                             ${family.children.map(child => `
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                                    <img src="${child.avatar}" alt="${child.name}" class="w-12 h-12 rounded-full mr-4">
+                                    <div class="child-avatar ${child.avatar}-avatar mr-4">
+                                        ${child.avatar === 'boy' ? '<i class="fas fa-mars"></i>' : '<i class="fas fa-venus"></i>'}
+                                    </div>
                                     <div class="flex-1">
                                         <div class="font-medium">${child.name}, age ${child.age}</div>
                                         <div class="text-sm text-gray-600">Interests: ${child.interests.join(', ')}</div>
@@ -1069,50 +1083,34 @@
 
             if (confirm(`Send connection request to ${family.familyName}?`)) {
                 // Add to connections as pending
-                connections.push({
-                    familyId: familyId,
-                    status: 'pending',
-                    date: new Date().toISOString()
-                });
-
-                // Update display
+                connections.push({ familyId: familyId, status: 'pending', date: new Date().toISOString().split('T')[0] });
+                
+                // Refresh display
                 displayFamilies(filteredFamilies);
                 updateStats();
-                closeFamilyModal();
-
-                alert(`Connection request sent to ${family.familyName}! They'll be notified and can accept or decline.`);
-
-                // In real implementation, this would update Firebase
-                if (window.db && window.firebaseFirestore) {
-                    // Add connection request to database
-                }
+                
+                alert(`Connection request sent to ${family.familyName}!`);
             }
         }
 
         function messageFamily(familyId) {
             const family = allFamilies.find(f => f.id === familyId);
             if (!family) return;
-
-            alert(`Messaging feature coming soon! You'll be able to chat directly with ${family.familyName}.`);
-            // In real implementation, this would open a messaging interface
+            
+            alert(`Message feature coming soon! You can contact ${family.familyName} directly.`);
         }
 
-        async function handleLogout() {
-            try {
-                if (window.curriculumSocial) {
-                    await window.curriculumSocial.signOut();
-                }
-                window.location.href = 'https://curriculumsocial.com/';
-            } catch (error) {
-                console.error('Error signing out:', error);
-                alert('Error signing out. Please try again.');
+        function handleLogout() {
+            if (window.auth) {
+                window.auth.signOut().then(() => {
+                    window.location.href = 'https://curriculumsocial.com/login.html';
+                }).catch((error) => {
+                    console.error('Logout error:', error);
+                });
+            } else {
+                window.location.href = 'https://curriculumsocial.com/login.html';
             }
         }
-
-        // Make functions globally available
-        window.viewFamilyProfile = viewFamilyProfile;
-        window.sendConnectionRequest = sendConnectionRequest;
-        window.messageFamily = messageFamily;
     </script>
 </body>
 </html>
