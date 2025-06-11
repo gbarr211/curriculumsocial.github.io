@@ -569,6 +569,16 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('activityDate').min = today;
             document.getElementById('dateFilter').min = today;
+
+            const desktopNav = document.getElementById('desktopNav');
+            if (desktopNav) {
+                desktopNav.innerHTML = `
+                    <a href="https://curriculumsocial.com/dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
+                    <a href="https://curriculumsocial.com/matching.html" class="nav-link">Find Families</a>
+                    <a href="https://curriculumsocial.com/activities.html" class="nav-link active">Activities</a>
+                `;
+            }
         });
 
         async function initializeAuth() {
