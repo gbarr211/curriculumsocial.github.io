@@ -349,10 +349,7 @@
                 </h1>
             </div>
             <nav class="hidden md:flex items-center space-x-2">
-                <a href="https://curriculumsocial.com/dashboard.html" class="nav-link">Dashboard</a>
-                <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
-                <a href="https://curriculumsocial.com/matching.html" class="nav-link active">Find Families</a>
-                <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
+                <div id="desktopNav"></div>
             </nav>
             <div class="flex items-center space-x-4">
                 <a href="interest.html" class="btn-secondary">Express Interest</a>
@@ -530,6 +527,16 @@
             
             // Set up event listeners
             setupEventListeners();
+
+            const desktopNav = document.getElementById('desktopNav');
+            if (desktopNav) {
+                desktopNav.innerHTML = `
+                    <a href="https://curriculumsocial.com/dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
+                    <a href="https://curriculumsocial.com/matching.html" class="nav-link active">Find Families</a>
+                    <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
+                `;
+            }
         });
 
         async function initializeAuth() {
