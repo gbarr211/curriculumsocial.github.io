@@ -7,21 +7,23 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <script type="module" src="js/firebase-config.js"></script>
     <style>
         :root {
             --primary-blue: #1a73e8;
             --secondary-blue: #4285f4;
             --primary-green: #34a853;
             --secondary-green: #66bb6a;
+            --primary-purple: #9c27b0;
             --light-blue: #e8f0fe;
             --light-green: #e6f4ea;
+            --light-purple: #f3e5f5;
         }
         
         body {
             font-family: 'Open Sans', sans-serif;
             color: #333;
-            background: linear-gradient(135deg, #e8f0fe 0%, #e6f4ea 100%);
-            min-height: 100vh;
+            background-color: #f8fafc;
         }
         
         h1, h2, h3, h4, h5, h6 {
@@ -31,93 +33,60 @@
         .btn-primary {
             background-color: var(--primary-blue);
             color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            font-size: 14px;
         }
         
         .btn-primary:hover {
             background-color: var(--secondary-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
         }
         
         .btn-secondary {
             background-color: var(--primary-green);
             color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            text-align: center;
+            font-size: 14px;
         }
         
         .btn-secondary:hover {
             background-color: var(--secondary-green);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
         }
         
         .btn-outline {
-            border: 2px solid var(--primary-blue);
+            border: 1px solid var(--primary-blue);
             color: var(--primary-blue);
             background-color: transparent;
-            padding: 10px 22px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 7px 15px;
+            border-radius: 6px;
+            font-weight: 500;
             transition: all 0.3s;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            font-size: 14px;
         }
         
         .btn-outline:hover {
             background-color: var(--light-blue);
         }
-        
-        .card {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
-            background: white;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .text-primary {
-            color: var(--primary-blue);
-        }
-        
-        .text-secondary {
-            color: var(--primary-green);
-        }
-
-        /* Mobile menu positioning fix */
-        #mobileMenu {
-            position: fixed;
-            top: 60px;
-            left: 0;
-            right: 0;
-            z-index: 40;
-            max-height: calc(100vh - 80px);
-            overflow-y: auto;
-        }
-
         
         .nav-link {
             position: relative;
@@ -130,87 +99,218 @@
             border-radius: 6px;
         }
         
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: var(--primary-blue);
-            transition: all 0.3s;
-            transform: translateX(-50%);
-        }
-        
         .nav-link:hover {
             color: var(--primary-blue);
             background-color: var(--light-blue);
         }
         
-        .nav-link:hover::after {
-            width: 80%;
+        .nav-link.active {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
         }
         
         .family-card {
             background: white;
             border-radius: 12px;
             padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
+            position: relative;
         }
         
         .family-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
         
         .compatibility-score {
-            background: var(--primary-green);
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 12px;
+            font-weight: 600;
         }
         
-        .filter-panel {
-            background: white;
+        .family-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--light-blue);
+        }
+        
+        .child-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            margin-right: 8px;
+        }
+        
+        .approach-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: var(--light-green);
+            color: var(--primary-green);
             border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            margin-bottom: 2rem;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 4px;
+            margin-bottom: 4px;
         }
         
-        .philosophy-tag {
+        .distance-badge {
             background: var(--light-blue);
             color: var(--primary-blue);
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
         }
         
-        .family-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--primary-blue);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.5rem;
-            margin-right: 1rem;
+        .verified-badge {
+            color: var(--primary-green);
+            font-size: 14px;
+            margin-left: 4px;
+        }
+        
+        .connection-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .status-connected {
+            background: var(--light-green);
+            color: var(--primary-green);
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .status-none {
+            background: #f3f4f6;
+            color: #6b7280;
         }
         
         .loading {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
             padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .role-parent {
+            background-color: var(--light-blue);
             color: var(--primary-blue);
+        }
+        
+        .role-teacher {
+            background-color: var(--light-green);
+            color: var(--primary-green);
+        }
+        
+        .role-student {
+            background-color: var(--light-purple);
+            color: var(--primary-purple);
+        }
+        
+        .interest-tag {
+            display: inline-block;
+            padding: 2px 6px;
+            background: #f3f4f6;
+            color: #6b7280;
+            border-radius: 8px;
+            font-size: 10px;
+            margin-right: 4px;
+            margin-bottom: 2px;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
         }
     </style>
 </head>
@@ -219,14 +319,13 @@
     <header class="sticky top-0 bg-white z-50 shadow-sm">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
-                <h1 class="text-2xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
-                    <a href="/" style="text-decoration: none; color: inherit;">
-                        <span style="color: var(--primary-green);">Curriculum</span>
+                <h1 class="text-2xl font-bold">
+                    <a href="https://curriculumsocial.com/" style="text-decoration: none; color: inherit;">
+                        <span style="color: var(--primary-green);">Curriculum</span> 
                         <span style="color: var(--primary-blue);">Social</span>
                     </a>
                 </h1>
             </div>
-            <!-- Desktop nav -->
             <nav class="hidden md:flex items-center space-x-2">
                 <a href="https://curriculumsocial.com/dashboard.html" class="nav-link">Dashboard</a>
                 <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
@@ -236,406 +335,793 @@
             <div class="flex items-center space-x-4">
                 <!-- Express Interest Button (visible on all screen sizes) -->
                 <a href="interest.html" class="btn-secondary">Express Interest</a>
-                <div id="userInfo" class="hidden">
+                <div id="userInfo" class="hidden md:inline-block">
                     <span id="userName" class="font-medium"></span>
                     <span id="userRole" class="role-badge"></span>
                 </div>
-                <button id="logoutBtn" class="hidden md:block">Logout</button>
+                <button id="logoutBtn" class="btn-outline" style="display:none;">Logout</button>
                 <button id="mobileMenuBtn" class="md:hidden text-gray-700 ml-2">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
         </div>
-        <!-- Mobile nav -->
-        <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
-            <div id="mobileNavLinks" class="px-4 py-2 space-y-2">
-                <a href="https://curriculumsocial.com/dashboard.html" class="block py-2 text-gray-700 hover:text-blue-600">Dashboard</a>
-                <a href="https://curriculumsocial.com/profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
-                <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-blue-600 font-semibold">Find Families</a>
-                <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
-                <div class="pt-2 border-t border-gray-200">
-                    <a href="interest.html" class="btn-secondary w-full block text-center mb-2">Express Interest</a>
-                    <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
-                </div>
-            </div>
-        </div>
     </header>
 
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
+        <div class="px-4 py-2 space-y-2">
+            <a href="https://curriculumsocial.com/dashboard.html" class="block py-2 text-gray-700 hover:text-blue-600">Dashboard</a>
+            <a href="https://curriculumsocial.com/profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
+            <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-blue-600 font-semibold">Find Families</a>
+            <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
+            <div class="pt-2 border-t border-gray-200">
+                <a href="interest.html" class="btn-secondary w-full block text-center mb-2">Express Interest</a>
+                <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="loading">
+        <div class="text-center">
+            <i class="fas fa-spinner fa-spin text-4xl text-blue-500 mb-4"></i>
+            <p class="text-gray-600">Finding compatible families...</p>
+        </div>
+    </div>
+
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+    <main id="mainContent" class="container mx-auto px-4 py-8 hidden">
+        <!-- Header Section -->
         <div class="text-center mb-8">
             <h2 class="text-3xl font-bold mb-4" style="color: var(--primary-blue);">Find Compatible Families</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Connect with like-minded families in your area based on educational philosophy, location, and shared interests.</p>
+            <p class="text-gray-600 max-w-2xl mx-auto mb-6">
+                Connect with like-minded families in your area who share similar educational values, 
+                interests, and approaches to learning. Build lasting friendships and learning partnerships.
+            </p>
         </div>
 
-        <!-- Filters Panel -->
-        <div class="filter-panel">
-            <h3 class="text-xl font-semibold mb-4" style="color: var(--primary-blue);">Search Preferences</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Distance (km)</label>
-                    <select id="distanceFilter" class="w-full p-2 border border-gray-300 rounded-md">
+        <!-- Search and Filters -->
+        <div class="card p-6 mb-8">
+            <h3 class="text-lg font-semibold mb-4">Find Your Perfect Match</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div class="form-group">
+                    <label for="distanceFilter">Distance</label>
+                    <select id="distanceFilter">
+                        <option value="">Any Distance</option>
                         <option value="5">Within 5 km</option>
                         <option value="10">Within 10 km</option>
-                        <option value="25" selected>Within 25 km</option>
-                        <option value="50">Within 50 km</option>
+                        <option value="15">Within 15 km</option>
+                        <option value="20">Within 20 km</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Educational Philosophy</label>
-                    <select id="philosophyFilter" class="w-full p-2 border border-gray-300 rounded-md">
-                        <option value="">All Philosophies</option>
+                <div class="form-group">
+                    <label for="approachFilter">Educational Approach</label>
+                    <select id="approachFilter">
+                        <option value="">Any Approach</option>
                         <option value="montessori">Montessori</option>
-                        <option value="charlotte_mason">Charlotte Mason</option>
-                        <option value="classical">Classical</option>
                         <option value="waldorf">Waldorf</option>
+                        <option value="charlotte-mason">Charlotte Mason</option>
+                        <option value="traditional">Traditional</option>
                         <option value="unschooling">Unschooling</option>
                         <option value="eclectic">Eclectic</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Child Age Range</label>
-                    <select id="ageFilter" class="w-full p-2 border border-gray-300 rounded-md">
-                        <option value="">All Ages</option>
+                <div class="form-group">
+                    <label for="ageFilter">Children's Age Range</label>
+                    <select id="ageFilter">
+                        <option value="">Any Age</option>
                         <option value="0-3">0-3 years</option>
                         <option value="3-6">3-6 years</option>
-                        <option value="6-12">6-12 years</option>
+                        <option value="6-9">6-9 years</option>
+                        <option value="9-12">9-12 years</option>
                         <option value="12+">12+ years</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="statusFilter">Connection Status</label>
+                    <select id="statusFilter">
+                        <option value="">All Families</option>
+                        <option value="connected">Connected</option>
+                        <option value="pending">Pending</option>
+                        <option value="new">New Matches</option>
+                    </select>
+                </div>
             </div>
-            <div class="mt-4">
-                <button id="searchBtn" class="btn-primary">Search Families</button>
-                <button id="resetFiltersBtn" class="btn-outline ml-2">Reset Filters</button>
-            </div>
-        </div>
-
-        <!-- Results Section -->
-        <div id="resultsSection">
-            <div id="loadingState" class="loading" style="display: none;">
-                <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
-                <p>Finding compatible families...</p>
-            </div>
-
-            <div id="noResults" style="display: none;" class="text-center py-8">
-                <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
-                <h3 class="text-xl font-semibold text-gray-600 mb-2">No families found</h3>
-                <p class="text-gray-500">Try adjusting your search criteria or expanding your distance range.</p>
-            </div>
-
-            <div id="familyResults" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Family cards will be populated here -->
+            <div class="flex gap-4">
+                <button id="applyFilters" class="btn-primary">Apply Filters</button>
+                <button id="clearFilters" class="btn-outline">Clear All</button>
             </div>
         </div>
 
-        <!-- Sample families will be displayed here initially -->
-        <div id="sampleFamilies" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Sample data will be loaded on page load -->
+        <!-- Stats Summary -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="card p-4 text-center">
+                <div class="text-2xl font-bold text-blue-600" id="totalFamilies">12</div>
+                <div class="text-sm text-gray-600">Families Found</div>
+            </div>
+            <div class="card p-4 text-center">
+                <div class="text-2xl font-bold text-green-600" id="connectedFamilies">3</div>
+                <div class="text-sm text-gray-600">Connected</div>
+            </div>
+            <div class="card p-4 text-center">
+                <div class="text-2xl font-bold text-orange-600" id="pendingRequests">1</div>
+                <div class="text-sm text-gray-600">Pending</div>
+            </div>
+            <div class="card p-4 text-center">
+                <div class="text-2xl font-bold text-purple-600" id="newMatches">8</div>
+                <div class="text-sm text-gray-600">New Matches</div>
+            </div>
+        </div>
+
+        <!-- Family Profiles -->
+        <div id="familyProfiles" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Family profiles will be loaded here -->
+        </div>
+
+        <!-- No Results -->
+        <div id="noResults" class="text-center py-12 hidden">
+            <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">No Families Found</h3>
+            <p class="text-gray-500 mb-4">Try adjusting your search filters to find more families.</p>
+            <button onclick="document.getElementById('clearFilters').click()" class="btn-primary">
+                Clear Filters
+            </button>
         </div>
     </main>
+
+    <!-- Family Profile Modal -->
+    <div id="familyModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="modalFamilyName" class="text-2xl font-bold" style="color: var(--primary-blue);"></h3>
+                <button id="closeFamilyModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="familyModalContent">
+                <!-- Family details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const menuBtn = document.getElementById('mobileMenuBtn');
-          const mobileMenu = document.getElementById('mobileMenu');
-    
-          if (menuBtn && mobileMenu) {
-            menuBtn.addEventListener('click', function () {
-              const isVisible = mobileMenu.style.display !== 'none';
-              mobileMenu.style.display = isVisible ? 'none' : 'block';
-    
-              const icon = this.querySelector('i');
-              icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
-            });
-    
-            mobileMenu.addEventListener('click', function (e) {
-              if (e.target.tagName === 'A') {
-                mobileMenu.style.display = 'none';
-                menuBtn.querySelector('i').className = 'fas fa-bars text-xl';
-              }
-            });
-          }
-        });
-    </script>
-    <script>
+        // Global variables
+        let currentUser = null;
+        let currentUserData = null;
+        let allFamilies = [];
+        let filteredFamilies = [];
+        let connections = [];
+
+        // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
-            // No auth check needed for matching page
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
             
-            // Sample family data for demo purposes
-            const sampleFamilies = [
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Initialize Firebase auth
+            initializeAuth();
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        async function initializeAuth() {
+            if (window.auth) {
+                window.auth.onAuthStateChanged(async (user) => {
+                    if (user) {
+                        currentUser = user;
+                        
+                        // Get user profile data
+                        const userProfile = await window.curriculumSocial.getUserProfile(user.uid);
+                        
+                        if (userProfile.success) {
+                            currentUserData = {
+                                uid: user.uid,
+                                email: user.email,
+                                displayName: user.displayName || userProfile.data.displayName || userProfile.data.name,
+                                ...userProfile.data
+                            };
+                        } else {
+                            currentUserData = {
+                                uid: user.uid,
+                                email: user.email,
+                                displayName: user.displayName || user.email.split('@')[0],
+                                role: 'parent'
+                            };
+                        }
+                        
+                        updateUserInterface();
+                        loadFamilies();
+                        
+                        // Hide loading, show content
+                        document.getElementById('loadingState').classList.add('hidden');
+                        document.getElementById('mainContent').classList.remove('hidden');
+                    } else {
+                        // Redirect to login if not authenticated
+                        window.location.href = 'https://curriculumsocial.com/login.html';
+                    }
+                });
+            } else {
+                // Fallback: show demo data without auth
+                setTimeout(() => {
+                    loadDemoFamilies();
+                    document.getElementById('loadingState').classList.add('hidden');
+                    document.getElementById('mainContent').classList.remove('hidden');
+                }, 1000);
+            }
+        }
+
+        function updateUserInterface() {
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            const userInfo = document.getElementById('userInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            if (currentUserData && userName && userRole) {
+                const displayName = currentUserData.displayName || currentUserData.email.split('@')[0];
+                userName.textContent = displayName;
+                
+                const role = currentUserData.role || 'parent';
+                userRole.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+                userRole.className = `role-badge role-${role}`;
+                
+                userInfo.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+            }
+        }
+
+        function setupEventListeners() {
+            // Filter controls
+            document.getElementById('applyFilters').addEventListener('click', applyFilters);
+            document.getElementById('clearFilters').addEventListener('click', clearFilters);
+            
+            // Modal controls
+            document.getElementById('closeFamilyModal').addEventListener('click', closeFamilyModal);
+            document.getElementById('familyModal').addEventListener('click', function(e) {
+                if (e.target === this) closeFamilyModal();
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            document.getElementById('mobileLogoutBtn').addEventListener('click', handleLogout);
+        }
+
+        async function loadFamilies() {
+            try {
+                if (window.db && window.firebaseFirestore) {
+                    // Load real families from Firebase
+                    const familiesQuery = window.firebaseFirestore.collection(window.db, 'users');
+                    const querySnapshot = await window.firebaseFirestore.getDocs(familiesQuery);
+                    
+                    allFamilies = querySnapshot.docs
+                        .map(doc => ({ id: doc.id, ...doc.data() }))
+                        .filter(family => family.role === 'parent' && family.id !== currentUser.uid);
+                } else {
+                    // Fallback to demo data
+                    loadDemoFamilies();
+                    return;
+                }
+            } catch (error) {
+                console.error('Error loading families:', error);
+                loadDemoFamilies();
+                return;
+            }
+            
+            // Load connections data
+            await loadConnections();
+            
+            filteredFamilies = [...allFamilies];
+            displayFamilies(filteredFamilies);
+            updateStats();
+        }
+
+        function loadDemoFamilies() {
+            // Create realistic demo families for Koh Samui
+            allFamilies = [
                 {
                     id: 'family1',
-                    displayName: 'The Johnson Family',
+                    familyName: 'The Martinez Family',
+                    parentNames: ['Sofia Martinez', 'Carlos Martinez'],
+                    profilePhoto: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=150&h=150&fit=crop&crop=face',
                     location: 'Chaweng, Koh Samui',
-                    distance: 2.3,
-                    compatibility: 92,
-                    philosophies: ['montessori', 'charlotte_mason'],
+                    distance: 3.2,
+                    educationalApproach: ['montessori', 'nature-based'],
+                    bio: 'Digital nomad family from Spain. We believe in hands-on learning and outdoor exploration. Our kids love marine biology and art.',
                     children: [
-                        { age: 3, interests: ['nature', 'arts'] },
-                        { age: 6, interests: ['music', 'reading'] }
+                        { name: 'Luna', age: 8, interests: ['art', 'science', 'swimming'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&backgroundColor=b6e3f4' },
+                        { name: 'Diego', age: 6, interests: ['nature', 'building', 'soccer'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Diego&backgroundColor=c6f6d5' }
                     ],
-                    bio: 'Digital nomad family passionate about nature-based learning and creative expression.',
-                    verified: true
+                    languages: ['Spanish', 'English'],
+                    availability: ['mornings', 'weekends'],
+                    verified: true,
+                    joinedDate: '2024-11-15',
+                    activityCount: 12,
+                    connectionCount: 8,
+                    autoAccept: false
                 },
                 {
                     id: 'family2',
-                    displayName: 'The Martinez Family',
+                    familyName: 'The Chen Family',
+                    parentNames: ['Li Chen', 'Wei Chen'],
+                    profilePhoto: 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=150&h=150&fit=crop&crop=face',
                     location: 'Lamai, Koh Samui',
-                    distance: 1.8,
-                    compatibility: 88,
-                    philosophies: ['montessori', 'waldorf'],
+                    distance: 5.8,
+                    educationalApproach: ['traditional', 'stem'],
+                    bio: 'Tech entrepreneurs who relocated to Samui for better work-life balance. Strong focus on STEM education and multilingual learning.',
                     children: [
-                        { age: 2, interests: ['music', 'movement'] },
-                        { age: 5, interests: ['arts', 'nature'] }
+                        { name: 'Emma', age: 10, interests: ['coding', 'math', 'music'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma&backgroundColor=ffdfba' },
+                        { name: 'Alex', age: 7, interests: ['robotics', 'chess', 'reading'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&backgroundColor=ffd93d' }
                     ],
-                    bio: 'Expatriate family focused on holistic education and multilingual development.',
-                    verified: true
+                    languages: ['Mandarin', 'English'],
+                    availability: ['afternoons', 'weekends'],
+                    verified: true,
+                    joinedDate: '2024-10-20',
+                    activityCount: 18,
+                    connectionCount: 12,
+                    autoAccept: true
                 },
                 {
                     id: 'family3',
-                    displayName: 'The Kumar Family',
+                    familyName: 'The Johnson Family',
+                    parentNames: ['Sarah Johnson'],
+                    profilePhoto: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
                     location: 'Bophut, Koh Samui',
-                    distance: 3.1,
-                    compatibility: 85,
-                    philosophies: ['charlotte_mason', 'classical'],
+                    distance: 7.1,
+                    educationalApproach: ['unschooling', 'child-led'],
+                    bio: 'Single mom and freelance writer. We follow our curiosity and learn through real-world experiences. Always up for adventures and new friendships.',
                     children: [
-                        { age: 4, interests: ['science', 'building'] },
-                        { age: 7, interests: ['reading', 'music'] }
+                        { name: 'Maya', age: 9, interests: ['writing', 'photography', 'animals'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maya&backgroundColor=d1c4e9' }
                     ],
-                    bio: 'Academic-focused family with emphasis on literature and STEM learning.',
-                    verified: true
+                    languages: ['English'],
+                    availability: ['flexible'],
+                    verified: true,
+                    joinedDate: '2024-12-01',
+                    activityCount: 6,
+                    connectionCount: 4,
+                    autoAccept: false
                 },
                 {
                     id: 'family4',
-                    displayName: 'The Williams Family',
-                    location: 'Nathon, Koh Samui',
-                    distance: 4.2,
-                    compatibility: 79,
-                    philosophies: ['eclectic', 'montessori'],
+                    familyName: 'The Thompson Family',
+                    parentNames: ['Michael Thompson', 'Jessica Thompson'],
+                    profilePhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+                    location: 'Maenam, Koh Samui',
+                    distance: 12.3,
+                    educationalApproach: ['waldorf', 'arts-focused'],
+                    bio: 'Former teachers turned digital nomads. We love creative arts, storytelling, and building community. Our home always has art supplies ready!',
                     children: [
-                        { age: 8, interests: ['sports', 'technology'] },
-                        { age: 11, interests: ['art', 'languages'] }
+                        { name: 'Oliver', age: 11, interests: ['drawing', 'theater', 'history'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver&backgroundColor=a8e6cf' },
+                        { name: 'Sophia', age: 8, interests: ['dance', 'crafts', 'gardening'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia&backgroundColor=ff8b94' },
+                        { name: 'Jack', age: 5, interests: ['blocks', 'stories', 'sandbox'], avatar: 'https://api.dicebear.com/7.x/avat
+                        { name: 'Jack', age: 5, interests: ['blocks', 'stories', 'sandbox'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack&backgroundColor=88d8c0' }
                     ],
-                    bio: 'Tech-savvy family combining traditional and modern learning approaches.',
-                    verified: true
+                    languages: ['English'],
+                    availability: ['mornings', 'evenings'],
+                    verified: true,
+                    joinedDate: '2024-09-10',
+                    activityCount: 24,
+                    connectionCount: 15,
+                    autoAccept: true
+                },
+                {
+                    id: 'family5',
+                    familyName: 'The Kumar Family',
+                    parentNames: ['Priya Kumar', 'Raj Kumar'],
+                    profilePhoto: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+                    location: 'Fisherman\'s Village, Koh Samui',
+                    distance: 8.9,
+                    educationalApproach: ['eclectic', 'multicultural'],
+                    bio: 'Startup founders embracing slow living. We blend Indian traditions with global perspectives. Love cooking, yoga, and mindful learning.',
+                    children: [
+                        { name: 'Arjun', age: 12, interests: ['yoga', 'cooking', 'languages'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun&backgroundColor=ffd1dc' },
+                        { name: 'Anaya', age: 9, interests: ['dance', 'math', 'meditation'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Anaya&backgroundColor=b19cd9' }
+                    ],
+                    languages: ['Hindi', 'English', 'Thai'],
+                    availability: ['early mornings', 'evenings'],
+                    verified: true,
+                    joinedDate: '2024-08-22',
+                    activityCount: 20,
+                    connectionCount: 11,
+                    autoAccept: false
+                },
+                {
+                    id: 'family6',
+                    familyName: 'The Anderson Family',
+                    parentNames: ['Lisa Anderson', 'Tom Anderson'],
+                    profilePhoto: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+                    location: 'Choeng Mon, Koh Samui',
+                    distance: 15.2,
+                    educationalApproach: ['charlotte-mason', 'nature-study'],
+                    bio: 'Homeschooling family focused on nature study and living books. We love hiking, beach exploring, and building connections with local culture.',
+                    children: [
+                        { name: 'Grace', age: 13, interests: ['photography', 'marine-biology', 'writing'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Grace&backgroundColor=ffb3ba' },
+                        { name: 'Noah', age: 10, interests: ['fishing', 'nature', 'geography'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Noah&backgroundColor=bae1ff' }
+                    ],
+                    languages: ['English'],
+                    availability: ['mornings', 'weekends'],
+                    verified: true,
+                    joinedDate: '2024-07-15',
+                    activityCount: 16,
+                    connectionCount: 9,
+                    autoAccept: true
                 }
             ];
-            
-            function loadFamilies() {
-                displayFamilies(sampleFamilies);
-            }
-            
-            function displayFamilies(families) {
-                const container = document.getElementById('sampleFamilies');
-                container.innerHTML = '';
-                
-                if (families.length === 0) {
-                    document.getElementById('noResults').style.display = 'block';
-                    return;
-                }
-                
-                families.forEach(family => {
-                    const familyCard = createFamilyCard(family);
-                    container.appendChild(familyCard);
-                });
-            }
-            
-            function createFamilyCard(family) {
-                const card = document.createElement('div');
-                card.className = 'family-card';
-                
-                const compatibilityColor = family.compatibility >= 90 ? 'var(--primary-green)' : 
-                                         family.compatibility >= 80 ? 'var(--secondary-green)' : 
-                                         '#fbbf24';
-                
-                card.innerHTML = `
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="flex items-center">
-                            <div class="family-avatar">
-                                ${family.displayName.split(' ')[1][0]}
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-semibold" style="color: var(--primary-blue);">${family.displayName}</h3>
-                                <p class="text-gray-600">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>
-                                    ${family.location} • ${family.distance} km away
-                                </p>
-                                ${family.verified ? '<p class="text-green-600 text-sm"><i class="fas fa-check-circle mr-1"></i>Verified Family</p>' : ''}
-                            </div>
-                        </div>
-                        <div class="compatibility-score" style="background: ${compatibilityColor};">
-                            ${family.compatibility}% match
-                        </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <p class="text-gray-700 mb-3">${family.bio}</p>
-                        
-                        <div class="mb-3">
-                            <span class="text-sm font-medium text-gray-600">Educational Approaches:</span><br>
-                            ${family.philosophies.map(p => `<span class="philosophy-tag">${p.replace('_', ' ')}</span>`).join('')}
-                        </div>
-                        
-                        <div class="mb-4">
-                            <span class="text-sm font-medium text-gray-600">Children:</span><br>
-                            ${family.children.map(child => 
-                                `<span class="text-sm text-gray-600">Age ${child.age} • ${child.interests.join(', ')}</span>`
-                            ).join('<br>')}
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-2">
-                        <button class="btn-primary flex-1" onclick="connectFamily('${family.id}')">
-                            <i class="fas fa-user-plus mr-2"></i>Connect
-                        </button>
-                        <button class="btn-outline" onclick="viewProfile('${family.id}')">
-                            <i class="fas fa-eye mr-2"></i>View Profile
-                        </button>
-                    </div>
-                `;
-                
-                return card;
-            }
-            
-            // Filter functionality
-            document.getElementById('searchBtn').addEventListener('click', function() {
-                const distance = document.getElementById('distanceFilter').value;
-                const philosophy = document.getElementById('philosophyFilter').value;
-                const ageRange = document.getElementById('ageFilter').value;
-                
-                let filteredFamilies = sampleFamilies.filter(family => {
-                    // Distance filter
-                    if (family.distance > parseInt(distance)) return false;
-                    
-                    // Philosophy filter
-                    if (philosophy && !family.philosophies.includes(philosophy)) return false;
-                    
-                    // Age filter
-                    if (ageRange) {
-                        const [minAge, maxAge] = ageRange.includes('+') ? 
-                            [parseInt(ageRange), 100] : 
-                            ageRange.split('-').map(Number);
-                        
-                        const hasMatchingAge = family.children.some(child => 
-                            child.age >= minAge && child.age <= maxAge
-                        );
-                        
-                        if (!hasMatchingAge) return false;
-                    }
-                    
-                    return true;
-                });
-                
-                displayFamilies(filteredFamilies);
-            });
-            
-            document.getElementById('resetFiltersBtn').addEventListener('click', function() {
-                document.getElementById('distanceFilter').value = '25';
-                document.getElementById('philosophyFilter').value = '';
-                document.getElementById('ageFilter').value = '';
-                displayFamilies(sampleFamilies);
-            });
-            
-            // Sign out functionality
-            document.getElementById('logoutBtn').addEventListener('click', async () => {
-                try {
-                    await window.curriculumSocial.signOut();
-                    window.location.href = 'login.html';
-                } catch (error) {
-                    console.error('Error signing out:', error);
-                }
-            });
-        });
-        
-        // Global functions for family interactions
-        window.connectFamily = function(familyId) {
-            alert(`Connection request sent to ${familyId}! They will be notified and can accept your request.`);
-        };
-        
-        window.viewProfile = function(familyId) {
-            alert(`Viewing detailed profile for ${familyId}. Full profile view coming soon!`);
-        };
 
-        // Navigation links config
-        const navLinks = [
-            { href: 'dashboard.html', label: 'Dashboard' },
-            { href: 'profile.html', label: 'Profile' },
-            { href: 'matching.html', label: 'Find Families' },
-            { href: 'activities.html', label: 'Activities' }
-        ];
-        const currentPage = window.location.pathname.split('/').pop();
-        const isDashboard = currentPage === 'dashboard.html';
-        // Build nav links, excluding current page and dashboard on dashboard.html
-        function buildNavLinks(container, isMobile) {
-            container.innerHTML = '';
-            navLinks.forEach(link => {
-                if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
-                const a = document.createElement('a');
-                a.href = link.href;
-                a.textContent = link.label;
-                a.className = isMobile
-                    ? 'block py-2 text-gray-700 hover:text-blue-600'
-                    : 'nav-link';
-                container.appendChild(a);
-            });
-            // Add logout link
-            const logout = document.createElement('a');
-            logout.href = '#';
-            logout.textContent = 'Logout';
-            logout.className = isMobile
-                ? 'block py-2 text-gray-700 hover:text-blue-600'
-                : 'nav-link';
-            logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
-            container.appendChild(logout);
+            // Simulate connection statuses
+            connections = [
+                { familyId: 'family1', status: 'connected', date: '2024-12-01' },
+                { familyId: 'family2', status: 'connected', date: '2024-11-28' },
+                { familyId: 'family3', status: 'pending', date: '2024-12-10' },
+                { familyId: 'family4', status: 'connected', date: '2024-11-15' }
+            ];
+
+            filteredFamilies = [...allFamilies];
+            displayFamilies(filteredFamilies);
+            updateStats();
         }
-        buildNavLinks(document.getElementById('desktopNav'), false);
-        buildNavLinks(document.getElementById('mobileNavLinks'), true);
-        // Hamburger menu toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const isVisible = mobileMenu.style.display !== 'none';
-            mobileMenu.style.display = isVisible ? 'none' : 'block';
-            // Toggle hamburger icon
-            const icon = this.querySelector('i');
-            icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
-        });
-        // Close mobile menu when clicking on a link
-        document.getElementById('mobileMenu').addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-                this.style.display = 'none';
-                document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
+
+        async function loadConnections() {
+            try {
+                if (window.db && window.firebaseFirestore && currentUser) {
+                    // Load real connections from Firebase
+                    const connectionsQuery = window.firebaseFirestore.query(
+                        window.firebaseFirestore.collection(window.db, 'connections'),
+                        window.firebaseFirestore.where('userId', '==', currentUser.uid)
+                    );
+                    const querySnapshot = await window.firebaseFirestore.getDocs(connectionsQuery);
+                    connections = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                }
+            } catch (error) {
+                console.error('Error loading connections:', error);
             }
-        });
-        // Auto-close mobile menu on resize
-        window.addEventListener('resize', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            if (window.innerWidth >= 768) {
-                if (mobileMenu) mobileMenu.style.display = 'none';
-                if (mobileMenuBtn) {
-                    const icon = mobileMenuBtn.querySelector('i');
-                    if (icon) icon.className = 'fas fa-bars text-xl';
+        }
+
+        function displayFamilies(families) {
+            const container = document.getElementById('familyProfiles');
+            const noResults = document.getElementById('noResults');
+
+            if (families.length === 0) {
+                container.innerHTML = '';
+                noResults.classList.remove('hidden');
+                return;
+            }
+
+            noResults.classList.add('hidden');
+            container.innerHTML = '';
+
+            families.forEach(family => {
+                const familyCard = createFamilyCard(family);
+                container.appendChild(familyCard);
+            });
+        }
+
+        function createFamilyCard(family) {
+            const card = document.createElement('div');
+            card.className = 'family-card';
+
+            // Calculate compatibility score (demo algorithm)
+            const compatibilityScore = calculateCompatibilityScore(family);
+            
+            // Get connection status
+            const connection = connections.find(c => c.familyId === family.id);
+            const connectionStatus = connection ? connection.status : 'none';
+
+            card.innerHTML = `
+                <div class="compatibility-score">${compatibilityScore}% match</div>
+                
+                <div class="flex items-start mb-4">
+                    <img src="${family.profilePhoto}" alt="${family.familyName}" class="family-photo mr-4">
+                    <div class="flex-1">
+                        <div class="flex items-center mb-2">
+                            <h3 class="text-xl font-semibold">${family.familyName}</h3>
+                            ${family.verified ? '<i class="fas fa-check-circle verified-badge" title="Verified Family"></i>' : ''}
+                        </div>
+                        <div class="distance-badge mb-2">${family.distance} km away</div>
+                        <div class="text-sm text-gray-600 mb-2">
+                            <i class="fas fa-map-marker-alt mr-1"></i>${family.location}
+                        </div>
+                        <div class="connection-status status-${connectionStatus}">
+                            ${getConnectionStatusText(connectionStatus)}
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-gray-700 text-sm mb-4 line-clamp-2">${family.bio}</p>
+
+                <div class="mb-4">
+                    <div class="text-sm font-semibold mb-2">Educational Approach:</div>
+                    <div class="flex flex-wrap">
+                        ${family.educationalApproach.map(approach => 
+                            `<span class="approach-badge">${approach.replace('-', ' ')}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="text-sm font-semibold mb-2">Children (${family.children.length}):</div>
+                    <div class="flex items-center flex-wrap">
+                        ${family.children.map(child => `
+                            <div class="flex items-center mr-4 mb-2">
+                                <img src="${child.avatar}" alt="${child.name}" class="child-avatar">
+                                <div class="text-xs">
+                                    <div class="font-medium">${child.name}, ${child.age}</div>
+                                    <div class="text-gray-500">${child.interests.slice(0,2).join(', ')}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="text-sm text-gray-600">
+                        <i class="fas fa-globe mr-1"></i>
+                        Languages: ${family.languages.join(', ')}
+                    </div>
+                    <div class="text-sm text-gray-600">
+                        <i class="fas fa-clock mr-1"></i>
+                        Available: ${family.availability.join(', ')}
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-4">
+                    <button class="btn-outline flex-1" onclick="viewFamilyProfile('${family.id}')">
+                        <i class="fas fa-eye mr-1"></i>View Profile
+                    </button>
+                    ${getConnectionButton(family.id, connectionStatus)}
+                </div>
+            `;
+
+            return card;
+        }
+
+        function calculateCompatibilityScore(family) {
+            // Demo compatibility algorithm
+            let score = 60; // Base score
+            
+            // Distance bonus (closer = higher score)
+            if (family.distance <= 5) score += 20;
+            else if (family.distance <= 10) score += 15;
+            else if (family.distance <= 15) score += 10;
+            
+            // Educational approach match (simplified)
+            const commonApproaches = ['montessori', 'waldorf', 'charlotte-mason'];
+            if (family.educationalApproach.some(approach => commonApproaches.includes(approach))) {
+                score += 15;
+            }
+            
+            // Activity level bonus
+            if (family.activityCount > 15) score += 5;
+            
+            return Math.min(95, Math.max(65, score));
+        }
+
+        function getConnectionStatusText(status) {
+            switch(status) {
+                case 'connected': return 'Connected';
+                case 'pending': return 'Request Pending';
+                default: return 'Not Connected';
+            }
+        }
+
+        function getConnectionButton(familyId, status) {
+            switch(status) {
+                case 'connected':
+                    return `<button class="btn-secondary flex-1" onclick="messageFamily('${familyId}')">
+                        <i class="fas fa-comments mr-1"></i>Message
+                    </button>`;
+                case 'pending':
+                    return `<button class="btn-outline flex-1" disabled>
+                        <i class="fas fa-clock mr-1"></i>Pending
+                    </button>`;
+                default:
+                    return `<button class="btn-primary flex-1" onclick="sendConnectionRequest('${familyId}')">
+                        <i class="fas fa-user-plus mr-1"></i>Connect
+                    </button>`;
+            }
+        }
+
+        function applyFilters() {
+            const distance = document.getElementById('distanceFilter').value;
+            const approach = document.getElementById('approachFilter').value;
+            const age = document.getElementById('ageFilter').value;
+            const status = document.getElementById('statusFilter').value;
+
+            filteredFamilies = allFamilies.filter(family => {
+                // Distance filter
+                if (distance && family.distance > parseInt(distance)) return false;
+                
+                // Educational approach filter
+                if (approach && !family.educationalApproach.includes(approach)) return false;
+                
+                // Age filter
+                if (age) {
+                    const [minAge, maxAge] = age.includes('+') ? [parseInt(age), 100] : age.split('-').map(Number);
+                    const hasMatchingAge = family.children.some(child => 
+                        child.age >= minAge && child.age <= (maxAge || 100)
+                    );
+                    if (!hasMatchingAge) return false;
+                }
+                
+                // Status filter
+                if (status) {
+                    const connection = connections.find(c => c.familyId === family.id);
+                    const connectionStatus = connection ? connection.status : 'new';
+                    if (status === 'new' && connectionStatus !== 'new') return false;
+                    if (status !== 'new' && connectionStatus !== status) return false;
+                }
+                
+                return true;
+            });
+
+            displayFamilies(filteredFamilies);
+            updateStats();
+        }
+
+        function clearFilters() {
+            document.getElementById('distanceFilter').value = '';
+            document.getElementById('approachFilter').value = '';
+            document.getElementById('ageFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            
+            filteredFamilies = [...allFamilies];
+            displayFamilies(filteredFamilies);
+            updateStats();
+        }
+
+        function updateStats() {
+            const connected = connections.filter(c => c.status === 'connected').length;
+            const pending = connections.filter(c => c.status === 'pending').length;
+            const newMatches = filteredFamilies.length - connected - pending;
+            
+            document.getElementById('totalFamilies').textContent = filteredFamilies.length;
+            document.getElementById('connectedFamilies').textContent = connected;
+            document.getElementById('pendingRequests').textContent = pending;
+            document.getElementById('newMatches').textContent = Math.max(0, newMatches);
+        }
+
+        function viewFamilyProfile(familyId) {
+            const family = allFamilies.find(f => f.id === familyId);
+            if (!family) return;
+
+            const modal = document.getElementById('familyModal');
+            const title = document.getElementById('modalFamilyName');
+            const content = document.getElementById('familyModalContent');
+
+            title.textContent = family.familyName;
+
+            const connection = connections.find(c => c.familyId === familyId);
+            const connectionStatus = connection ? connection.status : 'none';
+
+            content.innerHTML = `
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <img src="${family.profilePhoto}" alt="${family.familyName}" class="w-24 h-24 rounded-full mr-6">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-2">
+                                <h4 class="text-lg font-semibold">${family.parentNames.join(' & ')}</h4>
+                                ${family.verified ? '<i class="fas fa-check-circle verified-badge ml-2"></i>' : ''}
+                            </div>
+                            <div class="text-gray-600 mb-2">
+                                <i class="fas fa-map-marker-alt mr-2"></i>${family.location} (${family.distance} km away)
+                            </div>
+                            <div class="text-gray-600 mb-2">
+                                <i class="fas fa-calendar mr-2"></i>Joined ${new Date(family.joinedDate).toLocaleDateString()}
+                            </div>
+                            <div class="text-gray-600">
+                                <i class="fas fa-users mr-2"></i>${family.connectionCount} connections • ${family.activityCount} activities
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h5 class="font-semibold mb-2">About Our Family</h5>
+                        <p class="text-gray-700">${family.bio}</p>
+                    </div>
+
+                    <div>
+                        <h5 class="font-semibold mb-3">Our Children</h5>
+                        <div class="space-y-3">
+                            ${family.children.map(child => `
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <img src="${child.avatar}" alt="${child.name}" class="w-12 h-12 rounded-full mr-4">
+                                    <div class="flex-1">
+                                        <div class="font-medium">${child.name}, age ${child.age}</div>
+                                        <div class="text-sm text-gray-600">Interests: ${child.interests.join(', ')}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h5 class="font-semibold mb-2">Educational Approach</h5>
+                            <div class="flex flex-wrap">
+                                ${family.educationalApproach.map(approach => 
+                                    `<span class="approach-badge">${approach.replace('-', ' ')}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold mb-2">Languages</h5>
+                            <p class="text-gray-700">${family.languages.join(', ')}</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h5 class="font-semibold mb-2">Availability</h5>
+                        <p class="text-gray-700">${family.availability.join(', ')}</p>
+                    </div>
+
+                    <div class="flex gap-3 pt-4 border-t">
+                        ${getConnectionButton(familyId, connectionStatus)}
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeFamilyModal() {
+            document.getElementById('familyModal').classList.add('hidden');
+        }
+
+        function sendConnectionRequest(familyId) {
+            const family = allFamilies.find(f => f.id === familyId);
+            if (!family) return;
+
+            if (confirm(`Send connection request to ${family.familyName}?`)) {
+                // Add to connections as pending
+                connections.push({
+                    familyId: familyId,
+                    status: 'pending',
+                    date: new Date().toISOString()
+                });
+
+                // Update display
+                displayFamilies(filteredFamilies);
+                updateStats();
+                closeFamilyModal();
+
+                alert(`Connection request sent to ${family.familyName}! They'll be notified and can accept or decline.`);
+
+                // In real implementation, this would update Firebase
+                if (window.db && window.firebaseFirestore) {
+                    // Add connection request to database
                 }
             }
-        });
-        // Logout functionality (add your logout logic here)
-        document.getElementById('logoutNav').addEventListener('click', async function() {
-            const result = await window.curriculumSocial.signOut();
-            if (result.success) {
-                window.location.href = 'index.html';
-            } else {
-                alert('Logout failed: ' + result.error);
+        }
+
+        function messageFamily(familyId) {
+            const family = allFamilies.find(f => f.id === familyId);
+            if (!family) return;
+
+            alert(`Messaging feature coming soon! You'll be able to chat directly with ${family.familyName}.`);
+            // In real implementation, this would open a messaging interface
+        }
+
+        async function handleLogout() {
+            try {
+                if (window.curriculumSocial) {
+                    await window.curriculumSocial.signOut();
+                }
+                window.location.href = 'https://curriculumsocial.com/';
+            } catch (error) {
+                console.error('Error signing out:', error);
+                alert('Error signing out. Please try again.');
             }
-        });
-        document.getElementById('mobileLogoutNav').addEventListener('click', async function() {
-            const result = await window.curriculumSocial.signOut();
-            if (result.success) {
-                window.location.href = 'index.html';
-            } else {
-                alert('Logout failed: ' + result.error);
-            }
-        });
+        }
+
+        // Make functions globally available
+        window.viewFamilyProfile = viewFamilyProfile;
+        window.sendConnectionRequest = sendConnectionRequest;
+        window.messageFamily = messageFamily;
     </script>
-    
-    <script type="module" src="js/firebase-config.js"></script>
 </body>
 </html>
