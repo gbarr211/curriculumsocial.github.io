@@ -7,145 +7,81 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <script type="module" src="js/firebase-config.js"></script>
     <style>
-        :root {
-            --primary-blue: #1a73e8;
-            --secondary-blue: #4285f4;
-            --primary-green: #34a853;
-            --secondary-green: #66bb6a;
-            --primary-purple: #9c27b0;
-            --secondary-purple: #ba68c8;
-            --light-blue: #e8f0fe;
-            --light-green: #e6f4ea;
-            --light-purple: #f3e5f5;
-        }
-        
         body {
             font-family: 'Open Sans', sans-serif;
             color: #333;
+            background-color: #f9fafb;
+            line-height: 1.6;
         }
-        
-        h1, h2, h3, h4, h5, h6 {
+        h1, h2, h3, h4 {
             font-family: 'Montserrat', sans-serif;
         }
-        
-        .btn-primary {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
+        .header-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
         }
-        
-        .btn-primary:hover {
-            background-color: var(--secondary-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-secondary {
-            background-color: var(--primary-green);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .btn-secondary:hover {
-            background-color: var(--secondary-green);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-purple {
-            background-color: var(--primary-purple);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .btn-purple:hover {
-            background-color: var(--secondary-purple);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card {
-            border-radius: 12px;
-            overflow: hidden;
+        .section-card {
+            border-top: 4px solid #10b981;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
         }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        .section-header {
+            border-bottom: 2px solid rgba(16, 185, 129, 0.2);
         }
-        
-        .section {
-            padding: 80px 0;
+        .feature-item {
+            border-left: 3px solid #3b82f6;
         }
-        
-        .hero {
-            background: linear-gradient(135deg, #f3e5f5 0%, #e8f0fe 50%, #e6f4ea 100%);
-            padding: 120px 0 80px;
-            position: relative;
-            overflow: hidden;
+        .testimonial {
+            background-color: rgba(59, 130, 246, 0.05);
+            border-left: 4px solid #3b82f6;
         }
-        
-        .nav-link {
-            position: relative;
-            padding: 8px 16px;
-            margin: 0 4px;
-            color: #4a5568;
-            text-decoration: none;
-            font-weight: 500;
+        .icon-bg {
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
             transition: all 0.3s ease;
-            border-radius: 6px;
         }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: var(--primary-blue);
-            transition: all 0.3s;
-            transform: translateX(-50%);
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #059669 100%);
+            transform: translateY(-1px);
         }
-        
-        .nav-link:hover {
-            color: var(--primary-blue);
-            background-color: var(--light-blue);
+        .highlight {
+            background: linear-gradient(transparent 70%, rgba(16, 185, 129, 0.3) 30%);
+            display: inline;
         }
-        
-        .nav-link:hover::after {
-            width: 80%;
+        .compensation-card {
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .compensation-card-header {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th {
+            background-color: rgba(16, 185, 129, 0.1);
+            text-align: left;
+            padding: 12px;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        tr:nth-child(even) {
+            background-color: #f9fafb;
         }
     </style>
 </head>
-<body __processed_2c1702bd-59ab-47c3-a9b2-965a71393675__="true" br-mode="off" saccades-color="" fixation-strength="2" saccades-interval="0" class="" style="--fixation-edge-opacity: 80%; --br-line-height: 1; --br-boldness: 600;">
-    <!-- Header & Navigation -->
+<body class="min-h-screen flex flex-col">
+    <!-- Header & Navigation (updated for consistency) -->
     <header class="sticky top-0 bg-white z-50 shadow-sm">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
                 <h1 class="text-2xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
                     <a href="/" style="text-decoration: none; color: inherit;">
-                        <span style="color: var(--primary-green);">Curriculum</span>
-                        <span style="color: var(--primary-blue);">Social</span>
+                        <span style="color: #34a853;">Curriculum</span>
+                        <span style="color: #1a73e8;">Social</span>
                     </a>
                 </h1>
             </div>
@@ -155,7 +91,7 @@
             </nav>
             <div class="flex items-center space-x-4">
                 <!-- Express Interest Button (desktop only, always visible) -->
-                <a href="interest.html" class="btn-secondary hidden md:inline-block">Express Interest</a>
+                <a href="interest.html" class="btn-secondary">Express Interest</a>
                 <!-- Mobile hamburger -->
                 <button id="mobileMenuBtn" class="md:hidden text-gray-700">
                     <i class="fas fa-bars text-xl"></i>
@@ -247,65 +183,69 @@
         });
     </script>
 
-    <!-- Platform Introduction -->
-    <section class="section">
-        <div class="card bg-white rounded-lg p-8 mb-8">
-            <div class="section-header pb-3 mb-6">
-                <h2 class="text-2xl font-semibold text-blue-600">
-                    <i class="fas fa-graduation-cap mr-2"></i> Platform Introduction & Vision
-                </h2>
-            </div>
+    <!-- Main Content (from old file, unchanged) -->
+    <main class="mx-auto max-w-4xl px-4 py-8 flex-1 w-full">
+        <!-- Platform Introduction -->
+        <section class="section">
+            <div class="card bg-white rounded-lg p-8 mb-8">
+                <div class="section-header pb-3 mb-6">
+                    <h2 class="text-2xl font-semibold text-blue-600">
+                        <i class="fas fa-graduation-cap mr-2"></i> Platform Introduction & Vision
+                    </h2>
+                </div>
 
-            <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                    <h3 class="text-xl font-medium mb-3 text-green-600">Our Vision</h3>
-                    <p class="mb-4">
-                        Curriculum Social is reimagining education through a progressive, Montessori-inspired approach that combines AI-powered learning, expert human teaching, and meaningful social connection.
-                    </p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-xl font-medium mb-3 text-green-600">Our Vision</h3>
+                        <p class="mb-4">
+                            Curriculum Social is reimagining education through a progressive, Montessori-inspired approach that combines AI-powered learning, expert human teaching, and meaningful social connection.
+                        </p>
+                        
+                        <p class="mb-4">
+                            We're building a platform that empowers both students and educators, allowing for personalized learning experiences while maintaining global educational standards.
+                        </p>
+                        
+                        <p>
+                            Our initial focus is serving the diverse international community in Koh Samui, Thailand, with plans for global expansion.
+                        </p>
+                    </div>
                     
-                    <p class="mb-4">
-                        We're building a platform that empowers both students and educators, allowing for personalized learning experiences while maintaining global educational standards.
-                    </p>
-                    
-                    <p>
-                        Our initial focus is serving the diverse international community in Koh Samui, Thailand, with plans for global expansion.
-                    </p>
+                    <div>
+                        <h3 class="text-xl font-medium mb-3 text-green-600">Core Educational Philosophy</h3>
+                        
+                        <ul class="space-y-3">
+                            <li class="feature-item pl-4">
+                                <span class="font-semibold">Freedom within structure</span> - Following Montessori principles while ensuring alignment with international standards
+                            </li>
+                            <li class="feature-item pl-4">
+                                <span class="font-semibold">Independent learning</span> - Fostering self-direction and intrinsic motivation
+                            </li>
+                            <li class="feature-item pl-4">
+                                <span class="font-semibold">Practical skills focus</span> - Balancing academic knowledge with real-world applications
+                            </li>
+                            <li class="feature-item pl-4">
+                                <span class="font-semibold">Global perspective</span> - Preparing students for international mobility and cross-cultural understanding
+                            </li>
+                            <li class="feature-item pl-4">
+                                <span class="font-semibold">Community-centered</span> - Recognizing that learning thrives within supportive social contexts
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 
-                <div>
-                    <h3 class="text-xl font-medium mb-3 text-green-600">Core Educational Philosophy</h3>
-                    
-                    <ul class="space-y-3">
-                        <li class="feature-item pl-4">
-                            <span class="font-semibold">Freedom within structure</span> - Following Montessori principles while ensuring alignment with international standards
-                        </li>
-                        <li class="feature-item pl-4">
-                            <span class="font-semibold">Independent learning</span> - Fostering self-direction and intrinsic motivation
-                        </li>
-                        <li class="feature-item pl-4">
-                            <span class="font-semibold">Practical skills focus</span> - Balancing academic knowledge with real-world applications
-                        </li>
-                        <li class="feature-item pl-4">
-                            <span class="font-semibold">Global perspective</span> - Preparing students for international mobility and cross-cultural understanding
-                        </li>
-                        <li class="feature-item pl-4">
-                            <span class="font-semibold">Community-centered</span> - Recognizing that learning thrives within supportive social contexts
-                        </li>
-                    </ul>
+                <div class="testimonial p-4 mt-6 rounded">
+                    <p class="italic">"We're seeking educators who share our vision for a more flexible, personalized, and effective educational experience—one that prepares children for a rapidly changing world while honoring time-tested educational principles."</p>
                 </div>
             </div>
-            
-            <div class="testimonial p-4 mt-6 rounded">
-                <p class="italic">"We're seeking educators who share our vision for a more flexible, personalized, and effective educational experience—one that prepares children for a rapidly changing world while honoring time-tested educational principles."</p>
-            </div>
-        </div>
-    </section>
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
-        <div class="container mx-auto px-4">
+        </section>
+    </main>
+
+    <!-- Footer (updated for consistency) -->
+    <footer class="bg-gray-800 text-white py-12 w-full mt-auto">
+        <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Company Info -->
-                <div>
+                <div class="text-left">
                     <h3 class="text-xl font-bold mb-4">Curriculum Social</h3>
                     <p class="text-gray-400 mb-4">
                         Reimagining education through community, technology, and innovation.
@@ -325,9 +265,8 @@
                         </a>
                     </div>
                 </div>
-                
-                <!-- Quick Links (combined) -->
-                <div>
+                <!-- Quick Links -->
+                <div class="text-left">
                     <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
                     <ul class="space-y-2">
                         <li><a href="https://curriculumsocial.com/parent.html" class="text-gray-400 hover:text-white">Parent Resources</a></li>
@@ -338,9 +277,8 @@
                         <li><a href="https://curriculumsocial.com/matching.html" class="text-gray-400 hover:text-white">Matching System</a></li>
                     </ul>
                 </div>
-                
                 <!-- Contact -->
-                <div>
+                <div class="text-left">
                     <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
                     <ul class="space-y-2">
                         <li class="flex items-start">
@@ -358,7 +296,6 @@
                     </ul>
                 </div>
             </div>
-            
             <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between">
                 <p class="text-gray-400 text-sm mb-4 md:mb-0">
                     &copy; 2025 Curriculum Social. All rights reserved.
@@ -373,12 +310,3 @@
     <script type="module" src="js/firebase-config.js"></script>
 </body>
 </html>
-    <script id="html_badge_script1">
-        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
-            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDvXcEVAaLbq48yNP5efXX50GZXBYJj4vQ6hy4%2B1Y6E6EsVD%2FrjvRf4GTrChhJPAJqwgLBZsOMrlgGTR17Id3rkbXqjdrvMYU4ID1rfgrUEEqwH%2F1axEpoVYuRXdr%2FmhosUMkC8JdXST1X9fHjbXThUCC1mBr4PIa%2BI6gAl2DbUKPpx2%2FgQEO8%2BauEu%2BbrEySykYZcc0hJkku04J8nW1vixbRp9FbuLUle1uFm%2F5GGm8cMHamlQGkR61b924THXtBURDD9lrDpe%2BlG8puRhJnosItdYlCba2W0Tc%2Bbe94UtggvdJpE2S2xIgTnB539S0u%2BkkDW%2BnUUH5axUZUHnmHQq649vIiKIFj8S2dDy4rVmAh9VslYy3FWXwCe8pZPRdeywLVtnTfGo9t1e0v6f%2F627rGkwCQGz5XlfvLe8X9%2BcmJih%2FlhJMlGAI7lhwV4xmlikQzl3Q9f0J%2B1IlXJn78IB9CXWjEENGemmOBrFGWARqIsinNE8p9Fjv3cCKjxYlD4Ha14TUQU7ipRpIVTwNCz7M%3D";
-        window.__genspark_locale = "en-US";
-        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDvXcEVAaLbq48yNP5efXX50GZXBYJj4vQ6hy4+1Y6E6EsVD/rjvRf4GTrChhJPAJqwgLBZsOMrlgGTR17Id3rkbXqjdrvMYU4ID1rfgrUEEqwH/1axEpoVYuRXdr/mhosUMkC8JdXST1X9fHjbXThUCC1mBr4PIa+I6gAl2DbUKPpx2/gQEO8+auEu+brEySykYZcc0hJkku04J8nW1vixbRp9FbuLUle1uFm/5GGm8cMHamlQGkR61b924THXtBURDD9lrDpe+lG8puRhJnosItdYlCba2W0Tc+be94UtggvdJpE2S2xIgTnB539S0u+kkDW+nUUH5axUZUHnmHQq649vIiKIFj8S2dDy4rVmAh9VslYy3FWXwCe8pZPRdeywLVtnTfGo9t1e0v6f/627rGkwCQGz5XlfvLe8X9+cmJih/lhJMlGAI7lhwV4xmlikQzl3Q9f0J+1IlXJn78IB9CXWjEENGemmOBrFGWARqIsinNE8p9Fjv3cCKjxYlD4Ha14TUQU7ipRpIVTwNCz7M=";
-    </script>
-    
-    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
-    
