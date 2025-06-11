@@ -273,7 +273,7 @@
     </style>
 </head>
 <body>
-    <!-- Header & Navigation -->
+     <!-- Header & Navigation -->
     <header class="sticky top-0 bg-white z-50 shadow-sm">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
@@ -291,13 +291,14 @@
                 <a href="https://curriculumsocial.com/activities.html" class="nav-link active">Activities</a>
             </nav>
             <div class="flex items-center space-x-4">
-                <a href="https://curriculumsocial.com/interest.html" class="btn-secondary hidden md:inline-block">Express Interest</a>
-                <div id="userInfo" class="hidden">
+                <!-- Express Interest Button (visible on all screen sizes) -->
+                <a href="interest.html" class="btn-secondary">Express Interest</a>
+                <div id="userInfo" class="hidden md:inline-block">
                     <span id="userName" class="font-medium"></span>
                     <span id="userRole" class="role-badge"></span>
                 </div>
-                <button id="logoutBtn" class="btn-outline hidden">Logout</button>
-                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+                <button id="logoutBtn" class="btn-outline" style="display:none;">Logout</button>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700 ml-2">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
@@ -312,7 +313,7 @@
             <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
             <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-blue-600 font-semibold">Activities</a>
             <div class="pt-2 border-t border-gray-200">
-                <a href="https://curriculumsocial.com/interest.html" class="btn-secondary block w-full text-center mb-2">Express Interest</a>
+                <a href="interest.html" class="btn-secondary w-full block text-center mb-2">Express Interest</a>
                 <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
             </div>
         </div>
