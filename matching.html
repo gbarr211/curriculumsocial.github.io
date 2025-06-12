@@ -354,20 +354,14 @@
             max-height: calc(100vh - 80px);
             overflow-y: auto;
         }
-        /* Emergency navigation fix */
-        nav a {
-            display: inline-block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
         
-        .hidden.md\:inline-block {
-            display: inline-block !important;
+        nav {
+            display: none;
         }
         
         @media (min-width: 768px) {
-            .hidden.md\:block {
-                display: block !important;
+            nav {
+                display: flex !important;
             }
         }
     </style>
