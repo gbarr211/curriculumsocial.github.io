@@ -32,6 +32,19 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+        
+        main {
+            flex: 1 0 auto;
+            width: 100%;
+        }
+        
+        footer {
+            flex-shrink: 0;
+            width: 100%;
+            margin-top: auto;
         }
         
         .section {
@@ -273,840 +286,837 @@
             transform: translateY(-1px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
-        main {
-            flex: 1;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
-    <!-- Header & Navigation -->
-    <header class="sticky top-0 bg-white z-50 shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center">
-                <h1 class="text-2xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
-                    <a href="/" style="text-decoration: none; color: inherit;">
-                        <span style="color: var(--primary-green);">Curriculum</span>
-                        <span style="color: var(--primary-blue);">Social</span>
-                    </a>
-                </h1>
-            </div>
-            <!-- Desktop nav -->
-            <nav id="desktopNav" class="hidden md:flex items-center space-x-2">
-                <!-- Nav links will be injected by JS -->
-            </nav>
-            <div class="flex items-center space-x-4">
-                <!-- Express Interest Button (desktop only, always visible) -->
-                <a href="interest.html" class="btn-secondary">Express Interest</a>
-                <!-- Mobile hamburger -->
-                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
-        </div>
-        <!-- Mobile nav -->
-        <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
-            <div id="mobileNavLinks" class="px-4 py-2 space-y-2">
-                <!-- Nav links will be injected by JS -->
-                <div class="pt-2 border-t border-gray-200">
-                    <a href="interest.html" class="btn-secondary w-full block text-center mb-2">Express Interest</a>
+    <main>
+        <!-- Header & Navigation -->
+        <header class="sticky top-0 bg-white z-50 shadow-sm">
+            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
+                        <a href="/" style="text-decoration: none; color: inherit;">
+                            <span style="color: var(--primary-green);">Curriculum</span>
+                            <span style="color: var(--primary-blue);">Social</span>
+                        </a>
+                    </h1>
+                </div>
+                <!-- Desktop nav -->
+                <nav id="desktopNav" class="hidden md:flex items-center space-x-2">
+                    <!-- Nav links will be injected by JS -->
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <!-- Express Interest Button (desktop only, always visible) -->
+                    <a href="interest.html" class="btn-secondary hidden md:inline-block">Express Interest</a>
+                    <!-- Mobile hamburger -->
+                    <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
                 </div>
             </div>
-        </div>
-    </header>
-    <script>
-        // Navigation links config
-        const navLinks = [
-            { href: 'dashboard.html', label: 'Dashboard' },
-            { href: 'profile.html', label: 'Profile' },
-            { href: 'matching.html', label: 'Find Families' },
-            { href: 'activities.html', label: 'Activities' }
-        ];
-        const currentPage = window.location.pathname.split('/').pop();
-        const isDashboard = currentPage === 'dashboard.html';
-        // Build nav links, excluding current page and dashboard on dashboard.html
-        function buildNavLinks(container, isMobile) {
-            container.innerHTML = '';
-            navLinks.forEach(link => {
-                if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
-                const a = document.createElement('a');
-                a.href = link.href;
-                a.textContent = link.label;
-                a.className = isMobile
+            <!-- Mobile nav -->
+            <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
+                <div id="mobileNavLinks" class="px-4 py-2 space-y-2">
+                    <!-- Nav links will be injected by JS -->
+                    <div class="pt-2 border-t border-gray-200">
+                        <a href="interest.html" class="btn-secondary w-full block text-center mb-2">Express Interest</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <script>
+            // Navigation links config
+            const navLinks = [
+                { href: 'dashboard.html', label: 'Dashboard' },
+                { href: 'profile.html', label: 'Profile' },
+                { href: 'matching.html', label: 'Find Families' },
+                { href: 'activities.html', label: 'Activities' }
+            ];
+            const currentPage = window.location.pathname.split('/').pop();
+            const isDashboard = currentPage === 'dashboard.html';
+            // Build nav links, excluding current page and dashboard on dashboard.html
+            function buildNavLinks(container, isMobile) {
+                container.innerHTML = '';
+                navLinks.forEach(link => {
+                    if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
+                    const a = document.createElement('a');
+                    a.href = link.href;
+                    a.textContent = link.label;
+                    a.className = isMobile
+                        ? 'block py-2 text-gray-700 hover:text-blue-600'
+                        : 'nav-link';
+                    container.appendChild(a);
+                });
+                // Add logout link
+                const logout = document.createElement('a');
+                logout.href = '#';
+                logout.textContent = 'Logout';
+                logout.className = isMobile
                     ? 'block py-2 text-gray-700 hover:text-blue-600'
                     : 'nav-link';
-                container.appendChild(a);
+                logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
+                container.appendChild(logout);
+            }
+            buildNavLinks(document.getElementById('desktopNav'), false);
+            buildNavLinks(document.getElementById('mobileNavLinks'), true);
+            // Hamburger menu toggle
+            document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const isVisible = mobileMenu.style.display !== 'none';
+                mobileMenu.style.display = isVisible ? 'none' : 'block';
+                // Toggle hamburger icon
+                const icon = this.querySelector('i');
+                icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
             });
-            // Add logout link
-            const logout = document.createElement('a');
-            logout.href = '#';
-            logout.textContent = 'Logout';
-            logout.className = isMobile
-                ? 'block py-2 text-gray-700 hover:text-blue-600'
-                : 'nav-link';
-            logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
-            container.appendChild(logout);
-        }
-        buildNavLinks(document.getElementById('desktopNav'), false);
-        buildNavLinks(document.getElementById('mobileNavLinks'), true);
-        // Hamburger menu toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const isVisible = mobileMenu.style.display !== 'none';
-            mobileMenu.style.display = isVisible ? 'none' : 'block';
-            // Toggle hamburger icon
-            const icon = this.querySelector('i');
-            icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
-        });
-        // Close mobile menu when clicking on a link
-        document.getElementById('mobileMenu').addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-                this.style.display = 'none';
-                document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
-            }
-        });
-        // Auto-close mobile menu on resize
-        window.addEventListener('resize', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            if (window.innerWidth >= 768) {
-                if (mobileMenu) mobileMenu.style.display = 'none';
-                if (mobileMenuBtn) {
-                    const icon = mobileMenuBtn.querySelector('i');
-                    if (icon) icon.className = 'fas fa-bars text-xl';
+            // Close mobile menu when clicking on a link
+            document.getElementById('mobileMenu').addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    this.style.display = 'none';
+                    document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
                 }
+            });
+            // Auto-close mobile menu on resize
+            window.addEventListener('resize', function() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                if (window.innerWidth >= 768) {
+                    if (mobileMenu) mobileMenu.style.display = 'none';
+                    if (mobileMenuBtn) {
+                        const icon = mobileMenuBtn.querySelector('i');
+                        if (icon) icon.className = 'fas fa-bars text-xl';
+                    }
+                }
+            });
+            // Logout functionality (replace with Firebase logic if available)
+            async function handleLogout(e) {
+                e.preventDefault();
+                // Add your logout logic here
+                window.location.href = 'index.html';
             }
-        });
-        // Logout functionality (replace with Firebase logic if available)
-        async function handleLogout(e) {
-            e.preventDefault();
-            // Add your logout logic here
-            window.location.href = 'index.html';
-        }
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('logoutNav').addEventListener('click', handleLogout);
-            document.getElementById('mobileLogoutNav').addEventListener('click', handleLogout);
-        });
-    </script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('logoutNav').addEventListener('click', handleLogout);
+                document.getElementById('mobileLogoutNav').addEventListener('click', handleLogout);
+            });
+        </script>
 
-    <div class="gradient-header">
-        <h1 class="text-4xl font-bold mb-4">
-            <a href="/" style="text-decoration: none; color: inherit;">Curriculum Social</a>
-        </h1>
-        <p class="text-xl mb-6">Revolutionizing homeschooling through AI-enhanced, community-based education</p>
-        <div class="flex items-center">
-            <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center mr-4">
-                <i class="fas fa-graduation-cap text-2xl" style="color: var(--primary-blue);"></i>
-            </div>
-            <div>
-                <p class="text-sm opacity-80">Investor Presentation | 2025</p>
-                <p class="text-xs opacity-70">CONFIDENTIAL</p>
+        <div class="gradient-header">
+            <h1 class="text-4xl font-bold mb-4">
+                <a href="/" style="text-decoration: none; color: inherit;">Curriculum Social</a>
+            </h1>
+            <p class="text-xl mb-6">Revolutionizing homeschooling through AI-enhanced, community-based education</p>
+            <div class="flex items-center">
+                <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center mr-4">
+                    <i class="fas fa-graduation-cap text-2xl" style="color: var(--primary-blue);"></i>
+                </div>
+                <div>
+                    <p class="text-sm opacity-80">Investor Presentation | 2025</p>
+                    <p class="text-xs opacity-70">CONFIDENTIAL</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-        
-        <!-- Executive Summary & Vision -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">Executive Summary &amp; Vision</h2>
-            
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-                <p class="text-lg text-gray-700 mb-6">
-                    <strong>Curriculum Social</strong> is a <strong>social-first community platform</strong> that revolutionizes homeschooling by connecting families for group learning and in-person activities, supported by AI-powered educational tools.
-                </p>
+        <div class="container mx-auto px-4 py-8">
+            <!-- Executive Summary & Vision -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Executive Summary &amp; Vision</h2>
                 
-                <p class="text-lg text-gray-700 mb-6">
-                    <strong>Core Mission:</strong> Address the critical socialization gap in our increasingly digital world by combining:
-                </p>
-                
-                <ul class="space-y-3 mb-6 text-gray-700">
-                    <li class="flex items-start">
-                        <span class="text-blue-600 mr-3">•</span>
-                        <strong>Community-driven social learning</strong> that connects like-minded homeschooling families locally
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-blue-600 mr-3">•</span>
-                        <strong>AI-powered personalized learning</strong> that adapts to each student's needs and interests
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-blue-600 mr-3">•</span>
-                        <strong>Human teaching expertise</strong> from qualified educators and knowledgeable parents
-                    </li>
-                </ul>
-                
-                <p class="text-gray-700 mb-8">
-                    Our platform serves globally mobile families and digital nomads who need flexible, affordable, high-quality education with strong social components.
-                </p>
-                
-                <div class="text-center bg-gray-50 p-6 rounded-lg">
-                    <div class="text-3xl font-bold text-blue-600">$150K-300K</div>
-                    <div class="text-gray-600">Monthly Revenue Target Year 3</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Market Opportunity -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">Market Opportunity</h2>
-            
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Growing Digital Nomad Family Segment</h3>
-                
-                <p class="text-gray-700 mb-6">
-                    The digital nomad population has grown by <strong>147% since 2019</strong>, reaching <strong>40 million worldwide</strong> with <strong>18.1 million from the US</strong>. Approximately <strong>15-20% are families</strong> with school-aged children seeking flexible, community-based education.
-                </p>
-                
-                <h4 class="text-xl font-semibold text-gray-800 mb-3">Current Market Gap:</h4>
-                <ul class="space-y-3 mb-6 text-gray-700">
-                    <li class="flex items-start">
-                        <span class="text-red-500 mr-3">•</span>
-                        <strong>International schools</strong> ($15,000-40,000 annually) - fixed location, limited community
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-red-500 mr-3">•</span>
-                        <strong>Online schools</strong> - lack crucial social interaction and local integration
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-red-500 mr-3">•</span>
-                        <strong>Traditional homeschooling</strong> - high parent burden, social isolation concerns
-                    </li>
-                </ul>
-                
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Koh Samui: Validated Launch Market</h3>
-                <ul class="space-y-3 mb-6 text-gray-700">
-                    <li class="flex items-start">
-                        <span class="text-green-600 mr-3">•</span>
-                        <strong>5,000-7,000 expatriate/digital nomad families</strong> actively seeking education solutions
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-600 mr-3">•</span>
-                        <strong>International school costs:</strong> $15,000-30,000 annually (our target: $3,000-6,000)
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-600 mr-3">•</span>
-                        <strong>Compact geography</strong> enabling effective in-person community building
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-600 mr-3">•</span>
-                        <strong>Tech-savvy population</strong> ready for hybrid digital-physical solutions
-                    </li>
-                </ul>
-                
-                <div class="text-center bg-gray-50 p-6 rounded-lg">
-                    <div class="text-3xl font-bold text-green-600">$15B+</div>
-                    <div class="text-gray-600">Global Homeschooling Market (Growing 15% Annually)</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Unique Value Proposition -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">Unique Value Proposition</h2>
-            
-            <div class="grid md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Community-First Learning</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li>• Location-based family matching</li>
-                        <li>• Regular in-person activities</li>
-                        <li>• Community-vetted learning venues</li>
-                        <li>• Cultural integration opportunities</li>
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <p class="text-lg text-gray-700 mb-6">
+                        <strong>Curriculum Social</strong> is a <strong>social-first community platform</strong> that revolutionizes homeschooling by connecting families for group learning and in-person activities, supported by AI-powered educational tools.
+                    </p>
+                    
+                    <p class="text-lg text-gray-700 mb-6">
+                        <strong>Core Mission:</strong> Address the critical socialization gap in our increasingly digital world by combining:
+                    </p>
+                    
+                    <ul class="space-y-3 mb-6 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-blue-600 mr-3">•</span>
+                            <strong>Community-driven social learning</strong> that connects like-minded homeschooling families locally
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-600 mr-3">•</span>
+                            <strong>AI-powered personalized learning</strong> that adapts to each student's needs and interests
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-600 mr-3">•</span>
+                            <strong>Human teaching expertise</strong> from qualified educators and knowledgeable parents
+                        </li>
                     </ul>
-                </div>
-                
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">AI-Powered Learning</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li>• Personalized learning pathways</li>
-                        <li>• Adaptive curriculum difficulty</li>
-                        <li>• Progress monitoring and analytics</li>
-                        <li>• 24/7 AI assistance and tutoring</li>
-                    </ul>
-                </div>
-                
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Human Teaching</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li>• Qualified teachers and parent-teachers</li>
-                        <li>• 1:1 and small group instruction</li>
-                        <li>• Expert guidance for complex concepts</li>
-                        <li>• Social-emotional development focus</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-lg shadow-lg p-8">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Key Differentiators</h3>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="space-y-4 text-gray-700">
-                        <p><strong>Social-First Approach</strong> - Community building is the primary product, not a feature</p>
-                        <p><strong>Network Effects</strong> - Each new family increases value for existing members</p>
-                    </div>
-                    <div class="space-y-4 text-gray-700">
-                        <p><strong>Parent Participation</strong> - Enables qualified parents as teachers and community leaders</p>
-                        <p><strong>Standards Compliance</strong> - Progressive pedagogy with global educational requirements</p>
+                    
+                    <p class="text-gray-700 mb-8">
+                        Our platform serves globally mobile families and digital nomads who need flexible, affordable, high-quality education with strong social components.
+                    </p>
+                    
+                    <div class="text-center bg-gray-50 p-6 rounded-lg">
+                        <div class="text-3xl font-bold text-blue-600">$150K-300K</div>
+                        <div class="text-gray-600">Monthly Revenue Target Year 3</div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Business Model -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">Business Model</h2>
-            
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-6">Research-Based Pricing Strategy</h3>
+            <!-- Market Opportunity -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Market Opportunity</h2>
+                
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Growing Digital Nomad Family Segment</h3>
+                    
+                    <p class="text-gray-700 mb-6">
+                        The digital nomad population has grown by <strong>147% since 2019</strong>, reaching <strong>40 million worldwide</strong> with <strong>18.1 million from the US</strong>. Approximately <strong>15-20% are families</strong> with school-aged children seeking flexible, community-based education.
+                    </p>
+                    
+                    <h4 class="text-xl font-semibold text-gray-800 mb-3">Current Market Gap:</h4>
+                    <ul class="space-y-3 mb-6 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-3">•</span>
+                            <strong>International schools</strong> ($15,000-40,000 annually) - fixed location, limited community
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-3">•</span>
+                            <strong>Online schools</strong> - lack crucial social interaction and local integration
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-3">•</span>
+                            <strong>Traditional homeschooling</strong> - high parent burden, social isolation concerns
+                        </li>
+                    </ul>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Koh Samui: Validated Launch Market</h3>
+                    <ul class="space-y-3 mb-6 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-3">•</span>
+                            <strong>5,000-7,000 expatriate/digital nomad families</strong> actively seeking education solutions
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-3">•</span>
+                            <strong>International school costs:</strong> $15,000-30,000 annually (our target: $3,000-6,000)
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-3">•</span>
+                            <strong>Compact geography</strong> enabling effective in-person community building
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-3">•</span>
+                            <strong>Tech-savvy population</strong> ready for hybrid digital-physical solutions
+                        </li>
+                    </ul>
+                    
+                    <div class="text-center bg-gray-50 p-6 rounded-lg">
+                        <div class="text-3xl font-bold text-green-600">$15B+</div>
+                        <div class="text-gray-600">Global Homeschooling Market (Growing 15% Annually)</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Unique Value Proposition -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Unique Value Proposition</h2>
                 
                 <div class="grid md:grid-cols-3 gap-6 mb-8">
-                    <div class="border rounded-lg p-6">
-                        <div class="text-2xl font-bold text-blue-600 mb-2">$120/month</div>
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Community Tier</h4>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Community-First Learning</h3>
                         <ul class="space-y-2 text-gray-700">
-                            <li>• Basic AI platform access</li>
-                            <li>• 4 community activities per month</li>
-                            <li>• Family matching and forums</li>
-                            <li>• Progress tracking dashboard</li>
+                            <li>• Location-based family matching</li>
+                            <li>• Regular in-person activities</li>
+                            <li>• Community-vetted learning venues</li>
+                            <li>• Cultural integration opportunities</li>
                         </ul>
                     </div>
                     
-                    <div class="border-2 border-blue-500 rounded-lg p-6 relative">
-                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-3 py-1 rounded-full text-sm">Most Popular</div>
-                        <div class="text-2xl font-bold text-blue-600 mb-2">$220/month</div>
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Standard Tier</h4>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">AI-Powered Learning</h3>
                         <ul class="space-y-2 text-gray-700">
-                            <li>• Full AI learning platform</li>
-                            <li>• 8+ monthly activities</li>
-                            <li>• 2 monthly teacher sessions</li>
-                            <li>• Priority community matching</li>
+                            <li>• Personalized learning pathways</li>
+                            <li>• Adaptive curriculum difficulty</li>
+                            <li>• Progress monitoring and analytics</li>
+                            <li>• 24/7 AI assistance and tutoring</li>
                         </ul>
                     </div>
                     
-                    <div class="border rounded-lg p-6">
-                        <div class="text-2xl font-bold text-blue-600 mb-2">$350/month</div>
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Premium Tier</h4>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Human Teaching</h3>
                         <ul class="space-y-2 text-gray-700">
-                            <li>• Unlimited community activities</li>
-                            <li>• Weekly 1:1 teacher sessions</li>
-                            <li>• Advanced AI personalization</li>
-                            <li>• Specialized learning modules</li>
+                            <li>• Qualified teachers and parent-teachers</li>
+                            <li>• 1:1 and small group instruction</li>
+                            <li>• Expert guidance for complex concepts</li>
+                            <li>• Social-emotional development focus</li>
                         </ul>
                     </div>
                 </div>
                 
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Teacher Compensation Models</h3>
-                
-                <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-gray-50 p-6 rounded-lg">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-3">Option 1: Commission-Based <span class="text-sm text-blue-600">(Primary Model)</span></h4>
-                        <ul class="space-y-2 text-gray-700">
-                            <li>• Teachers retain <strong>75% of class fees</strong> (industry standard: 70%)</li>
-                            <li>• Platform commission: <strong>25%</strong></li>
-                            <li>• Average teacher earnings: <strong>$20-35/hour</strong></li>
-                            <li>• Class pricing: <strong>$15-25/hour per student</strong></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="bg-gray-50 p-6 rounded-lg">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-3">Option 2: Parent-Teacher Exchange <span class="text-sm text-green-600">(Community Model)</span></h4>
-                        <ul class="space-y-2 text-gray-700">
-                            <li>• Teaching 6-8 hours/week = <strong>50% tuition reduction</strong></li>
-                            <li>• Teaching 12+ hours/week = <strong>100% tuition waiver</strong> + $15-20/hour additional</li>
-                            <li>• Creates strong community ownership and retention</li>
-                        </ul>
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Key Differentiators</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4 text-gray-700">
+                            <p><strong>Social-First Approach</strong> - Community building is the primary product, not a feature</p>
+                            <p><strong>Network Effects</strong> - Each new family increases value for existing members</p>
+                        </div>
+                        <div class="space-y-4 text-gray-700">
+                            <p><strong>Parent Participation</strong> - Enables qualified parents as teachers and community leaders</p>
+                            <p><strong>Standards Compliance</strong> - Progressive pedagogy with global educational requirements</p>
+                        </div>
                     </div>
                 </div>
-                
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Additional Revenue Streams</h3>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <ul class="space-y-2 text-gray-700">
-                        <li>• <strong>Venue Partnerships:</strong> $100-200 certification fees</li>
-                        <li>• <strong>Specialized Modules:</strong> $30-50 per course package</li>
-                    </ul>
-                    <ul class="space-y-2 text-gray-700">
-                        <li>• <strong>Teacher Training:</strong> $200-500 per certification program</li>
-                        <li>• <strong>Premium Support:</strong> $50-100/month for priority assistance</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Financial Projections -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">Financial Projections</h2>
-            
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-6">Realistic Revenue Projections</h3>
+            <!-- Business Model -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Business Model</h2>
                 
-                <div class="grid md:grid-cols-3 gap-6 mb-8">
-                    <div class="text-center bg-gray-50 p-6 rounded-lg">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Year 1 (Samui Validation)</h4>
-                        <div class="text-2xl font-bold text-blue-600 mb-2">$8K-15K</div>
-                        <div class="text-sm text-gray-600">Monthly Revenue</div>
-                        <div class="mt-4 space-y-1 text-sm text-gray-700">
-                            <div>50-100 active families</div>
-                            <div>$180/month average</div>
-                            <div>$100K-180K annual</div>
-                        </div>
-                    </div>
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">Research-Based Pricing Strategy</h3>
                     
-                    <div class="text-center bg-gray-50 p-6 rounded-lg">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Year 2 (Regional Expansion)</h4>
-                        <div class="text-2xl font-bold text-blue-600 mb-2">$35K-65K</div>
-                        <div class="text-sm text-gray-600">Monthly Revenue</div>
-                        <div class="mt-4 space-y-1 text-sm text-gray-700">
-                            <div>200-500 active families</div>
-                            <div>$220/month average</div>
-                            <div>$420K-780K annual</div>
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="border rounded-lg p-6">
+                            <div class="text-2xl font-bold text-blue-600 mb-2">$120/month</div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Community Tier</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Basic AI platform access</li>
+                                <li>• 4 community activities per month</li>
+                                <li>• Family matching and forums</li>
+                                <li>• Progress tracking dashboard</li>
+                            </ul>
                         </div>
-                    </div>
-                    
-                    <div class="text-center bg-gray-50 p-6 rounded-lg">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Year 3 (Scale Phase)</h4>
-                        <div class="text-2xl font-bold text-blue-600 mb-2">$120K-250K</div>
-                        <div class="text-sm text-gray-600">Monthly Revenue</div>
-                        <div class="mt-4 space-y-1 text-sm text-gray-700">
-                            <div>800-1,500 active families</div>
-                            <div>$240/month average</div>
-                            <div>$1.4M-3M annual</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Operational Cost Structure</h3>
-                
-                <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <h4 class="text-lg font-semibold text-gray-800 mb-3">Technology Costs <span class="text-sm text-gray-600">(Research-Based)</span></h4>
-                        <ul class="space-y-2 text-gray-700">
-                            <li>• <strong>AI Integration (OpenAI):</strong> $200-500/month → $5,000-15,000/month at scale</li>
-                            <li>• <strong>Firebase/Hosting:</strong> $50-200/month → $1,000-2,500/month at scale</li>
-                            <li>• <strong>Development:</strong> $8,000 initial → $200,000 total over 3 years</li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h4 class="text-lg font-semibold text-gray-800 mb-3">Staffing Costs</h4>
-                        <ul class="space-y-2 text-gray-700">
-                            <li>• <strong>Year 1:</strong> $20,000 (part-time team)</li>
-                            <li>• <strong>Year 2:</strong> $140,000 (4-6 person team)</li>
-                            <li>• <strong>Year 3:</strong> $600,000 (15-20 person team)</li>
-                        </ul>
                         
-                        <div class="mt-4 p-3 bg-yellow-50 rounded">
-                            <strong>Teacher Compensation:</strong> 60-65% of subscription revenue
+                        <div class="border-2 border-blue-500 rounded-lg p-6 relative">
+                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-3 py-1 rounded-full text-sm">Most Popular</div>
+                            <div class="text-2xl font-bold text-blue-600 mb-2">$220/month</div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Standard Tier</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Full AI learning platform</li>
+                                <li>• 8+ monthly activities</li>
+                                <li>• 2 monthly teacher sessions</li>
+                                <li>• Priority community matching</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="border rounded-lg p-6">
+                            <div class="text-2xl font-bold text-blue-600 mb-2">$350/month</div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Premium Tier</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Unlimited community activities</li>
+                                <li>• Weekly 1:1 teacher sessions</li>
+                                <li>• Advanced AI personalization</li>
+                                <li>• Specialized learning modules</li>
+                            </ul>
                         </div>
                     </div>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Teacher Compensation Models</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Option 1: Commission-Based <span class="text-sm text-blue-600">(Primary Model)</span></h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Teachers retain <strong>75% of class fees</strong> (industry standard: 70%)</li>
+                                <li>• Platform commission: <strong>25%</strong></li>
+                                <li>• Average teacher earnings: <strong>$20-35/hour</strong></li>
+                                <li>• Class pricing: <strong>$15-25/hour per student</strong></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Option 2: Parent-Teacher Exchange <span class="text-sm text-green-600">(Community Model)</span></h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Teaching 6-8 hours/week = <strong>50% tuition reduction</strong></li>
+                                <li>• Teaching 12+ hours/week = <strong>100% tuition waiver</strong> + $15-20/hour additional</li>
+                                <li>• Creates strong community ownership and retention</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Additional Revenue Streams</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <ul class="space-y-2 text-gray-700">
+                            <li>• <strong>Venue Partnerships:</strong> $100-200 certification fees</li>
+                            <li>• <strong>Specialized Modules:</strong> $30-50 per course package</li>
+                        </ul>
+                        <ul class="space-y-2 text-gray-700">
+                            <li>• <strong>Teacher Training:</strong> $200-500 per certification program</li>
+                            <li>• <strong>Premium Support:</strong> $50-100/month for priority assistance</li>
+                        </ul>
+                    </div>
                 </div>
-                
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Break-Even Analysis</h3>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <ul class="space-y-2 text-gray-700">
-                        <li>• <strong>Break-even point:</strong> Month 18-24 (conservative)</li>
-                        <li>• <strong>Required user base:</strong> 120-200 active families</li>
-                    </ul>
-                    <ul class="space-y-2 text-gray-700">
-                        <li>• <strong>Monthly break-even revenue:</strong> $25,000-35,000</li>
-                        <li>• <strong>Positive cash flow:</strong> Month 30-36</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Investment Opportunity -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">Investment Opportunity</h2>
-            
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-6">Phased Funding Strategy</h3>
+            <!-- Financial Projections -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Financial Projections</h2>
                 
-                <div class="space-y-8">
-                    <div class="border-l-4 border-blue-500 pl-6">
-                        <h4 class="text-xl font-semibold text-gray-800 mb-2">Stage 1: Samui Validation</h4>
-                        <div class="text-2xl font-bold text-blue-600 mb-3">Investment Required: $35,000 - $55,000</div>
-                        
-                        <div class="grid md:grid-cols-2 gap-6 mb-4">
-                            <ul class="space-y-2 text-gray-700">
-                                <li>• <strong>Platform Development:</strong> $8,000 (AI integration, basic features)</li>
-                                <li>• <strong>Operations & Staffing:</strong> $20,000 (Community manager, teacher coordinator)</li>
-                                <li>• <strong>Marketing & Events:</strong> $12,000 (Local advertising, venue partnerships)</li>
-                            </ul>
-                            <ul class="space-y-2 text-gray-700">
-                                <li>• <strong>Legal & Compliance:</strong> $3,000</li>
-                                <li>• <strong>Contingency:</strong> $5,000</li>
-                            </ul>
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">Realistic Revenue Projections</h3>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="text-center bg-gray-50 p-6 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Year 1 (Samui Validation)</h4>
+                            <div class="text-2xl font-bold text-blue-600 mb-2">$8K-15K</div>
+                            <div class="text-sm text-gray-600">Monthly Revenue</div>
+                            <div class="mt-4 space-y-1 text-sm text-gray-700">
+                                <div>50-100 active families</div>
+                                <div>$180/month average</div>
+                                <div>$100K-180K annual</div>
+                            </div>
                         </div>
                         
-                        <div class="bg-blue-50 p-4 rounded">
-                            <strong>Target:</strong> 50-100 active families, break-even at 80-120 families
+                        <div class="text-center bg-gray-50 p-6 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Year 2 (Regional Expansion)</h4>
+                            <div class="text-2xl font-bold text-blue-600 mb-2">$35K-65K</div>
+                            <div class="text-sm text-gray-600">Monthly Revenue</div>
+                            <div class="mt-4 space-y-1 text-sm text-gray-700">
+                                <div>200-500 active families</div>
+                                <div>$220/month average</div>
+                                <div>$420K-780K annual</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center bg-gray-50 p-6 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Year 3 (Scale Phase)</h4>
+                            <div class="text-2xl font-bold text-blue-600 mb-2">$120K-250K</div>
+                            <div class="text-sm text-gray-600">Monthly Revenue</div>
+                            <div class="mt-4 space-y-1 text-sm text-gray-700">
+                                <div>800-1,500 active families</div>
+                                <div>$240/month average</div>
+                                <div>$1.4M-3M annual</div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="border-l-4 border-green-500 pl-6">
-                        <h4 class="text-xl font-semibold text-gray-800 mb-2">Stage 2: Regional Expansion</h4>
-                        <div class="text-2xl font-bold text-green-600 mb-3">Investment Required: $180,000 - $280,000</div>
-                        
-                        <div class="grid md:grid-cols-2 gap-6 mb-4">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Operational Cost Structure</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Technology Costs <span class="text-sm text-gray-600">(Research-Based)</span></h4>
                             <ul class="space-y-2 text-gray-700">
-                                <li>• <strong>Technology & AI:</strong> $45,000 (Advanced features, mobile app)</li>
-                                <li>• <strong>Operations:</strong> $140,000 (4-6 person team, regional managers)</li>
-                            </ul>
-                            <ul class="space-y-2 text-gray-700">
-                                <li>• <strong>Marketing:</strong> $35,000 (Multi-city campaigns)</li>
-                                <li>• <strong>Contingency:</strong> $10,000</li>
+                                <li>• <strong>AI Integration (OpenAI):</strong> $200-500/month → $5,000-15,000/month at scale</li>
+                                <li>• <strong>Firebase/Hosting:</strong> $50-200/month → $1,000-2,500/month at scale</li>
+                                <li>• <strong>Development:</strong> $8,000 initial → $200,000 total over 3 years</li>
                             </ul>
                         </div>
                         
-                        <div class="bg-green-50 p-4 rounded">
-                            <strong>Target:</strong> 400-800 families across Thailand/SE Asia
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Staffing Costs</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• <strong>Year 1:</strong> $20,000 (part-time team)</li>
+                                <li>• <strong>Year 2:</strong> $140,000 (4-6 person team)</li>
+                                <li>• <strong>Year 3:</strong> $600,000 (15-20 person team)</li>
+                            </ul>
+                            
+                            <div class="mt-4 p-3 bg-yellow-50 rounded">
+                                <strong>Teacher Compensation:</strong> 60-65% of subscription revenue
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="border-l-4 border-purple-500 pl-6">
-                        <h4 class="text-xl font-semibold text-gray-800 mb-2">Stage 3: Global Scale</h4>
-                        <div class="text-2xl font-bold text-purple-600 mb-3">Investment Required: $800,000 - $1,200,000</div>
-                        
-                        <div class="grid md:grid-cols-2 gap-6 mb-4">
-                            <ul class="space-y-2 text-gray-700">
-                                <li>• <strong>Technology:</strong> $200,000 (Enterprise platform, multi-language)</li>
-                                <li>• <strong>Operations:</strong> $600,000 (15-20 person team, country managers)</li>
-                            </ul>
-                            <ul class="space-y-2 text-gray-700">
-                                <li>• <strong>Marketing:</strong> $150,000 (Global nomad community outreach)</li>
-                                <li>• <strong>Contingency:</strong> $50,000</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="bg-purple-50 p-4 rounded">
-                            <strong>Target:</strong> 2,000-4,000 families across 10+ countries
-                        </div>
-                    </div>
-                </div>
-                
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4 mt-8">Equity Structure & Returns</h3>
-                
-                <div class="grid md:grid-cols-3 gap-6 mb-6">
-                    <div class="text-center bg-gray-50 p-6 rounded-lg">
-                        <div class="text-lg font-semibold text-gray-800 mb-2">Stage 1 Equity</div>
-                        <div class="text-2xl font-bold text-blue-600 mb-2">8-15%</div>
-                        <div class="text-sm text-gray-600">for $35K-55K investment</div>
-                        <div class="mt-3 text-sm text-gray-700">
-                            <div>Pre-money: $300K-500K</div>
-                            <div>Angel/friends & family</div>
-                        </div>
-                    </div>
-                    
-                    <div class="text-center bg-gray-50 p-6 rounded-lg">
-                        <div class="text-lg font-semibold text-gray-800 mb-2">Stage 2 Equity</div>
-                        <div class="text-2xl font-bold text-green-600 mb-2">15-25%</div>
-                        <div class="text-sm text-gray-600">for $180K-280K investment</div>
-                        <div class="mt-3 text-sm text-gray-700">
-                            <div>Pre-money: $800K-1.5M</div>
-                            <div>Seed round investors</div>
-                        </div>
-                    </div>
-                    
-                    <div class="text-center bg-gray-50 p-6 rounded-lg">
-                        <div class="text-lg font-semibold text-gray-800 mb-2">Founder Retention</div>
-                        <div class="text-2xl font-bold text-purple-600 mb-2">45-60%</div>
-                        <div class="text-sm text-gray-600">equity after all rounds</div>
-                        <div class="mt-3 text-sm text-gray-700">
-                            <div>Maintains control</div>
-                            <div>Strong founder alignment</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Return Options</h3>
-                
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="bg-blue-50 p-6 rounded-lg">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-3">Equity Investment <span class="text-sm text-blue-600">(Recommended)</span></h4>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Break-Even Analysis</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
                         <ul class="space-y-2 text-gray-700">
-                            <li>• Participate in company growth and exits</li>
-                            <li>• Higher potential returns (3-10x over 5-7 years)</li>
-                            <li>• Standard for tech startups</li>
+                            <li>• <strong>Break-even point:</strong> Month 18-24 (conservative)</li>
+                            <li>• <strong>Required user base:</strong> 120-200 active families</li>
                         </ul>
-                    </div>
-                    
-                    <div class="bg-green-50 p-6 rounded-lg">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-3">Revenue Sharing <span class="text-sm text-green-600">(Alternative)</span></h4>
                         <ul class="space-y-2 text-gray-700">
-                            <li>• 2-3x return cap over 5-7 years</li>
-                            <li>• Monthly payments from gross revenue</li>
-                            <li>• Lower risk, predictable returns</li>
+                            <li>• <strong>Monthly break-even revenue:</strong> $25,000-35,000</li>
+                            <li>• <strong>Positive cash flow:</strong> Month 30-36</li>
                         </ul>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Risk Analysis & Mitigation -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">Risk Analysis &amp; Mitigation</h2>
-            
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Market Context</h3>
-                    <p class="text-gray-700 mb-2">
-                        <strong>EdTech Funding Reality:</strong> Venture capital in EdTech dropped <strong>89% from 2021 peak</strong> to $2.4B in 2024 - the lowest in a decade.
+            <!-- Investment Opportunity -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Investment Opportunity</h2>
+                
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">Phased Funding Strategy</h3>
+                    
+                    <div class="space-y-8">
+                        <div class="border-l-4 border-blue-500 pl-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-2">Stage 1: Samui Validation</h4>
+                            <div class="text-2xl font-bold text-blue-600 mb-3">Investment Required: $35,000 - $55,000</div>
+                            
+                            <div class="grid md:grid-cols-2 gap-6 mb-4">
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• <strong>Platform Development:</strong> $8,000 (AI integration, basic features)</li>
+                                    <li>• <strong>Operations & Staffing:</strong> $20,000 (Community manager, teacher coordinator)</li>
+                                    <li>• <strong>Marketing & Events:</strong> $12,000 (Local advertising, venue partnerships)</li>
+                                </ul>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• <strong>Legal & Compliance:</strong> $3,000</li>
+                                    <li>• <strong>Contingency:</strong> $5,000</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-blue-50 p-4 rounded">
+                                <strong>Target:</strong> 50-100 active families, break-even at 80-120 families
+                            </div>
+                        </div>
+                        
+                        <div class="border-l-4 border-green-500 pl-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-2">Stage 2: Regional Expansion</h4>
+                            <div class="text-2xl font-bold text-green-600 mb-3">Investment Required: $180,000 - $280,000</div>
+                            
+                            <div class="grid md:grid-cols-2 gap-6 mb-4">
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• <strong>Technology & AI:</strong> $45,000 (Advanced features, mobile app)</li>
+                                    <li>• <strong>Operations:</strong> $140,000 (4-6 person team, regional managers)</li>
+                                </ul>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• <strong>Marketing:</strong> $35,000 (Multi-city campaigns)</li>
+                                    <li>• <strong>Contingency:</strong> $10,000</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-green-50 p-4 rounded">
+                                <strong>Target:</strong> 400-800 families across Thailand/SE Asia
+                            </div>
+                        </div>
+                        
+                        <div class="border-l-4 border-purple-500 pl-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-2">Stage 3: Global Scale</h4>
+                            <div class="text-2xl font-bold text-purple-600 mb-3">Investment Required: $800,000 - $1,200,000</div>
+                            
+                            <div class="grid md:grid-cols-2 gap-6 mb-4">
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• <strong>Technology:</strong> $200,000 (Enterprise platform, multi-language)</li>
+                                    <li>• <strong>Operations:</strong> $600,000 (15-20 person team, country managers)</li>
+                                </ul>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• <strong>Marketing:</strong> $150,000 (Global nomad community outreach)</li>
+                                    <li>• <strong>Contingency:</strong> $50,000</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-purple-50 p-4 rounded">
+                                <strong>Target:</strong> 2,000-4,000 families across 10+ countries
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 mt-8">Equity Structure & Returns</h3>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mb-6">
+                        <div class="text-center bg-gray-50 p-6 rounded-lg">
+                            <div class="text-lg font-semibold text-gray-800 mb-2">Stage 1 Equity</div>
+                            <div class="text-2xl font-bold text-blue-600 mb-2">8-15%</div>
+                            <div class="text-sm text-gray-600">for $35K-55K investment</div>
+                            <div class="mt-3 text-sm text-gray-700">
+                                <div>Pre-money: $300K-500K</div>
+                                <div>Angel/friends & family</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center bg-gray-50 p-6 rounded-lg">
+                            <div class="text-lg font-semibold text-gray-800 mb-2">Stage 2 Equity</div>
+                            <div class="text-2xl font-bold text-green-600 mb-2">15-25%</div>
+                            <div class="text-sm text-gray-600">for $180K-280K investment</div>
+                            <div class="mt-3 text-sm text-gray-700">
+                                <div>Pre-money: $800K-1.5M</div>
+                                <div>Seed round investors</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center bg-gray-50 p-6 rounded-lg">
+                            <div class="text-lg font-semibold text-gray-800 mb-2">Founder Retention</div>
+                            <div class="text-2xl font-bold text-purple-600 mb-2">45-60%</div>
+                            <div class="text-sm text-gray-600">equity after all rounds</div>
+                            <div class="mt-3 text-sm text-gray-700">
+                                <div>Maintains control</div>
+                                <div>Strong founder alignment</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Return Options</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-6 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Equity Investment <span class="text-sm text-blue-600">(Recommended)</span></h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Participate in company growth and exits</li>
+                                <li>• Higher potential returns (3-10x over 5-7 years)</li>
+                                <li>• Standard for tech startups</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-green-50 p-6 rounded-lg">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Revenue Sharing <span class="text-sm text-green-600">(Alternative)</span></h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• 2-3x return cap over 5-7 years</li>
+                                <li>• Monthly payments from gross revenue</li>
+                                <li>• Lower risk, predictable returns</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Risk Analysis & Mitigation -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Risk Analysis &amp; Mitigation</h2>
+                
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Market Context</h3>
+                        <p class="text-gray-700 mb-2">
+                            <strong>EdTech Funding Reality:</strong> Venture capital in EdTech dropped <strong>89% from 2021 peak</strong> to $2.4B in 2024 - the lowest in a decade.
+                        </p>
+                        <p class="text-gray-700">
+                            <strong>Our Advantage:</strong> Community-first model creates <strong>network effects</strong> and <strong>organic growth</strong> that doesn't rely heavily on VC funding cycles.
+                        </p>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Key Risks & Mitigation</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-red-800 mb-2">Risk: Slower User Acquisition</h4>
+                                <ul class="text-sm text-red-700 space-y-1">
+                                    <li>• Extended cash burn if growth lags</li>
+                                    <li>• Competitive pressure from established players</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-green-800 mb-2">Mitigation</h4>
+                                <ul class="text-sm text-green-700 space-y-1">
+                                    <li>• Bootstrap-friendly model with low initial costs</li>
+                                    <li>• Strong word-of-mouth in tight-knit expat communities</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-red-800 mb-2">Risk: Teacher Quality Control</h4>
+                                <ul class="text-sm text-red-700 space-y-1">
+                                    <li>• Inconsistent educational quality</li>
+                                    <li>• High teacher turnover affecting continuity</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-green-800 mb-2">Mitigation</h4>
+                                <ul class="text-sm text-green-700 space-y-1">
+                                    <li>• Community rating system + parent-teacher exchange model</li>
+                                    <li>• Parents invested in quality due to their own children's education</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-red-800 mb-2">Risk: Competition from Traditional Schools</h4>
+                                <ul class="text-sm text-red-700 space-y-1">
+                                    <li>• Price pressure from established institutions</li>
+                                    <li>• Brand recognition advantages</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-green-800 mb-2">Mitigation</h4>
+                                <ul class="text-sm text-green-700 space-y-1">
+                                    <li>• Focus on underserved nomadic families</li>
+                                    <li>• 70-80% cost savings + social community benefits</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-red-800 mb-2">Risk: Regulatory Compliance</h4>
+                                <ul class="text-sm text-red-700 space-y-1">
+                                    <li>• Varying homeschool laws by country</li>
+                                    <li>• Potential regulatory changes</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-green-800 mb-2">Mitigation</h4>
+                                <ul class="text-sm text-green-700 space-y-1">
+                                    <li>• Start with homeschool-friendly jurisdictions</li>
+                                    <li>• Focus on internationally mobile families already navigating this</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 mt-8">Competitive Advantages</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <span class="text-green-600 mr-3 mt-1">✓</span>
+                                <div>
+                                    <strong class="text-gray-800">Network Effects:</strong>
+                                    <span class="text-gray-700"> Each new family increases value for existing members</span>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-green-600 mr-3 mt-1">✓</span>
+                                <div>
+                                    <strong class="text-gray-800">Community Moat:</strong>
+                                    <span class="text-gray-700"> Social connections create switching costs</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <span class="text-green-600 mr-3 mt-1">✓</span>
+                                <div>
+                                    <strong class="text-gray-800">Market Timing:</strong>
+                                    <span class="text-gray-700"> Post-pandemic normalization of remote work/education</span>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-green-600 mr-3 mt-1">✓</span>
+                                <div>
+                                    <strong class="text-gray-800">Proven Demand:</strong>
+                                    <span class="text-gray-700"> International school costs create clear market need</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Implementation Roadmap -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Implementation Roadmap</h2>
+                
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="space-y-8">
+                        <div class="border-l-4 border-blue-500 pl-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Months 1-6: Foundation & Validation</h3>
+                            <div class="grid md:grid-cols-2 gap-6 mb-4">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Key Milestones:</h4>
+                                    <ul class="space-y-1 text-gray-700">
+                                        <li>• Secure initial funding ($35K-55K)</li>
+                                        <li>• Hire community manager & teacher coordinator</li>
+                                        <li>• Launch beta with 15-30 families in Koh Samui</li>
+                                        <li>• Establish 3-5 venue partnerships</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Success Metrics:</h4>
+                                    <ul class="space-y-1 text-gray-700">
+                                        <li>• 25-50 active families</li>
+                                        <li>• 80%+ user satisfaction scores</li>
+                                        <li>• 10+ regular activities per month</li>
+                                        <li>• $3K-8K monthly revenue</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-l-4 border-green-500 pl-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Months 7-18: Growth & Expansion</h3>
+                            <div class="grid md:grid-cols-2 gap-6 mb-4">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Key Milestones:</h4>
+                                    <ul class="space-y-1 text-gray-700">
+                                        <li>• Scale to 80-150 families in Koh Samui</li>
+                                        <li>• Launch in Bangkok and Chiang Mai</li>
+                                        <li>• Implement advanced AI features</li>
+                                        <li>• Secure Series A funding ($180K-280K)</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Success Metrics:</h4>
+                                    <ul class="space-y-1 text-gray-700">
+                                        <li>• 200-400 active families</li>
+                                        <li>• $25K-50K monthly revenue</li>
+                                        <li>• Break-even achieved</li>
+                                        <li>• 90%+ retention rate</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-l-4 border-purple-500 pl-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Months 19-36: Regional Scale</h3>
+                            <div class="grid md:grid-cols-2 gap-6 mb-4">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Key Milestones:</h4>
+                                    <ul class="space-y-1 text-gray-700">
+                                        <li>• Expand to Bali, Singapore, Malaysia</li>
+                                        <li>• Launch mobile app</li>
+                                        <li>• Build 15-20 person team</li>
+                                        <li>• Achieve consistent profitability</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Success Metrics:</h4>
+                                    <ul class="space-y-1 text-gray-700">
+                                        <li>• 800-1,500 active families</li>
+                                        <li>• $120K-250K monthly revenue</li>
+                                        <li>• 5+ countries/regions</li>
+                                        <li>• Preparation for Series B funding</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-l-4 border-red-500 pl-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Months 37-48: Global Expansion</h3>
+                            <div class="grid md:grid-cols-2 gap-6 mb-4">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Key Milestones:</h4>
+                                    <ul class="space-y-1 text-gray-700">
+                                        <li>• Launch in Mexico, Portugal, UAE</li>
+                                        <li>• Advanced AI personalization</li>
+                                        <li>• Strategic partnerships</li>
+                                        <li>• Consider exit opportunities</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-2">Success Metrics:</h4>
+                                    <ul class="space-y-1 text-gray-700">
+                                        <li>• 2,000-4,000 active families</li>
+                                        <li>• $300K-600K monthly revenue</li>
+                                        <li>• 10+ countries/regions</li>
+                                        <li>• Strong exit valuation potential</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Call to Action -->
+            <section class="mb-12">
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg p-8 text-white text-center">
+                    <h2 class="text-3xl font-bold mb-4">Ready to Transform Education Together?</h2>
+                    <p class="text-xl mb-6">
+                        Join us in building the future of community-driven, flexible education for globally mobile families.
                     </p>
-                    <p class="text-gray-700">
-                        <strong>Our Advantage:</strong> Community-first model creates <strong>network effects</strong> and <strong>organic growth</strong> that doesn't rely heavily on VC funding cycles.
-                    </p>
-                </div>
-                
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">Key Risks & Mitigation</h3>
-                
-                <div class="space-y-6">
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="bg-red-50 p-4 rounded-lg">
-                            <h4 class="font-semibold text-red-800 mb-2">Risk: Slower User Acquisition</h4>
-                            <ul class="text-sm text-red-700 space-y-1">
-                                <li>• Extended cash burn if growth lags</li>
-                                <li>• Competitive pressure from established players</li>
-                            </ul>
+                    <div class="grid md:grid-cols-3 gap-4 mb-8">
+                        <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+                            <div class="text-2xl font-bold">$35K-55K</div>
+                            <div class="text-sm">Stage 1 Investment</div>
                         </div>
-                        <div class="bg-green-50 p-4 rounded-lg">
-                            <h4 class="font-semibold text-green-800 mb-2">Mitigation</h4>
-                            <ul class="text-sm text-green-700 space-y-1">
-                                <li>• Bootstrap-friendly model with low initial costs</li>
-                                <li>• Strong word-of-mouth in tight-knit expat communities</li>
-                            </ul>
+                        <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+                            <div class="text-2xl font-bold">8-15%</div>
+                            <div class="text-sm">Equity Range</div>
                         </div>
-                    </div>
-                    
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="bg-red-50 p-4 rounded-lg">
-                            <h4 class="font-semibold text-red-800 mb-2">Risk: Teacher Quality Control</h4>
-                            <ul class="text-sm text-red-700 space-y-1">
-                                <li>• Inconsistent educational quality</li>
-                                <li>• High teacher turnover affecting continuity</li>
-                            </ul>
-                        </div>
-                        <div class="bg-green-50 p-4 rounded-lg">
-                            <h4 class="font-semibold text-green-800 mb-2">Mitigation</h4>
-                            <ul class="text-sm text-green-700 space-y-1">
-                                <li>• Community rating system + parent-teacher exchange model</li>
-                                <li>• Parents invested in quality due to their own children's education</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="bg-red-50 p-4 rounded-lg">
-                            <h4 class="font-semibold text-red-800 mb-2">Risk: Competition from Traditional Schools</h4>
-                            <ul class="text-sm text-red-700 space-y-1">
-                                <li>• Price pressure from established institutions</li>
-                                <li>• Brand recognition advantages</li>
-                            </ul>
-                        </div>
-                        <div class="bg-green-50 p-4 rounded-lg">
-                            <h4 class="font-semibold text-green-800 mb-2">Mitigation</h4>
-                            <ul class="text-sm text-green-700 space-y-1">
-                                <li>• Focus on underserved nomadic families</li>
-                                <li>• 70-80% cost savings + social community benefits</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="bg-red-50 p-4 rounded-lg">
-                            <h4 class="font-semibold text-red-800 mb-2">Risk: Regulatory Compliance</h4>
-                            <ul class="text-sm text-red-700 space-y-1">
-                                <li>• Varying homeschool laws by country</li>
-                                <li>• Potential regulatory changes</li>
-                            </ul>
-                        </div>
-                        <div class="bg-green-50 p-4 rounded-lg">
-                            <h4 class="font-semibold text-green-800 mb-2">Mitigation</h4>
-                            <ul class="text-sm text-green-700 space-y-1">
-                                <li>• Start with homeschool-friendly jurisdictions</li>
-                                <li>• Focus on internationally mobile families already navigating this</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4 mt-8">Competitive Advantages</h3>
-                
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="space-y-4">
-                        <div class="flex items-start">
-                            <span class="text-green-600 mr-3 mt-1">✓</span>
-                            <div>
-                                <strong class="text-gray-800">Network Effects:</strong>
-                                <span class="text-gray-700"> Each new family increases value for existing members</span>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <span class="text-green-600 mr-3 mt-1">✓</span>
-                            <div>
-                                <strong class="text-gray-800">Community Moat:</strong>
-                                <span class="text-gray-700"> Social connections create switching costs</span>
-                            </div>
+                        <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+                            <div class="text-2xl font-bold">18-24 Mo</div>
+                            <div class="text-sm">Break-even Timeline</div>
                         </div>
                     </div>
                     <div class="space-y-4">
-                        <div class="flex items-start">
-                            <span class="text-green-600 mr-3 mt-1">✓</span>
-                            <div>
-                                <strong class="text-gray-800">Market Timing:</strong>
-                                <span class="text-gray-700"> Post-pandemic normalization of remote work/education</span>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <span class="text-green-600 mr-3 mt-1">✓</span>
-                            <div>
-                                <strong class="text-gray-800">Proven Demand:</strong>
-                                <span class="text-gray-700"> International school costs create clear market need</span>
-                            </div>
+                        <button class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Schedule Investment Discussion
+                        </button>
+                        <div class="text-sm opacity-90">
+                            Contact: greg@curriculumsocial.com | +1 (555) 123-4567
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
+    </main>
 
-        <!-- Implementation Roadmap -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">Implementation Roadmap</h2>
-            
-            <div class="bg-white rounded-lg shadow-lg p-8">
-                <div class="space-y-8">
-                    <div class="border-l-4 border-blue-500 pl-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Months 1-6: Foundation & Validation</h3>
-                        <div class="grid md:grid-cols-2 gap-6 mb-4">
-                            <div>
-                                <h4 class="font-semibold text-gray-800 mb-2">Key Milestones:</h4>
-                                <ul class="space-y-1 text-gray-700">
-                                    <li>• Secure initial funding ($35K-55K)</li>
-                                    <li>• Hire community manager & teacher coordinator</li>
-                                    <li>• Launch beta with 15-30 families in Koh Samui</li>
-                                    <li>• Establish 3-5 venue partnerships</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800 mb-2">Success Metrics:</h4>
-                                <ul class="space-y-1 text-gray-700">
-                                    <li>• 25-50 active families</li>
-                                    <li>• 80%+ user satisfaction scores</li>
-                                    <li>• 10+ regular activities per month</li>
-                                    <li>• $3K-8K monthly revenue</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="border-l-4 border-green-500 pl-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Months 7-18: Growth & Expansion</h3>
-                        <div class="grid md:grid-cols-2 gap-6 mb-4">
-                            <div>
-                                <h4 class="font-semibold text-gray-800 mb-2">Key Milestones:</h4>
-                                <ul class="space-y-1 text-gray-700">
-                                    <li>• Scale to 80-150 families in Koh Samui</li>
-                                    <li>• Launch in Bangkok and Chiang Mai</li>
-                                    <li>• Implement advanced AI features</li>
-                                    <li>• Secure Series A funding ($180K-280K)</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800 mb-2">Success Metrics:</h4>
-                                <ul class="space-y-1 text-gray-700">
-                                    <li>• 200-400 active families</li>
-                                    <li>• $25K-50K monthly revenue</li>
-                                    <li>• Break-even achieved</li>
-                                    <li>• 90%+ retention rate</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="border-l-4 border-purple-500 pl-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Months 19-36: Regional Scale</h3>
-                        <div class="grid md:grid-cols-2 gap-6 mb-4">
-                            <div>
-                                <h4 class="font-semibold text-gray-800 mb-2">Key Milestones:</h4>
-                                <ul class="space-y-1 text-gray-700">
-                                    <li>• Expand to Bali, Singapore, Malaysia</li>
-                                    <li>• Launch mobile app</li>
-                                    <li>• Build 15-20 person team</li>
-                                    <li>• Achieve consistent profitability</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800 mb-2">Success Metrics:</h4>
-                                <ul class="space-y-1 text-gray-700">
-                                    <li>• 800-1,500 active families</li>
-                                    <li>• $120K-250K monthly revenue</li>
-                                    <li>• 5+ countries/regions</li>
-                                    <li>• Preparation for Series B funding</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="border-l-4 border-red-500 pl-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Months 37-48: Global Expansion</h3>
-                        <div class="grid md:grid-cols-2 gap-6 mb-4">
-                            <div>
-                                <h4 class="font-semibold text-gray-800 mb-2">Key Milestones:</h4>
-                                <ul class="space-y-1 text-gray-700">
-                                    <li>• Launch in Mexico, Portugal, UAE</li>
-                                    <li>• Advanced AI personalization</li>
-                                    <li>• Strategic partnerships</li>
-                                    <li>• Consider exit opportunities</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800 mb-2">Success Metrics:</h4>
-                                <ul class="space-y-1 text-gray-700">
-                                    <li>• 2,000-4,000 active families</li>
-                                    <li>• $300K-600K monthly revenue</li>
-                                    <li>• 10+ countries/regions</li>
-                                    <li>• Strong exit valuation potential</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Call to Action -->
-        <section class="mb-12">
-            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg p-8 text-white text-center">
-                <h2 class="text-3xl font-bold mb-4">Ready to Transform Education Together?</h2>
-                <p class="text-xl mb-6">
-                    Join us in building the future of community-driven, flexible education for globally mobile families.
-                </p>
-                <div class="grid md:grid-cols-3 gap-4 mb-8">
-                    <div class="bg-white bg-opacity-20 p-4 rounded-lg">
-                        <div class="text-2xl font-bold">$35K-55K</div>
-                        <div class="text-sm">Stage 1 Investment</div>
-                    </div>
-                    <div class="bg-white bg-opacity-20 p-4 rounded-lg">
-                        <div class="text-2xl font-bold">8-15%</div>
-                        <div class="text-sm">Equity Range</div>
-                    </div>
-                    <div class="bg-white bg-opacity-20 p-4 rounded-lg">
-                        <div class="text-2xl font-bold">18-24 Mo</div>
-                        <div class="text-sm">Break-even Timeline</div>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <button class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                        Schedule Investment Discussion
-                    </button>
-                    <div class="text-sm opacity-90">
-                        Contact: greg@curriculumsocial.com | +1 (555) 123-4567
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-    <footer class="bg-gray-800 text-white py-12 w-full">
-        <div class="max-w-7xl mx-auto px-4">
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Company Info -->
                 <div class="text-left">
@@ -1198,10 +1208,10 @@
             
             const cumulative = [
                 -35150, -70400, -105800, -142400, -179250, -216350, -254750, -293550, -332800, 
-                -373550, -414850, -456850, -501600, -547100, -593350, -642350, -692100, -742600, 
-                -796850, -851850, -907850, -967850, -1029100, -1092100, -1142100, -1192100, -1242100, 
-                -1290100, -1332100, -1358100, -1364100, -1364100, -1359100, -1349100, -1334100, -1309100, 
-                -1269100, -1224100, -1174100, -1114100, -1044100, -964100, -879100, -779100, -674100, -564100, -444100, -324100
+                -373550, -414850, -456850, -501600, -547100, -593350, -642350, -692100, 
+                -742600, -796850, -851850, -907850, -967850, -1029100, -1092100, -1142100, -1192100, 
+                -1242100, -1290100, -1332100, -1358100, -1364100, -1364100, -1359100, -1349100, -1334100, 
+                -1309100, -1269100, -1224100, -1174100, -1114100, -1044100, -964100, -879100, -779100, -674100, -564100, -444100
             ];
 
             const chart = new Chart(ctx, {
