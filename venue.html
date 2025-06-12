@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Curriculum Social - Venue Partnership Outreach</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="https://images.weserv.nl/?url=raw.githubusercontent.com/gbarr211/curriculumsocial.github.io/main/favicon.png&w=32&h=32&fit=cover">
     <style>
         :root {
@@ -15,12 +18,89 @@
             --light-green: #e6f4ea;
         }
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
+            font-family: 'Open Sans', sans-serif;
             color: #333;
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-secondary {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-outline {
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            background-color: transparent;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-outline:hover {
+            background-color: var(--light-blue);
+        }
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 4px;
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-blue);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        .nav-link:hover {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        #mobileMenu {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
         }
         .header {
             background: linear-gradient(135deg, #1a6e97, #0d8056);
