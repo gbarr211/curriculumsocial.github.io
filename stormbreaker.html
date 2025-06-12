@@ -274,6 +274,130 @@
     <div class="footer">
         <p>© 2025 Curriculum Social | www.curriculumsocial.com | greg@curriculumsocial.com</p>
     </div>
+
+    <script>
+        // Navigation links config
+        const navLinks = [
+            { href: 'dashboard.html', label: 'Dashboard' },
+            { href: 'profile.html', label: 'Profile' },
+            { href: 'matching.html', label: 'Find Families' },
+            { href: 'activities.html', label: 'Activities' }
+        ];
+        const currentPage = window.location.pathname.split('/').pop();
+        const isDashboard = currentPage === 'dashboard.html';
+
+        // Build nav links based on auth state
+        function buildNavLinks(container, isMobile) {
+            container.innerHTML = '';
+            
+            // Check if user is authenticated
+            const isAuthenticated = window.auth.currentUser !== null;
+            
+            if (isAuthenticated) {
+                // Show authenticated navigation
+                navLinks.forEach(link => {
+                    if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
+                    const a = document.createElement('a');
+                    a.href = link.href;
+                    a.textContent = link.label;
+                    a.className = isMobile
+                        ? 'block py-2 text-gray-700 hover:text-blue-600'
+                        : 'nav-link';
+                    container.appendChild(a);
+                });
+                
+                // Add logout link
+                const logout = document.createElement('a');
+                logout.href = '#';
+                logout.textContent = 'Logout';
+                logout.className = isMobile
+                    ? 'block py-2 text-gray-700 hover:text-blue-600'
+                    : 'nav-link';
+                logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
+                container.appendChild(logout);
+            } else {
+                // Show unauthenticated navigation
+                const login = document.createElement('a');
+                login.href = 'login.html';
+                login.textContent = 'Login';
+                login.className = isMobile
+                    ? 'block py-2 text-gray-700 hover:text-blue-600'
+                    : 'nav-link';
+                container.appendChild(login);
+                
+                const signup = document.createElement('a');
+                signup.href = 'signup.html';
+                signup.textContent = 'Sign Up';
+                signup.className = isMobile
+                    ? 'block py-2 text-gray-700 hover:text-blue-600'
+                    : 'btn-primary';
+                container.appendChild(signup);
+            }
+        }
+
+        // Initialize navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Build initial navigation
+            buildNavLinks(document.getElementById('desktopNav'), false);
+            buildNavLinks(document.getElementById('mobileNavLinks'), true);
+            
+            // Add auth state listener to update navigation
+            window.auth.onAuthStateChanged((user) => {
+                buildNavLinks(document.getElementById('desktopNav'), false);
+                buildNavLinks(document.getElementById('mobileNavLinks'), true);
+            });
+            
+            // Hamburger menu toggle
+            document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const isVisible = mobileMenu.style.display !== 'none';
+                mobileMenu.style.display = isVisible ? 'none' : 'block';
+                // Toggle hamburger icon
+                const icon = this.querySelector('i');
+                icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+            });
+            
+            // Close mobile menu when clicking on a link
+            document.getElementById('mobileMenu').addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    this.style.display = 'none';
+                    document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
+                }
+            });
+            
+            // Auto-close mobile menu on resize
+            window.addEventListener('resize', function() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                if (window.innerWidth >= 768) {
+                    if (mobileMenu) mobileMenu.style.display = 'none';
+                    if (mobileMenuBtn) {
+                        const icon = mobileMenuBtn.querySelector('i');
+                        if (icon) icon.className = 'fas fa-bars text-xl';
+                    }
+                }
+            });
+            
+            // Logout functionality
+            async function handleLogout(e) {
+                e.preventDefault();
+                try {
+                    await window.curriculumSocial.signOut();
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error('Error signing out:', error);
+                }
+            }
+            
+            // Add logout handlers
+            document.addEventListener('click', function(e) {
+                if (e.target.id === 'logoutNav' || e.target.id === 'mobileLogoutNav') {
+                    handleLogout(e);
+                }
+            });
+        });
+    </script>
+    
     <script type="module" src="js/firebase-config.js"></script>
 </body>
 </html>
