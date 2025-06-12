@@ -34,9 +34,9 @@
         .btn-primary {
             background-color: var(--primary-blue);
             color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
@@ -45,15 +45,16 @@
         
         .btn-primary:hover {
             background-color: var(--secondary-blue);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
         .btn-secondary {
             background-color: var(--primary-green);
             color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
@@ -62,16 +63,17 @@
         
         .btn-secondary:hover {
             background-color: var(--secondary-green);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
         .btn-outline {
-            border: 1px solid var(--primary-blue);
+            border: 2px solid var(--primary-blue);
             color: var(--primary-blue);
             background-color: transparent;
-            padding: 7px 15px;
-            border-radius: 6px;
-            font-weight: 500;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 600;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
@@ -79,6 +81,27 @@
         }
         
         .btn-outline:hover {
+            background-color: var(--light-blue);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-blue);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        
+        .nav-link.active {
+            color: var(--primary-blue);
             background-color: var(--light-blue);
         }
         
