@@ -722,6 +722,39 @@
                 </div>
             </section>
 
+            <!-- Revenue Growth Visualization -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-6">Revenue Growth Visualization</h3>
+                <div class="chart-container" style="height: 400px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Market Opportunity -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold mb-6">Market Opportunity</h2>
+                <!-- Koh Samui: Validated Launch Market -->
+                <div class="mb-8">
+                    <!-- Your existing market content -->
+                </div>
+                <!-- User Growth Trajectory -->
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">User Growth Trajectory</h3>
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="userGrowthChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Cost Advantage Analysis -->
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">Cost Advantage Analysis</h3>
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="marketComparisonChart"></canvas>
+                    </div>
+                    <p class="text-center text-gray-600 mt-4">Curriculum Social offers 70-80% cost savings compared to international schools</p>
+                </div>
+            </section>
+
             <!-- Investment Opportunity -->
             <section class="mb-12">
                 <h2 class="text-3xl font-bold text-gray-800 mb-6">Investment Opportunity</h2>
@@ -849,6 +882,14 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Investment & Equity Overview -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-6">Investment & Equity Overview</h3>
+                <div class="chart-container" style="height: 400px;">
+                    <canvas id="investmentChart"></canvas>
+                </div>
+            </div>
 
             <!-- Risk Analysis & Mitigation -->
             <section class="mb-12">
@@ -1185,117 +1226,222 @@
         </div>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // Financial data for the chart
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('financialChart').getContext('2d');
-            
-            // Data for the chart
-            const months = Array.from({length: 48}, (_, i) => i + 1);
-            const revenue = [
-                3750, 6250, 10000, 15000, 21250, 27500, 35000, 45000, 56250, 68750, 82500, 100000,
-                118750, 137500, 156250, 175000, 193750, 212500, 231250, 250000, 275000, 300000, 331250, 375000,
-                425000, 450000, 480000, 512000, 544000, 575000, 600000, 625000, 650000, 675000, 700000, 725000,
-                750000, 775000, 800000, 825000, 850000, 875000, 900000, 925000, 950000, 975000, 1000000, 1025000
-            ];
-            
-            const costs = [
-                38900, 41500, 45400, 51600, 58100, 64600, 73400, 83800, 95500, 109500, 123800, 142000,
-                163500, 183000, 202500, 224000, 243500, 263000, 285500, 305000, 331000, 360000, 392500, 438000,
-                475000, 500000, 530000, 560000, 586000, 601000, 606000, 625000, 645000, 665000, 685000, 700000,
-                710000, 730000, 750000, 765000, 780000, 795000, 815000, 825000, 845000, 865000, 880000, 905000
-            ];
-            
-            const cumulative = [
-                -35150, -70400, -105800, -142400, -179250, -216350, -254750, -293550, -332800, 
-                -373550, -414850, -456850, -501600, -547100, -593350, -642350, -692100, 
-                -742600, -796850, -851850, -907850, -967850, -1029100, -1092100, -1142100, -1192100, 
-                -1242100, -1290100, -1332100, -1358100, -1364100, -1364100, -1359100, -1349100, -1334100, 
-                -1309100, -1269100, -1224100, -1174100, -1114100, -1044100, -964100, -879100, -779100, -674100, -564100, -444100
-            ];
-
-            const chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [
-                        {
-                            label: 'Monthly Revenue ($)',
-                            data: revenue,
-                            borderColor: 'rgba(42, 157, 143, 1)',
-                            backgroundColor: 'rgba(42, 157, 143, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Monthly Costs ($)',
-                            data: costs,
-                            borderColor: 'rgba(44, 125, 160, 1)',
-                            backgroundColor: 'rgba(44, 125, 160, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Cumulative P&L ($)',
-                            data: cumulative,
-                            borderColor: 'rgba(231, 111, 81, 1)',
-                            backgroundColor: 'rgba(0, 0, 0, 0)',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            tension: 0.4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Month'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Amount ($)'
+            // Revenue Projection Chart
+            const revenueCtx = document.getElementById('revenueChart');
+            if (revenueCtx) {
+                new Chart(revenueCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+                        datasets: [
+                            {
+                                label: 'Conservative Projection',
+                                data: [100, 420, 1400, 2800, 4200],
+                                borderColor: 'rgb(59, 130, 246)',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4
                             },
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
-                                }
+                            {
+                                label: 'Aggressive Projection',
+                                data: [180, 780, 3000, 5400, 8100],
+                                borderColor: 'rgb(34, 197, 94)',
+                                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4
                             }
-                        }
+                        ]
                     },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': $' + context.raw.toLocaleString();
-                                }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Annual Revenue Projections ($K)',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                position: 'top',
                             }
                         },
-                        annotation: {
-                            annotations: {
-                                breakeven: {
-                                    type: 'line',
-                                    mode: 'vertical',
-                                    scaleID: 'x',
-                                    value: 32,
-                                    borderColor: 'rgba(42, 157, 143, 0.5)',
-                                    borderWidth: 2,
-                                    label: {
-                                        content: 'Breakeven',
-                                        enabled: true,
-                                        position: 'top'
-                                    }
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Revenue ($ Thousands)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Timeline'
                                 }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
+
+            // User Growth Chart
+            const userCtx = document.getElementById('userGrowthChart');
+            if (userCtx) {
+                new Chart(userCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Year 1', 'Year 2', 'Year 3'],
+                        datasets: [{
+                            label: 'Active Families',
+                            data: [75, 350, 1150],
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.8)',
+                                'rgba(34, 197, 94, 0.8)',
+                                'rgba(168, 85, 247, 0.8)'
+                            ],
+                            borderColor: [
+                                'rgb(59, 130, 246)',
+                                'rgb(34, 197, 94)',
+                                'rgb(168, 85, 247)'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'User Growth Projection',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Families'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Market Comparison Chart
+            const marketCtx = document.getElementById('marketComparisonChart');
+            if (marketCtx) {
+                new Chart(marketCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['International Schools', 'Online Schools', 'Traditional Homeschool', 'Curriculum Social'],
+                        datasets: [{
+                            data: [25000, 8000, 12000, 4000],
+                            backgroundColor: [
+                                '#ef4444',
+                                '#f97316',
+                                '#eab308',
+                                '#22c55e'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Annual Cost Comparison (USD)',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Investment Stages Chart
+            const investmentCtx = document.getElementById('investmentChart');
+            if (investmentCtx) {
+                new Chart(investmentCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Stage 1\nValidation', 'Stage 2\nExpansion', 'Stage 3\nGlobal'],
+                        datasets: [
+                            {
+                                label: 'Investment Required ($K)',
+                                data: [45, 230, 1000],
+                                backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                                borderColor: 'rgb(59, 130, 246)',
+                                borderWidth: 2,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Equity Given (%)',
+                                data: [12, 20, 25],
+                                backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                                borderColor: 'rgb(34, 197, 94)',
+                                borderWidth: 2,
+                                yAxisID: 'y1',
+                                type: 'line',
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Investment Stages & Equity',
+                                font: { size: 16, weight: 'bold' }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Investment ($K)'
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Equity (%)'
+                                },
+                                grid: {
+                                    drawOnChartArea: false,
+                                },
+                            }
+                        }
+                    }
+                });
+            }
         });
     </script>
     <script type="module" src="js/firebase-config.js"></script>
