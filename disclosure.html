@@ -288,6 +288,14 @@
         const currentPage = window.location.pathname.split('/').pop();
         const isDashboard = currentPage === 'dashboard.html';
 
+        // Set initial mobile menu state
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu) {
+                mobileMenu.style.display = 'none';
+            }
+        });
+
         // Build nav links based on auth state
         function buildNavLinks(container, isMobile) {
             container.innerHTML = '';
