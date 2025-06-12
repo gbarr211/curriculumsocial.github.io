@@ -8,195 +8,88 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="https://images.weserv.nl/?url=raw.githubusercontent.com/gbarr211/curriculumsocial.github.io/main/favicon.png&w=32&h=32&fit=cover">
     <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --secondary-blue: #4285f4;
+            --primary-green: #34a853;
+            --secondary-green: #66bb6a;
+            --light-blue: #e8f0fe;
+            --light-green: #e6f4ea;
+        }
         body {
             font-family: 'Inter', sans-serif;
-            color: #333;
             line-height: 1.6;
-            max-width: 800px;
+            color: #333;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
         .header {
-            background: linear-gradient(135deg, #1a7f76 0%, #2563eb 100%);
-            padding: 20px;
+            background: linear-gradient(135deg, #1a6e97, #0d8056);
             color: white;
-            border-radius: 8px 8px 0 0;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        h1, h2, h3 {
+            color: #1a6e97;
+        }
+        .section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin: 20px 0;
+        }
+        .timeline {
+            margin: 20px 0;
+        }
+        .timeline-item {
+            display: flex;
             margin-bottom: 20px;
         }
-        h1 {
-            color: #1a7f76;
-            font-weight: 700;
+        .timeline-month {
+            width: 120px;
+            font-weight: bold;
+            padding-right: 20px;
+            color: #1a6e97;
         }
-        h2 {
-            color: #2563eb;
-            font-weight: 600;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 5px;
+        .timeline-content {
+            flex-grow: 1;
+            border-left: 2px solid #1a6e97;
+            padding-left: 20px;
         }
-        .signature-area {
-            margin-top: 30px;
-            border-top: 1px solid #e5e7eb;
-            padding-top: 20px;
-        }
-        .signature-line {
-            border-bottom: 1px solid #333;
+        table {
             width: 100%;
-            display: inline-block;
-            margin-top: 25px;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
         }
         .footer {
             margin-top: 40px;
-            text-align: center;
-            color: #6b7280;
-            font-size: 0.875rem;
-        }
-         {
-            .header {
-                background: #1a7f76 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            body {
-                padding: 0;
-            }
-        }
-        .nav-link {
-            position: relative;
-            padding: 8px 16px;
-            margin: 0 4px;
-            color: #4a5568;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border-radius: 6px;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: var(--primary-blue);
-            transition: all 0.3s;
-            transform: translateX(-50%);
-        }
-        .nav-link:hover {
-            color: var(--primary-blue);
-            background-color: var(--light-blue);
-        }
-        .nav-link:hover::after {
-            width: 80%;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #666;
         }
     </style>
 </head>
-<body class="bg-white">
-    <!-- Header & Navigation -->
-    <header class="sticky top-0 bg-white z-50 shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center">
-                <h1 class="text-2xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
-                    <a href="/" style="text-decoration: none; color: inherit;">
-                        <span style="color: var(--primary-green);">Curriculum</span>
-                        <span style="color: var(--primary-blue);">Social</span>
-                    </a>
-                </h1>
-            </div>
-            <!-- Desktop nav -->
-            <nav id="desktopNav" class="hidden md:flex items-center space-x-2">
-                <!-- Add your nav links here if not present -->
-            </nav>
-            <div class="flex items-center space-x-4">
-                <!-- Express Interest Button (desktop only, always visible) -->
-                <a href="interest.html" class="btn-secondary hidden md:inline-block">Express Interest</a>
-                <!-- Mobile hamburger -->
-                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
-        </div>
-        <!-- Mobile nav -->
-        <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
-            <div id="mobileNavLinks" class="px-4 py-2 space-y-2">
-                <!-- Add your mobile nav links here if not present -->
-                <div class="pt-2 border-t border-gray-200">
-                    <a href="interest.html" class="btn-secondary w-full block text-center mb-2">Express Interest</a>
-                </div>
-            </div>
-        </div>
-    </header>
-    <script>
-        const navLinks = [
-            { href: 'dashboard.html', label: 'Dashboard' },
-            { href: 'profile.html', label: 'Profile' },
-            { href: 'matching.html', label: 'Find Families' },
-            { href: 'activities.html', label: 'Activities' }
-        ];
-        const currentPage = window.location.pathname.split('/').pop();
-        const isDashboard = currentPage === 'dashboard.html';
-        function buildNavLinks(container, isMobile) {
-            container.innerHTML = '';
-            navLinks.forEach(link => {
-                if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
-                const a = document.createElement('a');
-                a.href = link.href;
-                a.textContent = link.label;
-                a.className = isMobile
-                    ? 'block py-2 text-gray-700 hover:text-blue-600'
-                    : 'nav-link';
-                container.appendChild(a);
-            });
-            const logout = document.createElement('a');
-            logout.href = '#';
-            logout.textContent = 'Logout';
-            logout.className = isMobile
-                ? 'block py-2 text-gray-700 hover:text-blue-600'
-                : 'nav-link';
-            logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
-            container.appendChild(logout);
-        }
-        buildNavLinks(document.getElementById('desktopNav'), false);
-        buildNavLinks(document.getElementById('mobileNavLinks'), true);
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const isVisible = mobileMenu.style.display !== 'none';
-            mobileMenu.style.display = isVisible ? 'none' : 'block';
-            const icon = this.querySelector('i');
-            icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
-        });
-        document.getElementById('mobileMenu').addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-                this.style.display = 'none';
-                document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
-            }
-        });
-        window.addEventListener('resize', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            if (window.innerWidth >= 768) {
-                if (mobileMenu) mobileMenu.style.display = 'none';
-                if (mobileMenuBtn) {
-                    const icon = mobileMenuBtn.querySelector('i');
-                    if (icon) icon.className = 'fas fa-bars text-xl';
-                }
-            }
-        });
-        async function handleLogout(e) {
-            e.preventDefault();
-            const result = await window.curriculumSocial.signOut();
-            if (result.success) {
-                window.location.href = 'index.html';
-            } else {
-                alert('Logout failed: ' + result.error);
-            }
-        }
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('logoutNav').addEventListener('click', handleLogout);
-            document.getElementById('mobileLogoutNav').addEventListener('click', handleLogout);
-        });
-    </script>
+<body>
+    <div style="text-align: center; margin-bottom: 30px; padding: 20px 0; border-bottom: 1px solid #ddd;">
+        <h1 style="color: #1a6e97; margin: 0;">
+            <a href="/" style="text-decoration: none; color: inherit;">Curriculum Social</a>
+        </h1>
+        <p style="margin: 5px 0 0 0; color: #666;">curriculumsocial.com</p>
+    </div>
 
     <div class="header">
         <div class="flex items-center justify-between">
@@ -274,15 +167,5 @@
     <div class="footer">
         <p>Curriculum Social | curriculumsocial.com | This document is confidential and legally binding.</p>
     </div>
-    <script type="module" src="js/firebase-config.js"></script>
 </body>
 </html>
-    <script id="html_badge_script1">
-        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
-            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDkoAQTsvvDj8QJ%2BNCpD1OYAY%2FDy4pmOj5Gcv%2FQApDnisIYFQUohNU7h06bVe7hukG6LkG0veRvhc6rFBxyMAheZb3pYMvlwBfoct4e%2BOqL9ZfaYTMrrHNyFTaaV%2FZIQP2Tgp1aLhxFX2SyUVVkeU7jB%2BUoHcor14er5ozU1iB54uw4CRVg%2F3X5TJ5fS%2BuKymthccEzAbXQfVtGGvTccq46OBnwc2A2qSQtHyH9raV8AyO6rI2ZDJzHNU6fAs5N0BTsQDIMoa0%2BmHonUJiopR2bDOZiGqd1E9JjQCTa9JMBH2b26FaSKj2Sz4OPjq3IZVBxCMJsQvHODNYBUiFuPruIZOKEl8KvJQP%2FEaHoiPfZ56MNTKaOue%2Bho1xv89aVwIhCpwgJBg9j9qV8ztLwz0tBPteeENPbj%2BukgqVZgTXKESilQtzoLcaiVWZKnAnUixiAiPWtVT%2BNKtksEzG%2FBipFJUGOgwSDIE%2FnugWyBXXOhP73DcBaRMXdv%2Fi1d4zTFQBA2DJp2qYcOr%2BsAPJaYwOlI%3D";
-        window.__genspark_locale = "en-US";
-        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDkoAQTsvvDj8QJ+NCpD1OYAY/Dy4pmOj5Gcv/QApDnisIYFQUohNU7h06bVe7hukG6LkG0veRvhc6rFBxyMAheZb3pYMvlwBfoct4e+OqL9ZfaYTMrrHNyFTaaV/ZIQP2Tgp1aLhxFX2SyUVVkeU7jB+UoHcor14er5ozU1iB54uw4CRVg/3X5TJ5fS+uKymthccEzAbXQfVtGGvTccq46OBnwc2A2qSQtHyH9raV8AyO6rI2ZDJzHNU6fAs5N0BTsQDIMoa0+mHonUJiopR2bDOZiGqd1E9JjQCTa9JMBH2b26FaSKj2Sz4OPjq3IZVBxCMJsQvHODNYBUiFuPruIZOKEl8KvJQP/EaHoiPfZ56MNTKaOue+ho1xv89aVwIhCpwgJBg9j9qV8ztLwz0tBPteeENPbj+ukgqVZgTXKESilQtzoLcaiVWZKnAnUixiAiPWtVT+NKtksEzG/BipFJUGOgwSDIE/nugWyBXXOhP73DcBaRMXdv/i1d4zTFQBA2DJp2qYcOr+sAPJaYwOlI=";
-    </script>
-    
-    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
-    
