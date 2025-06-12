@@ -17,6 +17,16 @@
             --light-blue: #e8f0fe;
             --light-green: #e6f4ea;
         }
+        /* Hide navigation on mobile, show on desktop */
+        nav {
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            nav {
+                display: flex !important;
+            }
+        }
         body {
             font-family: 'Open Sans', sans-serif;
             color: #333;
@@ -177,7 +187,7 @@
                 </h1>
             </div>
             <!-- Desktop nav -->
-            <nav id="desktopNav" class="hidden md:flex items-center space-x-2"></nav>
+            <nav id="desktopNav" class="flex items-center space-x-2"></nav>
             <div class="flex items-center space-x-4">
                 <!-- Express Interest Button (desktop only, always visible) -->
                 <a href="interest.html" class="btn-secondary hidden md:inline-block">Express Interest</a>
