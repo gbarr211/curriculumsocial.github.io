@@ -359,7 +359,7 @@
                 display: inline-block !important;
             }
             #userInfo {
-                display: inline-block !important;
+                display: none !important;
             }
         }
         
@@ -378,7 +378,7 @@
             display: none;
         }
         
-        @media (min-width: 768px) {
+         (min-width: 768px) {
             nav {
                 display: flex !important;
             }
@@ -411,7 +411,7 @@
                 <span id="userName" class="font-medium"></span>
                 <span id="userRole" class="role-badge"></span>
             </div>
-            <button id="logoutBtn" class="btn-outline hidden md:block">Logout</button>
+            <button id="logoutBtn" class="btn-outline hidden md:inline-block" style="display:none;">Logout</button>
             <button id="mobileMenuBtn" class="md:hidden text-gray-700 ml-2">
                 <i class="fas fa-bars text-xl"></i>
             </button>
@@ -431,21 +431,7 @@
         </div>
       </div>
     </header>
-
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
-        <div class="px-4 py-2 space-y-2">
-            <a href="https://curriculumsocial.com/dashboard.html" class="block py-2 text-gray-700 hover:text-blue-600">Dashboard</a>
-            <a href="https://curriculumsocial.com/profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
-            <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-blue-600 font-semibold">Find Families</a>
-            <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
-            <div class="pt-2 border-t border-gray-200">
-                <a href="interest.html" class="btn-secondary w-full block text-center mb-2">Express Interest</a>
-                <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
-            </div>
-        </div>
-    </div>
-
+    
     <!-- Loading State -->
     <div id="loadingState" class="loading">
         <div class="text-center">
