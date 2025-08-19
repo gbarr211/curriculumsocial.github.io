@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="https://images.weserv.nl/?url=raw.githubusercontent.com/gbarr211/curriculumsocial.github.io/main/favicon.png&w=32&h=32&fit=cover">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- EmailJS Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
             --primary-blue: #2a6cb2;
@@ -346,6 +348,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize EmailJS - REPLACE WITH YOUR ACTUAL PUBLIC KEY
+            emailjs.init("YOUR_PUBLIC_KEY_HERE");
+            
             // Stakeholder Type Selection
             const stakeholderTypes = document.querySelectorAll('.stakeholder-type');
             const stakeholderInput = document.getElementById('stakeholder-type');
@@ -404,6 +409,28 @@
                             interestData
                         );
                         
+                        // Send notification email to you
+                        await emailjs.send("YOUR_SERVICE_ID", "YOUR_NOTIFICATION_TEMPLATE_ID", {
+                            from_name: formValues.name,
+                            reply_to: formValues.email,
+                            stakeholder_type: formValues['stakeholder-type'],
+                            location: formValues.location,
+                            message: formValues.interest,
+                            referral: formValues.referral || 'Not specified',
+                            timestamp: new Date().toLocaleString()
+                        });
+                        
+                        // Send auto-response to them
+                        const response = getPersonalizedResponse(formValues);
+                        await emailjs.send("YOUR_SERVICE_ID", "YOUR_AUTORESPONSE_TEMPLATE_ID", {
+                            to_name: formValues.name,
+                            to_email: formValues.email,
+                            subject: response.subject,
+                            message: response.content,
+                            stakeholder_type: formValues['stakeholder-type'],
+                            location: formValues.location
+                        });
+                        
                         // Hide form and show success message
                         form.classList.add('hidden');
                         successMessage.classList.remove('hidden');
@@ -426,6 +453,97 @@
                     errorMessage.classList.add('animated', 'fadeIn');
                 }
             });
+            
+            function getPersonalizedResponse(data) {
+                const responses = {
+                    parent: {
+                        subject: "Welcome to the Curriculum Social Family Community! 👨‍👩‍👧‍👦",
+                        content: `Dear ${data.name},
+
+Thank you for your interest in joining our educational community! As a parent in ${data.location}, you're taking an important step toward providing your children with a personalized, community-driven education experience.
+
+What's Next:
+• I'll personally reach out within 24 hours to discuss your family's educational goals
+• We'll help you connect with like-minded families in your area  
+• Our AI system will create personalized curricula for each of your children
+
+While you wait, explore our parent resources: https://curriculumsocial.com/parent.html
+
+Looking forward to supporting your family's educational journey!
+
+Best regards,
+Greg Barr
+Founder, Curriculum Social
+greg@curriculumsocial.com`
+                    },
+                    teacher: {
+                        subject: "Your Teaching Expertise is Valued at Curriculum Social! 🍎",
+                        content: `Dear ${data.name},
+
+Thank you for your interest in joining our teaching community! Your expertise is exactly what families in ${data.location} are looking for.
+
+Teaching Opportunities:
+• Flexible schedule - choose your hours and availability
+• Fair compensation with transparent structure
+• Parent-teacher option available
+• Work with families worldwide
+
+I'll contact you within 24 hours to discuss your teaching background and available opportunities.
+
+Excited to have you join our educational mission!
+
+Best regards,
+Greg Barr
+Founder, Curriculum Social
+greg@curriculumsocial.com`
+                    },
+                    venue: {
+                        subject: "Partnership Opportunity with Curriculum Social 🏢",
+                        content: `Dear ${data.name},
+
+Thank you for your interest in partnering with Curriculum Social! Your venue in ${data.location} could be perfect for our educational community activities.
+
+Partnership Benefits:
+• Additional revenue during off-peak hours
+• Support innovative education in your area
+• Flexible arrangements around your schedule
+• Comprehensive supervision provided
+
+I'll reach out within 24 hours to discuss venue specifications and revenue sharing.
+
+Looking forward to exploring this partnership!
+
+Best regards,
+Greg Barr
+Founder, Curriculum Social
+greg@curriculumsocial.com`
+                    },
+                    investor: {
+                        subject: "Investment Opportunity in Educational Innovation 📈",
+                        content: `Dear ${data.name},
+
+Thank you for your interest in Curriculum Social's investment opportunity! We're revolutionizing education through our unique hybrid model.
+
+Market Opportunity:
+• Global homeschooling market expected to reach $15.7B by 2028
+• First platform combining AI, teachers, and local communities
+• Technology-enabled with global reach
+• Strong demand from mobile families
+
+I'd like to schedule a call to discuss our business model, traction, and investment terms.
+
+Best regards,
+Greg Barr
+Founder, Curriculum Social
+greg@curriculumsocial.com`
+                    }
+                };
+                
+                return responses[data['stakeholder-type']] || {
+                    subject: "Thank you for your interest in Curriculum Social!",
+                    content: `Dear ${data.name},\n\nThank you for your interest! I'll be in touch soon.\n\nBest regards,\nGreg Barr`
+                };
+            }
         });
     </script>
     <script>
@@ -481,12 +599,3 @@
     <script type="module" src="js/firebase-config.js"></script>
 </body>
 </html>
-    <script id="html_badge_script1">
-        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
-            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDiAVN0o2fPLF2k4d557n6aB90xH3I51cl9%2BG0gjLd5Jrfv8kem6Cfp6C1PWJWA1pvPnFuvCXsi2FC706DCmDU3Iw0xcj%2F9LsOlbTZCTJ7uOIY4Izjd7E%2BM5Smyw%2FANb4JN9PJOVh9w9jKDxt2aDkJXbO87jHDTWHCtEgZWWztwUQW0ZAtQ1gyQYOasPqP3wIzcEHrJ%2BLt6qRX2gAUvYZ7EK1SUkoYmBxtnK5QxLhF4HIW%2B%2BcUHKUw9stPfUCJJW2wmmqbbG4S7PghCoScmofukQHb3X5vBCJO%2B6SXQeTUXTL%2Be6KWecMtZyosFliIRot%2F4FYgUTsN8dJngHjaAchxdggToEMCm8i10rjvEGyfCBybU4FwapRjQChURVzR9xDdlGX2VpeYd24qw4XlHyMI5K%2FneZISZVEEOGhJtHPrxvxwUmoXb%2Fv1GoUA77lJ1Peyz%2F923We1vJI5JNd7B26cndkAfYypsLkQWQFywM8A7%2F3j%2BUZcrfLRDTcZqPZyNFfrMy82cW6%2BFl0wbjmrRrbMAo%3D";
-        window.__genspark_locale = "en-US";
-        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDiAVN0o2fPLF2k4d557n6aB90xH3I51cl9+G0gjLd5Jrfv8kem6Cfp6C1PWJWA1pvPnFuvCXsi2FC706DCmDU3Iw0xcj/9LsOlbTZCTJ7uOIY4Izjd7E+M5Smyw/ANb4JN9PJOVh9w9jKDxt2aDkJXbO87jHDTWHCtEgZWWztwUQW0ZAtQ1gyQYOasPqP3wIzcEHrJ+Lt6qRX2gAUvYZ7EK1SUkoYmBxtnK5QxLhF4HIW++cUHKUw9stPfUCJJW2wmmqbbG4S7PghCoScmofukQHb3X5vBCJO+6SXQeTUXTL+e6KWecMtZyosFliIRot/4FYgUTsN8dJngHjaAchxdggToEMCm8i10rjvEGyfCBybU4FwapRjQChURVzR9xDdlGX2VpeYd24qw4XlHyMI5K/neZISZVEEOGhJtHPrxvxwUmoXb/v1GoUA77lJ1Peyz/923We1vJI5JNd7B26cndkAfYypsLkQWQFywM8A7/3j+UZcrfLRDTcZqPZyNFfrMy82cW6+Fl0wbjmrRrbMAo=";
-    </script>
-    
-    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
-    
