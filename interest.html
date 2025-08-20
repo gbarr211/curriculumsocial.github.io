@@ -192,6 +192,9 @@
                 
                 <!-- Contact Form -->
                 <form id="interest-form" class="space-y-6">
+                    <!-- Hidden field for timestamp -->
+                    <input type="hidden" name="timestamp" id="timestamp">
+                    
                     <!-- Personal Information -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -389,11 +392,14 @@
                 
                 if (isValid) {
                     try {
+                        // Set timestamp
+                        document.getElementById('timestamp').value = new Date().toLocaleString();
+                        
                         // Get form data
                         const formData = new FormData(form);
                         const formValues = Object.fromEntries(formData.entries());
                         
-                        // Add timestamp and status
+                        // Add timestamp and status for Firebase
                         const interestData = {
                             ...formValues,
                             timestamp: new Date(),
@@ -408,30 +414,15 @@
                             window.firebaseFirestore.collection(window.db, 'interest_submissions'),
                             interestData
                         );
+                        console.log('Interest submission saved with ID:', docRef.id);
                         
-                        // Send notification email to you
-                        await emailjs.send("service_nbff6ju", "template_rbse5nw", {
-                            email: "gbarr211@gmail.com",
-                            to_name: "Greg",
-                            from_name: formValues.name,
-                            subject: `🎯 New ${formValues['stakeholder-type']} Interest - ${formValues.name}`,
-                            message: `
-    New interest submission:
-    
-    Name: ${formValues.name}
-    Email: ${formValues.email}
-    Type: ${formValues['stakeholder-type']}
-    Location: ${formValues.location}
-    Timezone: ${formValues.timezone || 'Not specified'}
-    Interest: ${formValues.interest}
-    Referral: ${formValues.referral || 'Not specified'}
-    Time: ${new Date().toLocaleString()}
-    
-    Reply to ${formValues.email} to respond directly.
-                            `
-                        });
+                        // Send notification email to you using the notification template
+                        await emailjs.sendForm("service_nbff6ju", "template_4xshob1", form);
+                        console.log('Notification email sent to you successfully');
                         
-                        console.log('Notification email sent successfully');
+                        // Send auto-reply email to them using the auto-reply template
+                        await emailjs.sendForm("service_nbff6ju", "template_rbse5nw", form);
+                        console.log('Auto-reply email sent to user successfully');
                         
                         // Hide form and show success message
                         form.classList.add('hidden');
@@ -442,18 +433,19 @@
                         form.reset();
                         stakeholderTypes.forEach(t => t.classList.remove('selected'));
                         
-                        console.log('Interest submission saved with ID:', docRef.id);
                     } catch (error) {
                         console.error('Error:', error);
+                        errorMessage.querySelector('p.text-sm').textContent = 
+                            'There was an error submitting your information. Please try again later.';
                         errorMessage.classList.remove('hidden');
                     }
                 } else {
                     errorMessage.classList.remove('hidden');
+                    errorMessage.classList.add('animated', 'fadeIn');
                 }
             });
         });
     </script>
-
     <script>
         // Navigation links config
         const navLinks = [
