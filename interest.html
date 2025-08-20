@@ -348,7 +348,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize EmailJS - REPLACE WITH YOUR ACTUAL PUBLIC KEY
+            // Initialize EmailJS
             emailjs.init("4On4QsjS27mAhw0AB");
             
             // Stakeholder Type Selection
@@ -409,23 +409,25 @@
                             interestData
                         );
                         
-                        // Send notification email to you (using your existing template)
+                        // Send notification email to you
                         await emailjs.send("service_nbff6ju", "template_rbse5nw", {
+                            email: "gbarr211@gmail.com",
                             to_name: "Greg",
                             from_name: formValues.name,
-                            reply_to: formValues.email,
                             subject: `🎯 New ${formValues['stakeholder-type']} Interest - ${formValues.name}`,
                             message: `
-            Name: ${formValues.name}
-            Email: ${formValues.email}
-            Type: ${formValues['stakeholder-type']}
-            Location: ${formValues.location}
-            Timezone: ${formValues.timezone || 'Not specified'}
-            Interest: ${formValues.interest}
-            Referral: ${formValues.referral || 'Not specified'}
-            Time: ${new Date().toLocaleString()}
-            
-            Reply to this email to respond directly to ${formValues.name}.
+    New interest submission:
+    
+    Name: ${formValues.name}
+    Email: ${formValues.email}
+    Type: ${formValues['stakeholder-type']}
+    Location: ${formValues.location}
+    Timezone: ${formValues.timezone || 'Not specified'}
+    Interest: ${formValues.interest}
+    Referral: ${formValues.referral || 'Not specified'}
+    Time: ${new Date().toLocaleString()}
+    
+    Reply to ${formValues.email} to respond directly.
                             `
                         });
                         
@@ -449,99 +451,9 @@
                     errorMessage.classList.remove('hidden');
                 }
             });
-            
-            function getPersonalizedResponse(data) {
-                const responses = {
-                    parent: {
-                        subject: "Welcome to the Curriculum Social Family Community! 👨‍👩‍👧‍👦",
-                        content: `Dear ${data.name},
-
-Thank you for your interest in joining our educational community! As a parent in ${data.location}, you're taking an important step toward providing your children with a personalized, community-driven education experience.
-
-What's Next:
-• I'll personally reach out within 24 hours to discuss your family's educational goals
-• We'll help you connect with like-minded families in your area  
-• Our AI system will create personalized curricula for each of your children
-
-While you wait, explore our parent resources: https://curriculumsocial.com/parent.html
-
-Looking forward to supporting your family's educational journey!
-
-Best regards,
-Greg Barr
-Founder, Curriculum Social
-greg@curriculumsocial.com`
-                    },
-                    teacher: {
-                        subject: "Your Teaching Expertise is Valued at Curriculum Social! 🍎",
-                        content: `Dear ${data.name},
-
-Thank you for your interest in joining our teaching community! Your expertise is exactly what families in ${data.location} are looking for.
-
-Teaching Opportunities:
-• Flexible schedule - choose your hours and availability
-• Fair compensation with transparent structure
-• Parent-teacher option available
-• Work with families worldwide
-
-I'll contact you within 24 hours to discuss your teaching background and available opportunities.
-
-Excited to have you join our educational mission!
-
-Best regards,
-Greg Barr
-Founder, Curriculum Social
-greg@curriculumsocial.com`
-                    },
-                    venue: {
-                        subject: "Partnership Opportunity with Curriculum Social 🏢",
-                        content: `Dear ${data.name},
-
-Thank you for your interest in partnering with Curriculum Social! Your venue in ${data.location} could be perfect for our educational community activities.
-
-Partnership Benefits:
-• Additional revenue during off-peak hours
-• Support innovative education in your area
-• Flexible arrangements around your schedule
-• Comprehensive supervision provided
-
-I'll reach out within 24 hours to discuss venue specifications and revenue sharing.
-
-Looking forward to exploring this partnership!
-
-Best regards,
-Greg Barr
-Founder, Curriculum Social
-greg@curriculumsocial.com`
-                    },
-                    investor: {
-                        subject: "Investment Opportunity in Educational Innovation 📈",
-                        content: `Dear ${data.name},
-
-Thank you for your interest in Curriculum Social's investment opportunity! We're revolutionizing education through our unique hybrid model.
-
-Market Opportunity:
-• Global homeschooling market expected to reach $15.7B by 2028
-• First platform combining AI, teachers, and local communities
-• Technology-enabled with global reach
-• Strong demand from mobile families
-
-I'd like to schedule a call to discuss our business model, traction, and investment terms.
-
-Best regards,
-Greg Barr
-Founder, Curriculum Social
-greg@curriculumsocial.com`
-                    }
-                };
-                
-                return responses[data['stakeholder-type']] || {
-                    subject: "Thank you for your interest in Curriculum Social!",
-                    content: `Dear ${data.name},\n\nThank you for your interest! I'll be in touch soon.\n\nBest regards,\nGreg Barr`
-                };
-            }
         });
     </script>
+
     <script>
         // Navigation links config
         const navLinks = [
