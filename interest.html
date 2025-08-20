@@ -349,7 +349,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize EmailJS - REPLACE WITH YOUR ACTUAL PUBLIC KEY
-            emailjs.init("YOUR_PUBLIC_KEY_HERE");
+            emailjs.init("4On4QsjS27mAhw0AB");
             
             // Stakeholder Type Selection
             const stakeholderTypes = document.querySelectorAll('.stakeholder-type');
@@ -410,7 +410,7 @@
                         );
                         
                         // Send notification email to you
-                        await emailjs.send("YOUR_SERVICE_ID", "YOUR_NOTIFICATION_TEMPLATE_ID", {
+                        await emailjs.send("service_nbff6ju", "template_rbse5nw", {
                             from_name: formValues.name,
                             reply_to: formValues.email,
                             stakeholder_type: formValues['stakeholder-type'],
@@ -422,7 +422,7 @@
                         
                         // Send auto-response to them
                         const response = getPersonalizedResponse(formValues);
-                        await emailjs.send("YOUR_SERVICE_ID", "YOUR_AUTORESPONSE_TEMPLATE_ID", {
+                        await emailjs.send("service_nbff6ju", "template_rbse5nw", {
                             to_name: formValues.name,
                             to_email: formValues.email,
                             subject: response.subject,
