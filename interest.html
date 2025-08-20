@@ -409,27 +409,27 @@
                             interestData
                         );
                         
-                        // Send notification email to you
+                        // Send notification email to you (using your existing template)
                         await emailjs.send("service_nbff6ju", "template_rbse5nw", {
+                            to_name: "Greg",
                             from_name: formValues.name,
                             reply_to: formValues.email,
-                            stakeholder_type: formValues['stakeholder-type'],
-                            location: formValues.location,
-                            message: formValues.interest,
-                            referral: formValues.referral || 'Not specified',
-                            timestamp: new Date().toLocaleString()
+                            subject: `🎯 New ${formValues['stakeholder-type']} Interest - ${formValues.name}`,
+                            message: `
+            Name: ${formValues.name}
+            Email: ${formValues.email}
+            Type: ${formValues['stakeholder-type']}
+            Location: ${formValues.location}
+            Timezone: ${formValues.timezone || 'Not specified'}
+            Interest: ${formValues.interest}
+            Referral: ${formValues.referral || 'Not specified'}
+            Time: ${new Date().toLocaleString()}
+            
+            Reply to this email to respond directly to ${formValues.name}.
+                            `
                         });
                         
-                        // Send auto-response to them
-                        const response = getPersonalizedResponse(formValues);
-                        await emailjs.send("service_nbff6ju", "template_rbse5nw", {
-                            to_name: formValues.name,
-                            to_email: formValues.email,
-                            subject: response.subject,
-                            message: response.content,
-                            stakeholder_type: formValues['stakeholder-type'],
-                            location: formValues.location
-                        });
+                        console.log('Notification email sent successfully');
                         
                         // Hide form and show success message
                         form.classList.add('hidden');
@@ -442,15 +442,11 @@
                         
                         console.log('Interest submission saved with ID:', docRef.id);
                     } catch (error) {
-                        console.error('Error saving interest submission:', error);
-                        errorMessage.querySelector('p.text-sm').textContent = 
-                            'There was an error submitting your information. Please try again later.';
+                        console.error('Error:', error);
                         errorMessage.classList.remove('hidden');
                     }
                 } else {
-                    // Show error message
                     errorMessage.classList.remove('hidden');
-                    errorMessage.classList.add('animated', 'fadeIn');
                 }
             });
             
