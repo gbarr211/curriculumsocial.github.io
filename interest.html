@@ -416,21 +416,6 @@
                         );
                         console.log('Firebase save successful with ID:', docRef.id);
                         
-                        // Send notification email to owner
-                        console.log('Sending notification email to owner...');
-                        try {
-                            const notificationResult = await emailjs.sendForm(
-                                'service_nbff6ju',
-                                'template_4xshob1',
-                                form,
-                                '4On4QsjS27mAhw0AB'
-                            );
-                            console.log('Notification email sent successfully:', notificationResult);
-                        } catch (emailError) {
-                            console.error('Notification email failed:', emailError);
-                            // Continue with auto-reply even if notification fails
-                        }
-                        
                         // Send auto-reply email to user
                         console.log('Sending auto-reply email to user...');
                         try {
