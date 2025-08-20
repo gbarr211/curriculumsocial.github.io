@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="https://images.weserv.nl/?url=raw.githubusercontent.com/gbarr211/curriculumsocial.github.io/main/favicon.png&w=32&h=32&fit=cover">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- EmailJS Script -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
             --primary-blue: #2a6cb2;
@@ -192,9 +190,6 @@
                 
                 <!-- Contact Form -->
                 <form id="interest-form" class="space-y-6">
-                    <!-- Hidden field for timestamp -->
-                    <input type="hidden" name="timestamp" id="timestamp">
-                    
                     <!-- Personal Information -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -353,6 +348,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize EmailJS
             emailjs.init("4On4QsjS27mAhw0AB");
+            console.log('EmailJS initialized with public key: 4On4QsjS27mAhw0AB');
             
             // Stakeholder Type Selection
             const stakeholderTypes = document.querySelectorAll('.stakeholder-type');
@@ -376,6 +372,7 @@
             
             form.addEventListener('submit', async function(event) {
                 event.preventDefault();
+                console.log('Form submission started');
                 
                 // Basic form validation
                 let isValid = true;
@@ -385,6 +382,7 @@
                     if (!field.value) {
                         isValid = false;
                         field.classList.add('border-red-500');
+                        console.log('Required field missing:', field.name);
                     } else {
                         field.classList.remove('border-red-500');
                     }
@@ -392,14 +390,13 @@
                 
                 if (isValid) {
                     try {
-                        // Set timestamp
-                        document.getElementById('timestamp').value = new Date().toLocaleString();
+                        console.log('Form validation passed, proceeding with submission');
                         
                         // Get form data
                         const formData = new FormData(form);
                         const formValues = Object.fromEntries(formData.entries());
                         
-                        // Add timestamp and status for Firebase
+                        // Add timestamp and status
                         const interestData = {
                             ...formValues,
                             timestamp: new Date(),
@@ -409,20 +406,45 @@
                             eventInvites: formData.get('event-invites') === 'on'
                         };
                         
-                        // Save to Firebase
+                        console.log('Form data prepared:', interestData);
+                        
+                        // Save to Firebase first
+                        console.log('Saving to Firebase...');
                         const docRef = await window.firebaseFirestore.addDoc(
                             window.firebaseFirestore.collection(window.db, 'interest_submissions'),
                             interestData
                         );
-                        console.log('Interest submission saved with ID:', docRef.id);
+                        console.log('Firebase save successful with ID:', docRef.id);
                         
-                        // Send notification email to you using the notification template
-                        await emailjs.sendForm("service_nbff6ju", "template_4xshob1", form);
-                        console.log('Notification email sent to you successfully');
+                        // Send notification email to owner
+                        console.log('Sending notification email to owner...');
+                        try {
+                            const notificationResult = await emailjs.sendForm(
+                                'service_nbff6ju',
+                                'template_4xshob1',
+                                form,
+                                '4On4QsjS27mAhw0AB'
+                            );
+                            console.log('Notification email sent successfully:', notificationResult);
+                        } catch (emailError) {
+                            console.error('Notification email failed:', emailError);
+                            // Continue with auto-reply even if notification fails
+                        }
                         
-                        // Send auto-reply email to them using the auto-reply template
-                        await emailjs.sendForm("service_nbff6ju", "template_rbse5nw", form);
-                        console.log('Auto-reply email sent to user successfully');
+                        // Send auto-reply email to user
+                        console.log('Sending auto-reply email to user...');
+                        try {
+                            const autoReplyResult = await emailjs.sendForm(
+                                'service_nbff6ju',
+                                'template_rbse5nw',
+                                form,
+                                '4On4QsjS27mAhw0AB'
+                            );
+                            console.log('Auto-reply email sent successfully:', autoReplyResult);
+                        } catch (emailError) {
+                            console.error('Auto-reply email failed:', emailError);
+                            // Continue with success flow even if auto-reply fails
+                        }
                         
                         // Hide form and show success message
                         form.classList.add('hidden');
@@ -433,13 +455,17 @@
                         form.reset();
                         stakeholderTypes.forEach(t => t.classList.remove('selected'));
                         
+                        console.log('Form submission completed successfully');
                     } catch (error) {
-                        console.error('Error:', error);
+                        console.error('Error in form submission process:', error);
                         errorMessage.querySelector('p.text-sm').textContent = 
                             'There was an error submitting your information. Please try again later.';
                         errorMessage.classList.remove('hidden');
+                        errorMessage.classList.add('animated', 'fadeIn');
                     }
                 } else {
+                    console.log('Form validation failed');
+                    // Show error message
                     errorMessage.classList.remove('hidden');
                     errorMessage.classList.add('animated', 'fadeIn');
                 }
@@ -495,7 +521,19 @@
         }
     </script>
     
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
     <!-- Firebase configuration -->
     <script type="module" src="js/firebase-config.js"></script>
 </body>
 </html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDiAVN0o2fPLF2k4d557n6aB90xH3I51cl9%2BG0gjLd5Jrfv8kem6Cfp6C1PWJWA1pvPnFuvCXsi2FC706DCmDU3Iw0xcj%2F9LsOlbTZCTJ7uOIY4Izjd7E%2BM5Smyw%2FANb4JN9PJOVh9w9jKDxt2aDkJXbO87jHDTWHCtEgZWWztwUQW0ZAtQ1gyQYOasPqP3wIzcEHrJ%2BLt6qRX2gAUvYZ7EK1SUkoYmBxtnK5QxLhF4HIW%2B%2BcUHKUw9stPfUCJJW2wmmqbbG4S7PghCoScmofukQHb3X5vBCJO%2B6SXQeTUXTL%2Be6KWecMtZyosFliIRot%2F4FYgUTsN8dJngHjaAchxdggToEMCm8i10rjvEGyfCBybU4FwapRjQChURVzR9xDdlGX2VpeYd24qw4XlHyMI5K%2FneZISZVEEOGhJtHPrxvxwUmoXb%2Fv1GoUA77lJ1Peyz%2F923We1vJI5JNd7B26cndkAfYypsLkQWQFywM8A7%2F3j%2BUZcrfLRDTcZqPZyNFfrMy82cW6%2BFl0wbjmrRrbMAo%3D";
+        window.__genspark_locale = "en-US";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDiAVN0o2fPLF2k4d557n6aB90xH3I51cl9+G0gjLd5Jrfv8kem6Cfp6C1PWJWA1pvPnFuvCXsi2FC706DCmDU3Iw0xcj/9LsOlbTZCTJ7uOIY4Izjd7E+M5Smyw/ANb4JN9PJOVh9w9jKDxt2aDkJXbO87jHDTWHCtEgZWWztwUQW0ZAtQ1gyQYOasPqP3wIzcEHrJ+Lt6qRX2gAUvYZ7EK1SUkoYmBxtnK5QxLhF4HIW++cUHKUw9stPfUCJJW2wmmqbbG4S7PghCoScmofukQHb3X5vBCJO+6SXQeTUXTL+e6KWecMtZyosFliIRot/4FYgUTsN8dJngHjaAchxdggToEMCm8i10rjvEGyfCBybU4FwapRjQChURVzR9xDdlGX2VpeYd24qw4XlHyMI5K/neZISZVEEOGhJtHPrxvxwUmoXb/v1GoUA77lJ1Peyz/923We1vJI5JNd7B26cndkAfYypsLkQWQFywM8A7/3j+UZcrfLRDTcZqPZyNFfrMy82cW6+Fl0wbjmrRrbMAo=";
+    </script>
+    
+    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
+    
