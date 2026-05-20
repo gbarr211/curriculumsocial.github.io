@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Curriculum Social</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+    :root {
+        --primary-blue: #1a73e8;
+        --secondary-blue: #4285f4;
+        --primary-green: #34a853;
+        --secondary-green: #66bb6a;
+        --primary-purple: #9c27b0;
+        --secondary-purple: #ba68c8;
+        --light-blue: #e8f0fe;
+        --light-green: #e6f4ea;
+        --light-purple: #f3e5f5;
+    }
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 4px;
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-blue);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
+                    <a href="/" style="text-decoration: none; color: inherit;">
+                        <span style="color: var(--primary-green);">Curriculum</span>
+                        <span style="color: var(--primary-blue);">Social</span>
+                    </a>
+                </h1>
+            </div>
+            <!-- Desktop nav -->
+            <nav id="desktopNav" class="hidden md:flex items-center space-x-2"></nav>
+            <div class="flex items-center space-x-4">
+                <!-- Mobile hamburger -->
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile nav -->
+        <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
+            <div id="mobileNavLinks" class="px-4 py-2 space-y-2"></div>
+        </div>
+    </header>
+
+    <!-- Main login form -->
+    <main class="min-h-screen flex items-center justify-center py-12 px-4">
+        <div class="max-w-md w-full space-y-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-gray-900">Welcome back</h2>
+                <p class="mt-2 text-gray-600">Sign in to your account</p>
+            </div>
+            
+            <form id="loginForm" class="mt-8 space-y-6 bg-white p-8 rounded-lg shadow-md">
+                <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
+                
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" required 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" required 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <button type="submit" 
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Sign In
+                </button>
+            </form>
+            
+            <div class="text-center">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-gray-50 text-gray-500">Or continue with</span>
+                    </div>
+                </div>
+                
+                <button id="googleLogin" 
+                        class="mt-4 w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <i class="fab fa-google mr-2"></i>
+                    Sign in with Google
+                </button>
+            </div>
+            
+            <div class="text-center">
+                <p class="text-sm text-gray-600">
+                    Don't have an account? 
+                    <a href="signup.html" class="font-medium text-blue-600 hover:text-blue-500">Sign up</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Login functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const googleLoginBtn = document.getElementById('googleLogin');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.remove('hidden');
+            }
+            
+            function hideError() {
+                errorMessage.classList.add('hidden');
+            }
+            
+            // Email/Password Login
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideError();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                try {
+                    await window.firebaseAuth.signInWithEmailAndPassword(window.auth, email, password);
+                    window.location.href = 'dashboard.html';
+                } catch (error) {
+                    showError(error.message);
+                }
+            });
+            
+            // Google Login
+            googleLoginBtn.addEventListener('click', async () => {
+                hideError();
+                try {
+                    await window.firebaseAuth.signInWithPopup(window.auth, window.googleProvider);
+                    window.location.href = 'dashboard.html';
+                } catch (error) {
+                    showError(error.message);
+                }
+            });
+        });
+
+        // Navigation links config
+        const navLinks = [
+            { href: 'dashboard.html', label: 'Dashboard' },
+            { href: 'profile.html', label: 'Profile' },
+            { href: 'matching.html', label: 'Find Families' },
+            { href: 'activities.html', label: 'Activities' }
+        ];
+        const currentPage = window.location.pathname.split('/').pop();
+        const isDashboard = currentPage === 'dashboard.html';
+        // Build nav links, excluding current page and dashboard on dashboard.html
+        function buildNavLinks(container, isMobile) {
+            container.innerHTML = '';
+            navLinks.forEach(link => {
+                if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
+                const a = document.createElement('a');
+                a.href = link.href;
+                a.textContent = link.label;
+                a.className = isMobile
+                    ? 'block py-2 text-gray-700 hover:text-blue-600'
+                    : 'nav-link';
+                container.appendChild(a);
+            });
+            // Add logout link
+            const logout = document.createElement('a');
+            logout.href = '#';
+            logout.textContent = 'Logout';
+            logout.className = isMobile
+                ? 'block py-2 text-gray-700 hover:text-blue-600'
+                : 'nav-link';
+            logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
+            container.appendChild(logout);
+        }
+        buildNavLinks(document.getElementById('desktopNav'), false);
+        buildNavLinks(document.getElementById('mobileNavLinks'), true);
+        // Hamburger menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const isVisible = mobileMenu.style.display !== 'none';
+            mobileMenu.style.display = isVisible ? 'none' : 'block';
+            // Toggle hamburger icon
+            const icon = this.querySelector('i');
+            icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+        });
+        // Close mobile menu when clicking on a link
+        document.getElementById('mobileMenu').addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                this.style.display = 'none';
+                document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
+            }
+        });
+        // Auto-close mobile menu on resize
+        window.addEventListener('resize', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (window.innerWidth >= 768) {
+                if (mobileMenu) mobileMenu.style.display = 'none';
+                if (mobileMenuBtn) {
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) icon.className = 'fas fa-bars text-xl';
+                }
+            }
+        });
+        // Logout functionality (replace with Firebase logic if available)
+        async function handleLogout(e) {
+            e.preventDefault();
+            const result = await window.curriculumSocial.signOut();
+            if (result.success) {
+                window.location.href = 'index.html';
+            } else {
+                alert('Logout failed: ' + result.error);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('logoutNav').addEventListener('click', handleLogout);
+            document.getElementById('mobileLogoutNav').addEventListener('click', handleLogout);
+        });
+    </script>
+    
+    <!-- Firebase configuration -->
+    <script type="module" src="js/firebase-config.js"></script>
+</body>
+</html>

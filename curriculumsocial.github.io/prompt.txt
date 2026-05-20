@@ -1,0 +1,285 @@
+Curriculum Social Master Continuity Prompt (Complete)
+Project Overview & Vision
+Curriculum Social is a hybrid educational platform revolutionizing homeschooling through community connection. We combine AI-powered adaptive learning, human teaching expertise, and in-person social activities to create personalized education for globally mobile families (digital nomads, expatriates, international families).
+
+Domain: curriculumsocial.com (hosted on GitHub Pages) Repository: https://github.com/gbarr211/curriculumsocial.github.io
+
+Core Mission
+Transform education by making it:
+
+Affordable (70-80% cost reduction vs international schools)
+Flexible (supports diverse family situations and mobility)
+Community-driven (connects like-minded families locally)
+Standards-compliant (US, UK, Canadian, Thai educational requirements)
+Future-focused (emphasizes independence, critical thinking, and personal interests)
+Educational Philosophy
+Montessori-inspired approach emphasizing:
+
+Child-led learning and natural curiosity
+Practical life skills alongside academics
+Global perspective and cultural awareness
+Independence and self-direction
+Community collaboration and social learning
+Current Platform Status (MVP Complete)
+✅ Implemented Features:
+Authentication System: Firebase-based with email/password + Google social login
+User Management: Role-based access (Parents, Teachers, Venue Hosts)
+Profile System: Complete profile management with student profiles for parents
+Family Matching: Location-based discovery with educational philosophy filtering
+Activity Scheduling: Community event creation and booking system
+Responsive Design: Mobile-first approach, works on all devices
+🔧 Technical Stack:
+Frontend: HTML5, CSS3 (Tailwind), JavaScript (ES6+)
+Backend: Firebase (Authentication, Firestore, Storage)
+Database: Firestore (NoSQL, real-time)
+Hosting: GitHub Pages with custom domain (curriculumsocial.com)
+AI Integration: Ready for OpenAI GPT-4 integration (planned)
+📁 Current File Structure (GitHub Repository):
+Core Platform Files:
+index.html - Landing page with navigation and feature overview
+signup.html - User registration with role selection
+login.html - User authentication portal
+dashboard.html - Role-based dashboard (Parents/Teachers/Venue Hosts)
+profile.html - User profile management with student profiles
+matching.html - Family discovery and matching system
+activities.html - Activity creation and browsing
+Supporting Files:
+js/firebase-config.js - Firebase configuration and utility functions
+CNAME - Custom domain configuration
+parent.html - Parent information and resources
+teacher.html - Teacher information and resources
+investor.html - Investor information and pitch materials
+interest.html - Interest form for early access
+Legal/Agreement Files:
+f_agreement.html - Family membership agreement
+t_agreement.html - Teacher agreement
+v_agreement.html - Venue partnership agreement
+disclosure.html - Interest disclosure agreement
+safety.html - Safety policies and protocols
+protection.html - Business protection strategy
+Business Development Files:
+invest_terms.html - Investment terms sheet
+invest_analysis.html - Investment analysis
+samui.html - Koh Samui launch plan
+stormbreaker.html - Investor outreach materials
+venue.html - Venue partnership information
+lead_research.html - Lead research tools
+📍 Launch Market:
+Koh Samui, Thailand - Selected for:
+
+International demographic (5,000-7,000 expats/digital nomads)
+Education gap (international schools cost $15,000+/year)
+Digital infrastructure and tech-savvy population
+Compact geography enabling in-person meetups
+GitHub Workflow Preferences & Implementation Guidelines
+🔧 Greg's Preferred Development Workflow:
+Code Delivery Format:
+❌ NEVER create preview links or demo pages
+✅ ALWAYS provide complete, ready-to-paste code
+✅ Specify exact file location (e.g., "Replace entire contents of matching.html")
+✅ Include complete file paths when creating new files
+✅ Provide exact line numbers when making partial updates
+File Update Instructions:
+Complete File Replacement: Provide entire file contents with clear filename
+Partial Updates: Specify exact location with "Find this code:" and "Replace with:"
+New File Creation: Always specify complete path (e.g., js/new-feature.js)
+CSS/JavaScript: Include in appropriate sections, never as separate files unless necessary
+Communication Preferences:
+Implementation-ready: Code should work immediately after copy/paste
+Minimal manual work: Avoid requiring multiple file edits for single features
+Clear instructions: Step-by-step with exact locations
+Domain references: All links should use curriculumsocial.com (never placeholder domains)
+📋 File Modification Protocol:
+When updating existing files:
+State filename clearly (e.g., "Update dashboard.html")
+Provide complete file contents OR exact location of changes
+Ensure all internal links use curriculumsocial.com domain
+Maintain existing styling and structure unless specified otherwise
+When creating new files:
+Specify complete file path
+Include appropriate navigation links in existing files
+Add Firebase script tag: <script type="module" src="js/firebase-config.js"></script>
+Use established CSS design system and color variables
+Critical Integration Requirements:
+Firebase Integration: All new pages need Firebase auth check
+Navigation Consistency: Update navigation menus across relevant files
+Mobile Responsiveness: Ensure all new content works on mobile
+Domain Consistency: Use curriculumsocial.com for all internal links
+Financial Framework & Investment Stages
+💰 Current Status: Bootstrap/Pre-Seed
+Investment: $0 (using free Firebase tier)
+Monthly Costs: $0-25 (domain + basic hosting)
+Revenue: $0 (pre-launch)
+📊 Investment Stage Requirements:
+Stage 1: Local Validation ($25K-50K)
+Duration: 6-12 months
+Goal: 50-100 active families in Koh Samui
+Use: Marketing, basic AI integration, initial team
+Team: 2-3 people (Founder + Developer + Community Manager)
+Expected Revenue: $2K-5K/month by end
+Stage 2: Regional Expansion ($150K-300K)
+Duration: 12-18 months
+Goal: 500-1000 families across Thailand/SE Asia
+Use: Advanced AI features, mobile app, larger team
+Team: 6-8 people (Add: AI Engineer, Marketing Lead, Teacher Coordinator)
+Expected Revenue: $25K-50K/month by end
+Stage 3: International Scale ($1M-2M)
+Duration: 18-24 months
+Goal: 5,000+ families across multiple countries
+Use: Global expansion, advanced features, enterprise sales
+Team: 15-20 people (Full departments: Product, Engineering, Marketing, Operations)
+Expected Revenue: $200K-500K/month by end
+Workflow Preferences & Operational Guidelines
+👨‍💼 Founder Role (Greg):
+Primary: Visionary, strategy, high-level decisions
+Secondary: Community host, occasional teaching
+Minimal Involvement: Day-to-day operations, technical implementation
+Development Preference: Copy-paste ready code, minimal technical work
+🎯 Team Structure Philosophy:
+Lean operations with AI augmentation where possible
+Remote-first team (global talent access)
+Outcome-focused rather than hours-based
+Community-centric culture reflecting platform values
+⚡ Automation Priorities:
+Customer Support: AI chatbots for common queries
+Content Creation: AI-assisted curriculum development
+Marketing: Automated social media, email campaigns
+Operations: Automated billing, user onboarding
+Analytics: Automated reporting and insights
+Market Research & Competitive Intelligence
+🔍 Continuous Monitoring Required:
+Direct Competitors:
+Outschool: Online classes marketplace
+Khan Academy: Free online education
+IXL Learning: Adaptive learning platform
+Time4Learning: Homeschool curriculum provider
+Indirect Competitors:
+Traditional international schools
+Local tutoring services
+Educational apps and platforms
+Homeschool curriculum publishers
+Market Trends to Track:
+AI in Education: GPT integration, personalized learning
+Remote Work Impact: Increased digital nomad families
+Education Costs: Rising international school fees
+Regulatory Changes: Homeschooling laws by country
+Technology Adoption: VR/AR in education, mobile learning
+📈 Market Opportunity Indicators:
+Global homeschooling market: $15+ billion (growing 15% annually)
+Digital nomad population: 4.8 million (expected to reach 50 million by 2035)
+International school costs: $20K-40K/year per child
+Our target pricing: $3K-6K/year per child
+Curriculum & Standards Management
+📚 Standards Compliance Framework:
+US: Common Core, state standards
+UK: National Curriculum, GCSE/A-Level pathways
+Canada: Provincial curricula
+Thailand: Basic Education Core Curriculum
+International: IB, Cambridge curricula
+🔄 Continuous Updates Required:
+Standards Changes: Monitor official education department updates
+Best Practices: Research in child development, learning science
+Technology Integration: New educational tools and methods
+Global Trends: Skills needed for future workforce
+Cultural Sensitivity: Local customs and values integration
+🎯 Future-Focused Skills Emphasis:
+Critical Thinking: Problem-solving, analysis, evaluation
+Digital Literacy: Technology fluency, AI collaboration
+Communication: Multilingual, cross-cultural competency
+Entrepreneurship: Innovation, risk assessment, leadership
+Sustainability: Environmental awareness, social responsibility
+Emotional Intelligence: Self-awareness, empathy, social skills
+Critical Vulnerabilities & Risk Management
+⚠️ Financial Vulnerabilities:
+Cash Flow: Subscription model requires consistent user growth
+Market Risk: Dependent on expatriate population stability
+Competition: Well-funded competitors could replicate model
+Regulation: Changes in homeschooling laws could impact operations
+🛡️ Mitigation Strategies:
+Diversified Revenue: Multiple income streams (subscriptions, marketplace, premium services)
+Geographic Expansion: Reduce dependence on single market
+Strong Community: Network effects create competitive moat
+Regulatory Compliance: Proactive legal framework adherence
+🚨 Success Metrics to Monitor:
+User Growth: Monthly active families, retention rates
+Engagement: Platform usage, activity participation
+Financial: Monthly recurring revenue, customer acquisition cost
+Quality: User satisfaction, educational outcomes, safety incidents
+Firebase Configuration Details
+🔥 Current Firebase Setup:
+Project ID: cirriculum-social ⚠️ KNOWN ISSUE: "curriculum" spelled wrong (cirriculum)
+Authentication: Email/password + Google provider enabled
+Database: Firestore in test mode (nam5 region)
+Storage: Enabled for profile photos and documents
+Hosting: Using GitHub Pages instead of Firebase Hosting
+⚠️ Critical Future Migration Required:
+Firebase Project Misspelling: Current project ID cirriculum-social should be curriculum-social
+
+Migration Priority: Medium (after initial user validation) Complexity: High - requires new Firebase project + data migration Impact: Internal only (users never see project ID) Timing: Best performed during Stage 1 funding when resources allow proper migration
+
+When to migrate:
+
+After securing initial funding ($25K-50K range)
+Before scaling beyond 100 active users
+During a planned maintenance window
+When development resources are available for 1-2 week migration project
+Migration Requirements:
+
+Create new Firebase project with correct spelling
+Export/import all user data and profiles
+Update firebase-config.js with new project details
+Test all authentication and database functions
+Coordinate user communication about temporary downtime
+🔧 Firebase Collections Structure:
+users: User profiles with role-based access
+students: Student profiles linked to parents
+activities: Community activities and events
+venues: Verified locations for activities
+Immediate Next Steps (Priority Order)
+1. User Validation (Weeks 1-4)
+Create demo family profiles in Firebase
+Recruit 5-10 beta families in Koh Samui
+Conduct user testing sessions
+Gather feedback and iterate
+2. Content & Safety (Weeks 2-6)
+Develop initial curriculum modules
+Establish safety protocols for in-person activities
+Create teacher verification process
+Build content management system
+3. Community Building (Weeks 4-8)
+Launch marketing campaign in Koh Samui
+Host inaugural community events
+Establish partnerships with local venues
+Create referral program
+4. Fundraising Preparation (Weeks 6-10)
+Create investor pitch deck
+Develop financial projections
+Build demo video
+Prepare due diligence materials
+AI Agent Instructions
+When working on Curriculum Social:
+
+📋 Code Delivery Requirements:
+Never create preview links - Always provide complete, copy-paste ready code
+Specify exact file locations - Use repository file structure above
+Include complete file contents when updating existing files
+Use curriculumsocial.com domain for all internal links
+Maintain Firebase integration in all new pages
+Follow mobile-first responsive design principles
+🎯 Strategic Guidelines:
+Always reference this vision when making decisions
+Prioritize user experience and community building
+Consider financial constraints and lean operations
+Focus on MVP improvements before adding new features
+Research market changes and competitive landscape regularly
+Ensure curriculum relevance to future job market needs
+Maintain founder workflow preferences (minimal operational involvement)
+Emphasize automation and AI integration opportunities
+Consider international scalability in all decisions
+Keep safety and child protection as top priority
+🔧 Implementation Standards:
+File Updates: Provide complete file replacement with filename
+New Features: Include integration instructions for existing files
+CSS/JS: Use existing design system and Firebase configuration
+Testing: Ensure all code works with current Firebase setup
+Documentation: Include implementation steps when complex

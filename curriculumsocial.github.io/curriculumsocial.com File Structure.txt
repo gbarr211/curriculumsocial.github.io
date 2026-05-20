@@ -1,0 +1,35 @@
+
+curriculumsocial.com/
+├── index.html               # Main landing page
+├── assets/                  # Static assets directory
+│   ├── css/                 # Stylesheet files
+│   │   ├── main.css         # Main stylesheet
+│   │   └── components/      # Component-specific styles
+│   ├── js/                  # JavaScript files
+│   │   ├── main.js          # Main JavaScript file
+│   │   └── components/      # Component-specific scripts
+│   ├── images/              # Image files
+│   │   ├── logo/            # Logo variations
+│   │   └── icons/           # UI icons
+│   └── fonts/               # Custom fonts
+├── pages/                   # Individual pages
+│   ├── parents/             # Parent-focused pages
+│   │   └── index.html       # Main parents page
+│   ├── teachers/            # Teacher-focused pages
+│   │   └── index.html       # Main teachers page
+│   └── investors/           # Investor-focused pages
+│       └── index.html       # Main investors page
+├── forms/                   # Form pages and processing scripts
+│   ├── contact.html         # Contact form
+│   ├── interest.html        # Interest form
+│   └── process/             # Form processing scripts
+├── presentations/           # Interactive presentations
+│   ├── parents/             # Parent presentations
+│   ├── teachers/            # Teacher presentations
+│   └── investors/           # Investor presentations
+├── legal/                   # Legal documents
+│   ├── agreements/          # Contract templates
+│   └── policies/            # Policies and terms
+└── system/                  # System files (not publicly accessible)
+    ├── config/              # Configuration files
+    └── logs/                # System logs

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Social - Interest Disclosure Agreement</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://images.weserv.nl/?url=raw.githubusercontent.com/gbarr211/curriculumsocial.github.io/main/favicon.png&w=32&h=32&fit=cover">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --secondary-blue: #4285f4;
+            --primary-green: #34a853;
+            --secondary-green: #66bb6a;
+            --light-blue: #e8f0fe;
+            --light-green: #e6f4ea;
+        }
+        /* Hide navigation on mobile, show on desktop */
+        nav {
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            nav {
+                display: flex !important;
+            }
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a6e97, #0d8056);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin: 20px 0;
+        }
+        .timeline {
+            margin: 20px 0;
+        }
+        .timeline-item {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .timeline-month {
+            width: 120px;
+            font-weight: bold;
+            padding-right: 20px;
+            color: #1a6e97;
+        }
+        .timeline-content {
+            flex-grow: 1;
+            border-left: 2px solid #1a6e97;
+            padding-left: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-secondary {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-outline {
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            background-color: transparent;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-outline:hover {
+            background-color: var(--light-blue);
+        }
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 4px;
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-blue);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        .nav-link:hover {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        #mobileMenu {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
+                    <a href="/" style="text-decoration: none; color: inherit;">
+                        <span style="color: var(--primary-green);">Curriculum</span>
+                        <span style="color: var(--primary-blue);">Social</span>
+                    </a>
+                </h1>
+            </div>
+            <!-- Desktop nav -->
+            <nav id="desktopNav" class="flex items-center space-x-2"></nav>
+            <div class="flex items-center space-x-4">
+                <!-- Express Interest Button (desktop only, always visible) -->
+                <a href="interest.html" class="btn-secondary hidden md:inline-block">Express Interest</a>
+                <!-- Mobile hamburger -->
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile nav -->
+        <div id="mobileMenu" class="md:hidden bg-white shadow-lg" style="display: none;">
+            <div id="mobileNavLinks" class="px-4 py-2 space-y-2"></div>
+            <div class="px-4 py-2">
+                <a href="interest.html" class="btn-secondary w-full block text-center">Express Interest</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="header">
+        <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-white">
+                <a href="/" style="text-decoration: none; color: inherit;">Curriculum Social</a>
+            </h1>
+            <p class="text-sm">curriculumsocial.com</p>
+        </div>
+    </div>
+
+    <div class="content">
+        <h1 class="text-2xl text-center mb-6">Interest Disclosure Agreement</h1>
+        
+        <p class="mb-4">
+            This Interest Disclosure Agreement (the "Agreement") is entered into as of the date of signature below between Curriculum Social ("Company") and the undersigned individual or entity ("Recipient").
+        </p>
+
+        <h2>1. Purpose of Discussions</h2>
+        <p class="mb-4">
+            The purpose of this Agreement is to protect confidential information that may be disclosed during exploratory discussions and preliminary evaluations related to the Company's educational platform that combines AI-powered learning, human teaching, and community-based social learning ("Purpose").
+        </p>
+
+        <h2>2. Definition of Confidential Information</h2>
+        <p class="mb-4">
+            "Confidential Information" means any information disclosed by the Company to Recipient, either directly or indirectly, in writing, orally or by inspection of tangible objects, including without limitation: business plans, financial projections, technical specifications, educational methodologies, algorithms, matching systems, safety protocols, user interface designs, pricing structures, and other business information that is marked "confidential" or would reasonably be understood to be confidential given the nature of the information and circumstances of disclosure.
+        </p>
+
+        <h2>3. Permitted Use of Information</h2>
+        <p class="mb-4">
+            Recipient agrees to use the Confidential Information solely for the Purpose and not for any other purpose, including, without limitation, competing with the Company or developing similar services. Recipient shall hold all Confidential Information in strict confidence and shall not disclose it to any third party without prior written consent from the Company. Recipient may disclose Confidential Information only to those of its employees or advisors who need to know such information for the Purpose and who have agreed to maintain confidentiality.
+        </p>
+
+        <h2>4. Non-Solicitation</h2>
+        <p class="mb-4">
+            During the term of this Agreement and for a period of six (6) months thereafter, Recipient agrees not to solicit for employment or contract work any employee, contractor, partner, or affiliate of the Company with whom Recipient becomes acquainted through discussions related to the Purpose, without prior written consent from the Company.
+        </p>
+
+        <h2>5. Term & Termination</h2>
+        <p class="mb-4">
+            This Agreement shall remain in effect for six (6) months from the date of signature. The obligations of confidentiality and non-use shall survive any termination of this Agreement for a period of two (2) years from the date of termination.
+        </p>
+
+        <h2>6. No Obligation</h2>
+        <p class="mb-4">
+            Nothing in this Agreement obligates either party to proceed with any transaction or relationship. This Agreement does not create a partnership, joint venture, or agency relationship.
+        </p>
+
+        <h2>7. Return of Materials</h2>
+        <p class="mb-4">
+            Upon the Company's request, Recipient shall promptly return all tangible materials containing Confidential Information and destroy any copies, notes, or other documents containing Confidential Information.
+        </p>
+
+        <div class="signature-area">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <p><strong>For Curriculum Social:</strong></p>
+                    <br>
+                    <p>Signature: <span class="signature-line">&nbsp;</span></p>
+                    <p>Name: <span class="signature-line">&nbsp;</span></p>
+                    <p>Title: <span class="signature-line">&nbsp;</span></p>
+                    <p>Date: <span class="signature-line">&nbsp;</span></p>
+                </div>
+                <div>
+                    <p><strong>Recipient:</strong></p>
+                    <br>
+                    <p>Signature: <span class="signature-line">&nbsp;</span></p>
+                    <p>Name: <span class="signature-line">&nbsp;</span></p>
+                    <p>Organization: <span class="signature-line">&nbsp;</span></p>
+                    <p>Date: <span class="signature-line">&nbsp;</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 Curriculum Social | www.curriculumsocial.com | greg@curriculumsocial.com</p>
+    </div>
+
+    <script>
+        // Navigation links config
+        const navLinks = [
+            { href: 'dashboard.html', label: 'Dashboard' },
+            { href: 'profile.html', label: 'Profile' },
+            { href: 'matching.html', label: 'Find Families' },
+            { href: 'activities.html', label: 'Activities' }
+        ];
+        const currentPage = window.location.pathname.split('/').pop();
+        const isDashboard = currentPage === 'dashboard.html';
+
+        // Set initial mobile menu state
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu) {
+                mobileMenu.style.display = 'none';
+            }
+        });
+
+        // Build nav links based on auth state
+        function buildNavLinks(container, isMobile) {
+            container.innerHTML = '';
+            
+            // Check if user is authenticated
+            const isAuthenticated = window.auth.currentUser !== null;
+            
+            if (isAuthenticated) {
+                // Show authenticated navigation
+                navLinks.forEach(link => {
+                    if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
+                    const a = document.createElement('a');
+                    a.href = link.href;
+                    a.textContent = link.label;
+                    a.className = isMobile
+                        ? 'block py-2 text-gray-700 hover:text-blue-600'
+                        : 'nav-link';
+                    container.appendChild(a);
+                });
+                
+                // Add logout link
+                const logout = document.createElement('a');
+                logout.href = '#';
+                logout.textContent = 'Logout';
+                logout.className = isMobile
+                    ? 'block py-2 text-gray-700 hover:text-blue-600'
+                    : 'nav-link';
+                logout.id = isMobile ? 'mobileLogoutNav' : 'logoutNav';
+                container.appendChild(logout);
+            } else {
+                // Show unauthenticated navigation
+                const login = document.createElement('a');
+                login.href = 'login.html';
+                login.textContent = 'Login';
+                login.className = isMobile
+                    ? 'block py-2 text-gray-700 hover:text-blue-600'
+                    : 'nav-link';
+                container.appendChild(login);
+                
+                const signup = document.createElement('a');
+                signup.href = 'signup.html';
+                signup.textContent = 'Sign Up';
+                signup.className = isMobile
+                    ? 'block py-2 text-gray-700 hover:text-blue-600'
+                    : 'btn-primary';
+                container.appendChild(signup);
+            }
+        }
+
+        // Initialize navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Build initial navigation
+            buildNavLinks(document.getElementById('desktopNav'), false);
+            buildNavLinks(document.getElementById('mobileNavLinks'), true);
+            
+            // Add auth state listener to update navigation
+            window.auth.onAuthStateChanged((user) => {
+                buildNavLinks(document.getElementById('desktopNav'), false);
+                buildNavLinks(document.getElementById('mobileNavLinks'), true);
+            });
+            
+            // Hamburger menu toggle
+            document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const isVisible = mobileMenu.style.display !== 'none';
+                mobileMenu.style.display = isVisible ? 'none' : 'block';
+                // Toggle hamburger icon
+                const icon = this.querySelector('i');
+                icon.className = isVisible ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+            });
+            
+            // Close mobile menu when clicking on a link
+            document.getElementById('mobileMenu').addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    this.style.display = 'none';
+                    document.getElementById('mobileMenuBtn').querySelector('i').className = 'fas fa-bars text-xl';
+                }
+            });
+            
+            // Auto-close mobile menu on resize
+            window.addEventListener('resize', function() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                if (window.innerWidth >= 768) {
+                    if (mobileMenu) mobileMenu.style.display = 'none';
+                    if (mobileMenuBtn) {
+                        const icon = mobileMenuBtn.querySelector('i');
+                        if (icon) icon.className = 'fas fa-bars text-xl';
+                    }
+                }
+            });
+            
+            // Logout functionality
+            async function handleLogout(e) {
+                e.preventDefault();
+                try {
+                    await window.curriculumSocial.signOut();
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error('Error signing out:', error);
+                }
+            }
+            
+            // Add logout handlers
+            document.addEventListener('click', function(e) {
+                if (e.target.id === 'logoutNav' || e.target.id === 'mobileLogoutNav') {
+                    handleLogout(e);
+                }
+            });
+        });
+    </script>
+    
+    <script type="module" src="js/firebase-config.js"></script>
+</body>
+</html>
