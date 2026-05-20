@@ -263,6 +263,7 @@
       const isDashboard = currentPage === 'dashboard.html';
       // Build nav links, excluding current page and dashboard on dashboard.html
       function buildNavLinks(container, isMobile) {
+        if (!container) return;
         container.innerHTML = '';
         navLinks.forEach(link => {
           if ((isDashboard && link.href === 'dashboard.html') || link.href === currentPage) return;
@@ -317,6 +318,10 @@
       // Logout functionality (replace with Firebase logic if available)
       async function handleLogout(e) {
         e.preventDefault();
+        if (window.isDemoMode) {
+          window.location.href = 'signup.html';
+          return;
+        }
         const result = await window.curriculumSocial.signOut();
         if (result.success) {
           window.location.href = 'index.html';
@@ -325,8 +330,14 @@
         }
       }
       document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('logoutNav').addEventListener('click', handleLogout);
-        document.getElementById('mobileLogoutNav').addEventListener('click', handleLogout);
+        const logoutNav = document.getElementById('logoutNav');
+        const mobileLogoutNav = document.getElementById('mobileLogoutNav');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+        if (logoutNav) logoutNav.addEventListener('click', handleLogout);
+        if (mobileLogoutNav) mobileLogoutNav.addEventListener('click', handleLogout);
+        if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+        if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
       });
     </script>
 
@@ -527,6 +538,13 @@
             document.addEventListener('DOMContentLoaded', function() {
                 let currentUser = null;
                 let currentStudentId = null;
+                document.getElementById('profileAvatar').addEventListener('click', (e) => {
+                    if (window.isDemoMode) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        window.curriculumSocialDemo.showConversionPrompt('upload a profile photo');
+                    }
+                }, true);
                 
                 // Check authentication
                 window.firebaseAuth.onAuthStateChanged(window.auth, async (user) => {
@@ -534,12 +552,22 @@
                         currentUser = user;
                         await loadProfile();
                     } else {
-                        window.location.href = 'login.html';
+                        currentUser = window.curriculumSocialDemo.activate();
+                        await loadProfile();
                     }
                 });
                 
                 async function loadProfile() {
                     try {
+                        if (window.isDemoMode) {
+                            displayProfile(window.curriculumSocialDemo.demoProfile);
+                            document.getElementById('studentsSection').style.display = 'block';
+                            displayStudents(window.curriculumSocialDemo.demoStudents);
+                            document.getElementById('loadingState').style.display = 'none';
+                            document.getElementById('profileContent').style.display = 'block';
+                            return;
+                        }
+
                         const profileResult = await window.curriculumSocial.getUserProfile(currentUser.uid);
                         
                         if (profileResult.success) {
@@ -562,6 +590,29 @@
                 function displayProfile(userData) {
                     document.getElementById('profileName').textContent = userData.displayName || 'Your Name';
                     document.getElementById('profileRole').textContent = userData.role || 'Member';
+                    const userName = document.getElementById('userName');
+                    const userRole = document.getElementById('userRole');
+                    const userInfo = document.getElementById('userInfo');
+                    const logoutBtn = document.getElementById('logoutBtn');
+                    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+                    if (userName) userName.textContent = userData.displayName || 'Demo';
+                    if (userRole) {
+                        const role = userData.role || 'parent';
+                        userRole.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+                        userRole.className = `role-badge role-${role}`;
+                    }
+                    if (userInfo) userInfo.classList.remove('hidden');
+                    if (logoutBtn) {
+                        logoutBtn.classList.remove('hidden');
+                        if (window.isDemoMode) {
+                            logoutBtn.textContent = 'Sign Up';
+                            logoutBtn.onclick = () => window.location.href = 'signup.html';
+                        }
+                    }
+                    if (mobileLogoutBtn && window.isDemoMode) {
+                        mobileLogoutBtn.textContent = 'Sign Up';
+                        mobileLogoutBtn.onclick = () => window.location.href = 'signup.html';
+                    }
                     
                     // Update form fields
                     document.getElementById('displayName').value = userData.displayName || '';
@@ -633,6 +684,7 @@
                 
                 // Event listeners
                 document.getElementById('editModeBtn').addEventListener('click', () => {
+                    if (!window.requireRealAccount('edit your profile')) return;
                     document.getElementById('profileForm').style.display = 'block';
                     document.getElementById('editModeBtn').textContent = 'View Mode';
                 });
@@ -644,6 +696,7 @@
                 
                 document.getElementById('profileUpdateForm').addEventListener('submit', async (e) => {
                     e.preventDefault();
+                    if (!window.requireRealAccount('save profile changes')) return;
                     
                     const philosophies = Array.from(document.querySelectorAll('input[name="philosophy"]:checked'))
                         .map(cb => cb.value);
@@ -669,6 +722,7 @@
                 
                 // Student management
                 document.getElementById('addStudentBtn').addEventListener('click', () => {
+                    if (!window.requireRealAccount('add a child')) return;
                     currentStudentId = null;
                     document.getElementById('studentModalTitle').textContent = 'Add Child';
                     document.getElementById('studentForm').reset();
@@ -681,6 +735,7 @@
                 
                 document.getElementById('studentForm').addEventListener('submit', async (e) => {
                     e.preventDefault();
+                    if (!window.requireRealAccount('save a child profile')) return;
                     
                     const interests = Array.from(document.querySelectorAll('input[name="interests"]:checked'))
                         .map(cb => cb.value);
@@ -701,6 +756,10 @@
                 
                 // Photo upload
                 document.getElementById('photoUpload').addEventListener('change', async (e) => {
+                    if (!window.requireRealAccount('upload a profile photo')) {
+                        e.target.value = '';
+                        return;
+                    }
                     const file = e.target.files[0];
                     if (file) {
                         try {
@@ -726,10 +785,12 @@
             
             // Global functions
             window.editStudent = function(studentId) {
+                if (!window.requireRealAccount('edit a child profile')) return;
                 alert('Edit student functionality coming soon!');
             };
             
             window.deleteStudent = function(studentId) {
+                if (!window.requireRealAccount('delete a child profile')) return;
                 if (confirm('Are you sure you want to remove this child?')) {
                     alert('Delete student functionality coming soon!');
                 }

@@ -616,8 +616,13 @@
                         document.getElementById('loadingState').classList.add('hidden');
                         document.getElementById('mainContent').classList.remove('hidden');
                     } else {
-                        // Redirect to login if not authenticated
-                        window.location.href = 'https://curriculumsocial.com/login.html';
+                        currentUser = window.curriculumSocialDemo.activate();
+                        currentUserData = window.curriculumSocialDemo.demoProfile;
+                        updateUserInterface();
+                        loadFamilies();
+
+                        document.getElementById('loadingState').classList.add('hidden');
+                        document.getElementById('mainContent').classList.remove('hidden');
                     }
                 });
             } else {
@@ -646,6 +651,15 @@
                 
                 userInfo.classList.remove('hidden');
                 logoutBtn.classList.remove('hidden');
+                if (window.isDemoMode) {
+                    logoutBtn.textContent = 'Sign Up';
+                    logoutBtn.onclick = () => window.location.href = 'signup.html';
+                    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+                    if (mobileLogoutBtn) {
+                        mobileLogoutBtn.textContent = 'Sign Up';
+                        mobileLogoutBtn.onclick = () => window.location.href = 'signup.html';
+                    }
+                }
             }
         }
 
@@ -1133,6 +1147,8 @@
         }
 
         function sendConnectionRequest(familyId) {
+            if (!window.requireRealAccount('connect with a family')) return;
+
             const family = allFamilies.find(f => f.id === familyId);
             if (!family) return;
 
@@ -1149,6 +1165,8 @@
         }
 
         function messageFamily(familyId) {
+            if (!window.requireRealAccount('message a family')) return;
+
             const family = allFamilies.find(f => f.id === familyId);
             if (!family) return;
             
@@ -1156,6 +1174,10 @@
         }
 
         function handleLogout() {
+            if (window.isDemoMode) {
+                window.location.href = 'signup.html';
+                return;
+            }
             if (window.auth) {
                 window.auth.signOut().then(() => {
                     window.location.href = 'https://curriculumsocial.com/login.html';

@@ -769,8 +769,13 @@
                         document.getElementById('loadingState').classList.add('hidden');
                         document.getElementById('mainContent').classList.remove('hidden');
                     } else {
-                        // Redirect to login if not authenticated
-                        window.location.href = 'https://curriculumsocial.com/login.html';
+                        currentUser = window.curriculumSocialDemo.activate();
+                        currentUserData = window.curriculumSocialDemo.demoProfile;
+                        updateUserInterface();
+                        loadDemoActivities();
+
+                        document.getElementById('loadingState').classList.add('hidden');
+                        document.getElementById('mainContent').classList.remove('hidden');
                     }
                 });
             } else {
@@ -799,6 +804,15 @@
                 
                 userInfo.classList.remove('hidden');
                 logoutBtn.classList.remove('hidden');
+                if (window.isDemoMode) {
+                    logoutBtn.textContent = 'Sign Up';
+                    logoutBtn.onclick = () => window.location.href = 'signup.html';
+                    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+                    if (mobileLogoutBtn) {
+                        mobileLogoutBtn.textContent = 'Sign Up';
+                        mobileLogoutBtn.onclick = () => window.location.href = 'signup.html';
+                    }
+                }
             }
         }
 
@@ -1100,10 +1114,8 @@
         }
 
         function openCreateModal() {
-            if (!currentUser) {
-                alert('Please log in to create activities.');
-                return;
-            }
+            if (!window.requireRealAccount('create an activity')) return;
+
             document.getElementById('createActivityModal').classList.remove('hidden');
         }
 
@@ -1132,6 +1144,8 @@
         }
 
         function addCostItem() {
+            if (!window.requireRealAccount('add activity costs')) return;
+
             const costItems = document.getElementById('costItems');
             const itemIndex = costItems.children.length;
             
@@ -1156,10 +1170,7 @@
         async function handleCreateActivity(e) {
             e.preventDefault();
             
-            if (!currentUser) {
-                alert('Please log in to create activities.');
-                return;
-            }
+            if (!window.requireRealAccount('create an activity')) return;
             
             const formData = new FormData(e.target);
             
@@ -1314,10 +1325,7 @@
         }
 
         function joinActivity(activityId) {
-            if (!currentUser) {
-                alert('Please log in to join activities.');
-                return;
-            }
+            if (!window.requireRealAccount('join an activity')) return;
             
             const activity = allActivities.find(a => a.id === activityId);
             if (!activity) return;
@@ -1356,7 +1364,7 @@
         }
 
         function leaveActivity(activityId) {
-            if (!currentUser) return;
+            if (!window.requireRealAccount('leave an activity')) return;
             
             const activity = allActivities.find(a => a.id === activityId);
             if (!activity) return;
@@ -1382,6 +1390,10 @@
         }
 
         async function handleLogout() {
+            if (window.isDemoMode) {
+                window.location.href = 'signup.html';
+                return;
+            }
             try {
                 if (window.curriculumSocial) {
                     await window.curriculumSocial.signOut();

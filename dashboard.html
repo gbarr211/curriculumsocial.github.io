@@ -504,9 +504,11 @@
                         document.getElementById('dashboardContent').classList.remove('hidden');
                     }
                 } else {
-                    // User is not logged in, redirect to login
-                    console.log('User not authenticated, redirecting to login');
-                    window.location.href = 'https://curriculumsocial.com/login.html';
+                    console.log('User not authenticated, loading demo dashboard');
+                    currentUser = window.curriculumSocialDemo.activate();
+                    currentUserData = window.curriculumSocialDemo.demoProfile;
+                    updateUserInterface();
+                    document.getElementById('dashboardContent').classList.remove('hidden');
                 }
             });
         }
@@ -529,6 +531,15 @@
                 userRole.className = `role-badge role-${role}`;
                 userInfo.classList.remove('hidden');
                 logoutBtn.classList.remove('hidden');
+                if (window.isDemoMode) {
+                    logoutBtn.textContent = 'Sign Up';
+                    logoutBtn.onclick = () => window.location.href = 'signup.html';
+                    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+                    if (mobileLogoutBtn) {
+                        mobileLogoutBtn.textContent = 'Sign Up';
+                        mobileLogoutBtn.onclick = () => window.location.href = 'signup.html';
+                    }
+                }
     
                 // Update welcome section
                 welcomeName.textContent = displayName.split(' ')[0];
@@ -572,6 +583,16 @@
         }
     
         async function loadUserStats() {
+            if (window.isDemoMode) {
+                const demoStats = { connections: 3, activities: 6, learningHours: 24, achievements: 4 };
+                document.getElementById('statConnections').textContent = demoStats.connections;
+                document.getElementById('statActivities').textContent = demoStats.activities;
+                document.getElementById('statLearning').textContent = demoStats.learningHours;
+                document.getElementById('statAchievements').textContent = demoStats.achievements;
+                makeStatsClickable(demoStats.connections, demoStats.activities, demoStats.learningHours, demoStats.achievements);
+                return;
+            }
+
             try {
                 // Get real stats from Firebase
                 const userId = currentUser.uid;
@@ -748,9 +769,9 @@
             if (role === 'parent') {
                 actions = [
                     { icon: 'fas fa-users', text: 'Find Families', link: 'https://curriculumsocial.com/matching.html' },
-                    { icon: 'fas fa-calendar-plus', text: 'Create Activity', link: 'https://curriculumsocial.com/activities.html' },
-                    { icon: 'fas fa-user-plus', text: 'Add Student', link: 'https://curriculumsocial.com/profile.html' },
-                    { icon: 'fas fa-comments', text: 'Messages', link: '#' }
+                    { icon: 'fas fa-calendar-plus', text: 'Create Activity', link: 'https://curriculumsocial.com/activities.html', action: 'create an activity' },
+                    { icon: 'fas fa-user-plus', text: 'Add Student', link: 'https://curriculumsocial.com/profile.html', action: 'add a student' },
+                    { icon: 'fas fa-comments', text: 'Messages', link: '#', action: 'send messages' }
                 ];
             } else if (role === 'teacher') {
                 actions = [
@@ -767,9 +788,9 @@
                     { icon: 'fas fa-trophy', text: 'Achievements', link: '#' }
                 ];
             }
-    
+
             quickActions.innerHTML = actions.map(action => `
-                <div class="quick-action" onclick="window.location.href='${action.link}'">
+                <div class="quick-action" onclick="${action.action ? `if (window.isDemoMode && !window.requireRealAccount('${action.action}')) return;` : ''} window.location.href='${action.link}'">
                     <i class="${action.icon} text-2xl text-blue-500 mb-2"></i>
                     <p class="font-medium">${action.text}</p>
                 </div>
@@ -778,6 +799,19 @@
     
         async function loadStudentsList() {
             const studentsList = document.getElementById('studentsList');
+
+            if (window.isDemoMode) {
+                studentsList.innerHTML = window.curriculumSocialDemo.demoStudents.map(student => `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <h3 class="font-semibold">${student.name}</h3>
+                            <p class="text-sm text-gray-600">Age ${student.age} - ${student.gradeLevel}</p>
+                        </div>
+                        <button class="btn-outline" onclick="window.location.href='https://curriculumsocial.com/profile.html'">View</button>
+                    </div>
+                `).join('');
+                return;
+            }
             
             try {
                 // Get students from Firebase
@@ -826,6 +860,29 @@
     
         async function loadRecentActivities() {
             const recentActivities = document.getElementById('recentActivities');
+
+            if (window.isDemoMode) {
+                recentActivities.innerHTML = window.curriculumSocialDemo.demoActivities.map(activity => `
+                    <div class="activity-card">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-lg">${activity.title}</h3>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    <i class="fas fa-clock mr-1"></i> ${activity.date}
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    <i class="fas fa-map-marker-alt mr-1"></i> ${activity.location}
+                                </p>
+                                <p class="text-sm text-gray-700 mt-2">${activity.description}</p>
+                            </div>
+                            <div class="ml-4">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Sample</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                return;
+            }
             
             try {
                 // Get recent activities from Firebase
@@ -890,12 +947,16 @@
         function loadUpcomingActivities() {
             const upcomingActivities = document.getElementById('upcomingActivities');
             
-            // Demo upcoming activities - replace with Firebase query
-            const activities = [
-                { title: 'Beach Cleanup & Science', date: 'Saturday 9:00 AM' },
-                { title: 'Coding for Kids', date: 'Monday 3:00 PM' },
-                { title: 'Thai Language Circle', date: 'Wednesday 10:00 AM' }
-            ];
+            const activities = window.isDemoMode
+                ? window.curriculumSocialDemo.demoActivities.map(activity => ({
+                    title: activity.title,
+                    date: `${activity.location} - ${activity.date}`
+                }))
+                : [
+                    { title: 'Beach Cleanup & Science', date: 'Saturday 9:00 AM' },
+                    { title: 'Coding for Kids', date: 'Monday 3:00 PM' },
+                    { title: 'Thai Language Circle', date: 'Wednesday 10:00 AM' }
+                ];
     
             upcomingActivities.innerHTML = activities.map(activity => `
                 <div class="text-sm">
@@ -910,6 +971,10 @@
         document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
     
         async function logout() {
+            if (window.isDemoMode) {
+                window.location.href = 'signup.html';
+                return;
+            }
             try {
                 await window.curriculumSocial.signOut();
                 window.location.href = 'https://curriculumsocial.com/';
