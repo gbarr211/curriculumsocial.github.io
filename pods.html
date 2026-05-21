@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Pods - Curriculum Social</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="https://images.weserv.nl/?url=raw.githubusercontent.com/gbarr211/curriculumsocial.github.io/main/favicon.png&w=32&h=32&fit=cover">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <script type="module" src="js/firebase-config.js"></script>
+    <script src="js/platform-model.js"></script>
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --secondary-blue: #4285f4;
+            --primary-green: #34a853;
+            --secondary-green: #66bb6a;
+            --primary-purple: #9c27b0;
+            --light-blue: #e8f0fe;
+            --light-green: #e6f4ea;
+            --light-purple: #f3e5f5;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: #333;
+            background-color: #f8fafc;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            background-color: transparent;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--light-blue);
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 4px;
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-blue);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        .nav-link.active {
+            color: var(--primary-blue);
+            background-color: var(--light-blue);
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .pod-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .pod-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .visibility-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--light-green);
+            color: var(--primary-green);
+        }
+
+        .visibility-private {
+            background: var(--light-purple);
+            color: var(--primary-purple);
+        }
+
+        .feature-badge {
+            display: inline-block;
+            background: #f3f4f6;
+            color: #4b5563;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin: 2px;
+            text-transform: capitalize;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+        }
+    </style>
+</head>
+<body>
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold">
+                    <a href="https://curriculumsocial.com/" style="text-decoration: none; color: inherit;">
+                        <span style="color: var(--primary-green);">Curriculum</span>
+                        <span style="color: var(--primary-blue);">Social</span>
+                    </a>
+                </h1>
+            </div>
+            <nav class="hidden md:flex items-center space-x-2">
+                <a href="https://curriculumsocial.com/dashboard.html" class="nav-link">Dashboard</a>
+                <a href="https://curriculumsocial.com/profile.html" class="nav-link">Profile</a>
+                <a href="https://curriculumsocial.com/matching.html" class="nav-link">Find Families</a>
+                <a href="https://curriculumsocial.com/activities.html" class="nav-link">Activities</a>
+                <a href="https://curriculumsocial.com/pods.html" class="nav-link active">Learning Pods</a>
+                <a href="https://curriculumsocial.com/portfolio.html" class="nav-link">School-Ready Portfolio</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a href="interest.html" class="btn-secondary">Express Interest</a>
+                <div id="userInfo" class="hidden md:inline-block">
+                    <span id="userName" class="font-medium"></span>
+                    <span id="userRole" class="role-badge"></span>
+                </div>
+                <button id="logoutBtn" class="btn-outline" style="display:none;">Logout</button>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700 ml-2">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobileMenu" class="md:hidden bg-white shadow-lg hidden">
+        <div class="px-4 py-2 space-y-2">
+            <a href="https://curriculumsocial.com/dashboard.html" class="block py-2 text-gray-700 hover:text-blue-600">Dashboard</a>
+            <a href="https://curriculumsocial.com/profile.html" class="block py-2 text-gray-700 hover:text-blue-600">Profile</a>
+            <a href="https://curriculumsocial.com/matching.html" class="block py-2 text-gray-700 hover:text-blue-600">Find Families</a>
+            <a href="https://curriculumsocial.com/activities.html" class="block py-2 text-gray-700 hover:text-blue-600">Activities</a>
+            <a href="https://curriculumsocial.com/pods.html" class="block py-2 text-blue-600 font-semibold">Learning Pods</a>
+            <a href="https://curriculumsocial.com/portfolio.html" class="block py-2 text-gray-700 hover:text-blue-600">School-Ready Portfolio</a>
+            <div class="pt-2 border-t border-gray-200">
+                <a href="interest.html" class="btn-secondary w-full block text-center mb-2">Express Interest</a>
+                <button id="mobileLogoutBtn" class="btn-outline block w-full text-center">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <main id="mainContent" class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold mb-4" style="color: var(--primary-blue);">Learning Pods</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto mb-6">
+                Create or join flexible learning groups for families, teachers, and children.
+            </p>
+            <button id="createPodBtn" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i>Create Pod
+            </button>
+        </div>
+
+        <div class="card p-6 mb-8">
+            <h3 class="text-lg font-semibold mb-4">Find Learning Pods</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label for="podTypeFilter">Pod Type</label>
+                    <select id="podTypeFilter">
+                        <option value="">All Pod Types</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="visibilityFilter">Visibility</label>
+                    <select id="visibilityFilter">
+                        <option value="">Public and Private</option>
+                        <option value="public">Public</option>
+                        <option value="private">Private</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex gap-4 mt-4">
+                <button id="applyFiltersBtn" class="btn-primary">Apply Filters</button>
+                <button id="clearFiltersBtn" class="btn-outline">Clear All</button>
+            </div>
+        </div>
+
+        <div id="podsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+
+        <div id="noPods" class="text-center py-12 hidden">
+            <i class="fas fa-users text-6xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">No Pods Found</h3>
+            <p class="text-gray-500 mb-4">Try adjusting your filters or browse all learning pods.</p>
+            <button id="resetPodsBtn" class="btn-primary">Show All Pods</button>
+        </div>
+    </main>
+
+    <script>
+        let currentUser = null;
+        let currentUserData = null;
+        let allPods = [];
+        let filteredPods = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupMobileMenu();
+            setupFilters();
+            populatePodTypeFilter();
+            initializeAuth();
+        });
+
+        function setupMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        }
+
+        function setupFilters() {
+            document.getElementById('applyFiltersBtn').addEventListener('click', applyFilters);
+            document.getElementById('clearFiltersBtn').addEventListener('click', clearFilters);
+            document.getElementById('resetPodsBtn').addEventListener('click', clearFilters);
+            document.getElementById('createPodBtn').addEventListener('click', function() {
+                handlePlannedAction('create a learning pod');
+            });
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            document.getElementById('mobileLogoutBtn').addEventListener('click', handleLogout);
+        }
+
+        function populatePodTypeFilter() {
+            const typeFilter = document.getElementById('podTypeFilter');
+            window.CurriculumSocialModel.POD_TYPES.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type.id;
+                option.textContent = type.label;
+                typeFilter.appendChild(option);
+            });
+        }
+
+        function initializeAuth() {
+            if (window.firebaseAuth && window.auth) {
+                window.firebaseAuth.onAuthStateChanged(window.auth, (user) => {
+                    if (user) {
+                        window.isDemoMode = false;
+                        currentUser = user;
+                        currentUserData = {
+                            uid: user.uid,
+                            email: user.email,
+                            displayName: user.displayName || user.email.split('@')[0],
+                            role: 'parent'
+                        };
+                    } else {
+                        currentUser = window.curriculumSocialDemo.activate();
+                        currentUserData = window.curriculumSocialDemo.demoProfile;
+                    }
+                    updateUserInterface();
+                    loadPods();
+                });
+            } else {
+                currentUser = window.curriculumSocialDemo ? window.curriculumSocialDemo.activate() : null;
+                currentUserData = window.curriculumSocialDemo ? window.curriculumSocialDemo.demoProfile : { displayName: 'Demo', role: 'parent' };
+                updateUserInterface();
+                loadPods();
+            }
+        }
+
+        function updateUserInterface() {
+            const displayName = currentUserData?.displayName || 'Demo';
+            const role = currentUserData?.role || 'parent';
+            document.getElementById('userName').textContent = displayName;
+            document.getElementById('userRole').textContent = role.charAt(0).toUpperCase() + role.slice(1);
+            document.getElementById('userInfo').classList.remove('hidden');
+
+            const logoutBtn = document.getElementById('logoutBtn');
+            const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+            logoutBtn.style.display = 'inline-block';
+
+            if (window.isDemoMode) {
+                logoutBtn.textContent = 'Sign Up';
+                mobileLogoutBtn.textContent = 'Sign Up';
+            } else {
+                logoutBtn.textContent = 'Logout';
+                mobileLogoutBtn.textContent = 'Logout';
+            }
+        }
+
+        function loadPods() {
+            allPods = [...window.CurriculumSocialModel.DEMO_DATA.pods];
+            filteredPods = [...allPods];
+            displayPods(filteredPods);
+        }
+
+        function displayPods(pods) {
+            const container = document.getElementById('podsList');
+            const noPods = document.getElementById('noPods');
+
+            if (pods.length === 0) {
+                container.innerHTML = '';
+                noPods.classList.remove('hidden');
+                return;
+            }
+
+            noPods.classList.add('hidden');
+            container.innerHTML = pods.map(pod => createPodCard(pod)).join('');
+        }
+
+        function createPodCard(pod) {
+            const typeLabel = getPodTypeLabel(pod.type);
+            const visibilityClass = pod.visibility === 'private' ? 'visibility-badge visibility-private' : 'visibility-badge';
+            const features = pod.features.map(feature => `<span class="feature-badge">${feature.replace(/-/g, ' ')}</span>`).join('');
+
+            return `
+                <div class="pod-card">
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="type-badge">${typeLabel}</span>
+                        <span class="${visibilityClass}">${pod.visibility}</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--primary-blue);">${pod.title}</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600 mb-4">
+                        <div><i class="fas fa-child mr-2"></i>${pod.ageRange}</div>
+                        <div><i class="fas fa-map-marker-alt mr-2"></i>${pod.location}</div>
+                    </div>
+                    <p class="text-gray-700 mb-4">${pod.description}</p>
+                    <div class="mb-4">
+                        <div class="text-sm font-semibold mb-2">Enabled Features</div>
+                        <div>${features}</div>
+                    </div>
+                    <button class="btn-primary w-full" onclick="handlePlannedAction('join or manage this learning pod')">
+                        View Pod
+                    </button>
+                </div>
+            `;
+        }
+
+        function getPodTypeLabel(typeId) {
+            const type = window.CurriculumSocialModel.POD_TYPES.find(item => item.id === typeId);
+            return type ? type.label : typeId.replace(/-/g, ' ');
+        }
+
+        function applyFilters() {
+            const type = document.getElementById('podTypeFilter').value;
+            const visibility = document.getElementById('visibilityFilter').value;
+
+            filteredPods = allPods.filter(pod => {
+                if (type && pod.type !== type) return false;
+                if (visibility && pod.visibility !== visibility) return false;
+                return true;
+            });
+
+            displayPods(filteredPods);
+        }
+
+        function clearFilters() {
+            document.getElementById('podTypeFilter').value = '';
+            document.getElementById('visibilityFilter').value = '';
+            filteredPods = [...allPods];
+            displayPods(filteredPods);
+        }
+
+        function handlePlannedAction(actionLabel) {
+            if (window.requireRealAccount && !window.requireRealAccount(actionLabel)) return;
+            if (window.isDemoMode) {
+                alert('Create an account to use this feature.');
+                return;
+            }
+            alert('Learning pod actions are planned for a future release.');
+        }
+
+        async function handleLogout() {
+            if (window.isDemoMode) {
+                window.location.href = 'signup.html';
+                return;
+            }
+
+            if (window.curriculumSocial) {
+                await window.curriculumSocial.signOut();
+            }
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
