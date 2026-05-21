@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Incident Reports - Curriculum Social</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <script src="js/platform-model.js"></script>
+    <style>
+        body { font-family:'Open Sans',sans-serif; background:var(--app-bg); color:var(--text-main); }
+        h1,h2,h3 { font-family:'Montserrat',sans-serif; }
+        .card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:12px; box-shadow:var(--shadow-soft); }
+        .btn-primary,.btn-outline { padding:10px 22px; border-radius:8px; font-weight:600; text-decoration:none; display:inline-block; }
+        .btn-primary { background:var(--primary-blue); color:white; opacity:.55; cursor:not-allowed; }
+        .btn-outline { border:2px solid var(--primary-blue); color:var(--primary-blue); }
+        .nav-link { padding:8px 16px; margin:0 4px; color:#4a5568; text-decoration:none; font-weight:500; border-radius:6px; }
+        .nav-link.active,.nav-link:hover { color:var(--primary-blue); background:var(--light-blue); }
+        .badge { display:inline-block; padding:4px 10px; border-radius:14px; font-size:12px; font-weight:600; background:var(--light-blue); color:var(--primary-blue); text-transform:capitalize; }
+    </style>
+</head>
+<body>
+    <!-- Future: protect this route for admin users only after auth/claims are available. -->
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <h1 class="text-2xl font-bold"><a href="/" style="text-decoration:none;color:inherit;"><span style="color:var(--primary-green);">Curriculum</span> <span style="color:var(--primary-blue);">Social</span></a></h1>
+            <nav class="hidden md:flex items-center space-x-2">
+                <a href="admin.html" class="nav-link">Admin</a>
+                <a href="admin-venues.html" class="nav-link">Venue Reviews</a>
+                <a href="admin-reports.html" class="nav-link active">Incident Reports</a>
+            </nav>
+        </div>
+    </header>
+    <main class="container mx-auto px-4 py-8">
+        <h2 class="text-3xl font-bold mb-6" style="color:var(--primary-blue);">Incident Reports</h2>
+        <div id="reportList" class="space-y-6"></div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reports = window.CurriculumSocialModel.DEMO_DATA.incidentReports;
+            document.getElementById('reportList').innerHTML = reports.map(report => `
+                <div class="card p-6">
+                    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">${report.relatedItemName}</h3>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="badge">${formatLabel(report.type)}</span>
+                                <span class="badge">${formatLabel(report.urgency)}</span>
+                                <span class="badge">${formatLabel(report.status)}</span>
+                            </div>
+                            <p class="text-gray-600 mb-2">${formatLabel(report.relatedItemType)} - submitted by ${formatLabel(report.submittedByRole)}</p>
+                            <p class="text-gray-700">${report.summary}</p>
+                        </div>
+                        <div class="flex flex-col gap-2 md:w-48">
+                            <button class="btn-primary" disabled>Start Review</button>
+                            <button class="btn-primary" disabled>Resolve</button>
+                            <button class="btn-outline" onclick="alert('Incident review actions are planned for a future release.')">Review Notes</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        });
+        function formatLabel(value) { return String(value || '').replace(/_/g, ' ').replace(/-/g, ' '); }
+    </script>
+</body>
+</html>

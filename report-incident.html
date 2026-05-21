@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report an Issue - Curriculum Social</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <script type="module" src="js/firebase-config.js"></script>
+    <script src="js/platform-model.js"></script>
+    <style>
+        body { font-family: 'Open Sans', sans-serif; background: var(--app-bg); color: var(--text-main); }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; }
+        .btn-primary, .btn-secondary, .btn-outline { padding: 10px 22px; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-block; text-align: center; cursor: pointer; }
+        .btn-primary { background: var(--primary-blue); color: #fff; border: none; }
+        .btn-secondary { background: var(--primary-green); color: #fff; border: none; }
+        .btn-outline { border: 2px solid var(--primary-blue); color: var(--primary-blue); background: transparent; }
+        .nav-link { padding: 8px 16px; margin: 0 4px; color: #4a5568; text-decoration: none; font-weight: 500; border-radius: 6px; }
+        .nav-link:hover, .nav-link.active { color: var(--primary-blue); background: var(--light-blue); }
+        .card { background: var(--card-bg); border: 1px solid var(--border-soft); border-radius: 12px; box-shadow: var(--shadow-soft); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: .5rem; font-weight: 600; color: #374151; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: .75rem; border: 1px solid var(--border-soft); border-radius: 8px; background: #fff; }
+    </style>
+</head>
+<body>
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <h1 class="text-2xl font-bold"><a href="/" style="text-decoration:none;color:inherit;"><span style="color:var(--primary-green);">Curriculum</span> <span style="color:var(--primary-blue);">Social</span></a></h1>
+            <nav class="hidden md:flex items-center space-x-2">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="pods.html" class="nav-link">Learning Pods</a>
+                <a href="activities.html" class="nav-link">Activities</a>
+                <a href="venue-management.html" class="nav-link">Venue Approval</a>
+                <a href="report-incident.html" class="nav-link active">Report an Issue</a>
+            </nav>
+            <a href="interest.html" class="btn-secondary">Express Interest</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold mb-4" style="color: var(--primary-blue);">Report an Issue</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Use this central form for safety, venue, communication, activity, payment, or platform concerns. Student/child reports route through a parent account for now.</p>
+        </div>
+
+        <div class="card p-6 max-w-3xl mx-auto">
+            <form id="incidentForm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="reportType">Report Type</label>
+                        <select id="reportType" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="relatedItemType">Related Item Type</label>
+                        <select id="relatedItemType" required>
+                            <option value="pod">Pod</option>
+                            <option value="class">Class</option>
+                            <option value="activity">Activity</option>
+                            <option value="venue">Venue</option>
+                            <option value="message">Message</option>
+                            <option value="child/profile">Child/Profile</option>
+                            <option value="payment">Payment</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="relatedItemName">Related Item Name</label>
+                    <input id="relatedItemName" type="text" placeholder="Example: Lamai Nature Learners, Beach Nature Walk, Bophut Home Studio">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="5" required placeholder="Describe what happened, who was involved, and what support you need."></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="urgency">Urgency</label>
+                        <select id="urgency" required>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactPreference">Contact Preference</label>
+                        <select id="contactPreference" required>
+                            <option value="email">Email</option>
+                            <option value="phone">Phone</option>
+                            <option value="in-app">In-app follow-up later</option>
+                            <option value="no-follow-up">No follow-up needed</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary w-full">Submit Report</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reportType = document.getElementById('reportType');
+            reportType.innerHTML = window.CurriculumSocialModel.INCIDENT_REPORT_TYPES.map(type => `<option value="${type}">${formatLabel(type)}</option>`).join('');
+            document.getElementById('incidentForm').addEventListener('submit', handleIncidentSubmit);
+            initializeDemoState();
+        });
+
+        function initializeDemoState() {
+            if (window.firebaseAuth && window.auth) {
+                window.firebaseAuth.onAuthStateChanged(window.auth, (user) => {
+                    if (user) {
+                        window.isDemoMode = false;
+                        window.currentUser = user;
+                    } else if (window.curriculumSocialDemo) {
+                        window.curriculumSocialDemo.activate();
+                    }
+                });
+            } else {
+                window.isDemoMode = true;
+            }
+        }
+
+        function handleIncidentSubmit(e) {
+            e.preventDefault();
+            if (window.requireRealAccount && !window.requireRealAccount('submit an incident report')) return;
+            if (window.isDemoMode) {
+                alert('Create an account to use this feature.');
+                return;
+            }
+            alert('Incident reporting workflow is coming soon.');
+        }
+
+        function formatLabel(value) {
+            return String(value).replace(/_/g, ' ').replace(/-/g, ' ');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Scaffold - Curriculum Social</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <script src="js/platform-model.js"></script>
+    <style>
+        body { font-family:'Open Sans',sans-serif; background:var(--app-bg); color:var(--text-main); }
+        h1,h2,h3 { font-family:'Montserrat',sans-serif; }
+        .card { background:var(--card-bg); border:1px solid var(--border-soft); border-radius:12px; box-shadow:var(--shadow-soft); }
+        .btn-outline { border:2px solid var(--primary-blue); color:var(--primary-blue); padding:10px 22px; border-radius:8px; font-weight:600; text-decoration:none; display:inline-block; }
+        .nav-link { padding:8px 16px; margin:0 4px; color:#4a5568; text-decoration:none; font-weight:500; border-radius:6px; }
+        .nav-link.active,.nav-link:hover { color:var(--primary-blue); background:var(--light-blue); }
+        .summary-number { font-size:2rem; font-weight:700; color:var(--primary-blue); }
+    </style>
+</head>
+<body>
+    <!-- Future: protect this route for admin users only after auth/claims are available. -->
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <h1 class="text-2xl font-bold"><a href="/" style="text-decoration:none;color:inherit;"><span style="color:var(--primary-green);">Curriculum</span> <span style="color:var(--primary-blue);">Social</span></a></h1>
+            <nav class="hidden md:flex items-center space-x-2">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="admin.html" class="nav-link active">Admin</a>
+                <a href="admin-venues.html" class="nav-link">Venue Reviews</a>
+                <a href="admin-reports.html" class="nav-link">Incident Reports</a>
+            </nav>
+        </div>
+    </header>
+    <main class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold mb-4" style="color:var(--primary-blue);">Admin Scaffold</h2>
+            <p class="text-gray-600">Demo-only overview for future admin review queues.</p>
+        </div>
+        <div id="adminCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6"></div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const data = window.CurriculumSocialModel.DEMO_DATA;
+            const cards = [
+                { label: 'Venue reviews pending', value: data.venues.filter(v => v.approvalStatus === 'submitted_for_review').length, link: 'admin-venues.html' },
+                { label: 'Incident reports open', value: data.incidentReports.filter(r => !['resolved','dismissed','archived'].includes(r.status)).length, link: 'admin-reports.html' },
+                { label: 'Teacher verifications pending', value: data.teachers.filter(t => t.verificationStatus === 'unverified').length, link: 'admin.html' },
+                { label: 'Contribution credits pending', value: data.contributionCredits.filter(c => ['pending','suggested'].includes(c.status)).length, link: 'admin.html' },
+                { label: 'Pods needing review', value: 1, link: 'pods.html' }
+            ];
+            document.getElementById('adminCards').innerHTML = cards.map(card => `
+                <div class="card p-6 text-center">
+                    <div class="summary-number">${card.value}</div>
+                    <div class="text-gray-600 mb-4">${card.label}</div>
+                    <a class="btn-outline" href="${card.link}">View</a>
+                </div>
+            `).join('');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+:root {
+    --app-bg: #F7F3EA !important;
+    --card-bg: #FFFDF7 !important;
+    --primary-blue: #2563EB !important;
+    --secondary-blue: #3B82F6 !important;
+    --primary-green: #16A34A !important;
+    --secondary-green: #22C55E !important;
+    --warm-accent: #F59E0B !important;
+    --primary-purple: #8B5CF6 !important;
+    --secondary-purple: #A78BFA !important;
+    --text-main: #1F2937 !important;
+    --text-muted: #6B7280 !important;
+    --border-soft: #E5DFD2 !important;
+    --light-blue: #EAF2FF !important;
+    --light-green: #EAF7EE !important;
+    --light-purple: #F2ECFF !important;
+    --shadow-soft: 0 2px 8px rgba(31, 41, 55, 0.08) !important;
+    --shadow-soft-hover: 0 8px 22px rgba(31, 41, 55, 0.12) !important;
+
+    /* Future dark mode tokens. No toggle is wired yet. */
+    --dark-bg: #0F172A;
+    --dark-card-bg: #1E293B;
+    --dark-primary-blue: #60A5FA;
+    --dark-secondary-green: #4ADE80;
+    --dark-warm-accent: #FBBF24;
+    --dark-text-main: #F8FAFC;
+    --dark-text-muted: #CBD5E1;
+    --dark-border-soft: #334155;
+}
+
+[data-theme="dark"] {
+    --app-bg: var(--dark-bg) !important;
+    --card-bg: var(--dark-card-bg) !important;
+    --primary-blue: var(--dark-primary-blue) !important;
+    --secondary-blue: var(--dark-primary-blue) !important;
+    --primary-green: var(--dark-secondary-green) !important;
+    --secondary-green: var(--dark-secondary-green) !important;
+    --warm-accent: var(--dark-warm-accent) !important;
+    --text-main: var(--dark-text-main) !important;
+    --text-muted: var(--dark-text-muted) !important;
+    --border-soft: var(--dark-border-soft) !important;
+}
+
+body {
+    background: var(--app-bg) !important;
+    color: var(--text-main) !important;
+}
+
+header,
+.bg-white,
+.card,
+.profile-card,
+.activity-card,
+.family-card,
+.pod-card,
+.portfolio-card,
+.modal-content,
+.email-template,
+.benefits-summary,
+.safety-standards,
+.compensation-model {
+    background-color: var(--card-bg) !important;
+}
+
+.card,
+.profile-card,
+.activity-card,
+.family-card,
+.pod-card,
+.portfolio-card,
+.modal-content,
+.email-template,
+.benefits-summary,
+.safety-standards,
+.compensation-model,
+input,
+select,
+textarea {
+    border-color: var(--border-soft) !important;
+}
+
+.card,
+.profile-card,
+.activity-card,
+.family-card,
+.pod-card,
+.portfolio-card,
+.modal-content {
+    box-shadow: var(--shadow-soft) !important;
+}
+
+.card:hover,
+.profile-card:hover,
+.activity-card:hover,
+.family-card:hover,
+.pod-card:hover,
+.portfolio-card:hover {
+    box-shadow: var(--shadow-soft-hover) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary-blue) !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-blue) !important;
+}
+
+.btn-secondary {
+    background-color: var(--primary-green) !important;
+    color: #fff !important;
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-green) !important;
+}
+
+.btn-outline {
+    border-color: var(--primary-blue) !important;
+    color: var(--primary-blue) !important;
+    background-color: transparent !important;
+}
+
+.btn-outline:hover,
+.nav-link:hover,
+.nav-link.active {
+    background-color: var(--light-blue) !important;
+}
+
+.nav-link,
+.text-gray-700,
+.text-gray-800,
+h1,
+h2,
+h3,
+h4 {
+    color: var(--text-main) !important;
+}
+
+.text-gray-500,
+.text-gray-600,
+.stat-label {
+    color: var(--text-muted) !important;
+}
+
+section.bg-gradient-to-r,
+.header {
+    background: #F3EDE1 !important;
+    color: var(--text-main) !important;
+}
+
+.role-badge,
+.age-badge,
+.type-badge {
+    background-color: var(--light-blue) !important;
+    color: var(--primary-blue) !important;
+}
+
+.visibility-badge,
+.record-badge {
+    background-color: var(--light-green) !important;
+    color: var(--primary-green) !important;
+}
+
+.feature-badge,
+.approach-badge {
+    background-color: #F4EFE3 !important;
+    color: var(--text-main) !important;
+}

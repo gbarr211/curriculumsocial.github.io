@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venue Approval - Curriculum Social</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <script type="module" src="js/firebase-config.js"></script>
+    <script src="js/platform-model.js"></script>
+    <style>
+        body { font-family: 'Open Sans', sans-serif; color: #1F2937; background-color: var(--app-bg); }
+        h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; }
+        .btn-primary, .btn-secondary, .btn-outline { padding: 10px 22px; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-block; text-align: center; cursor: pointer; }
+        .btn-primary { background: var(--primary-blue); color: white; border: none; }
+        .btn-secondary { background: var(--primary-green); color: white; border: none; }
+        .btn-outline { border: 2px solid var(--primary-blue); color: var(--primary-blue); background: transparent; }
+        .nav-link { padding: 8px 16px; margin: 0 4px; color: #4a5568; text-decoration: none; font-weight: 500; border-radius: 6px; }
+        .nav-link:hover, .nav-link.active { color: var(--primary-blue); background: var(--light-blue); }
+        .card { background: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow-soft); border: 1px solid var(--border-soft); }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 14px; font-size: 12px; font-weight: 600; background: var(--light-blue); color: var(--primary-blue); text-transform: capitalize; }
+        .badge-green { background: var(--light-green); color: var(--primary-green); }
+        .field-label { color: var(--text-muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+    </style>
+</head>
+<body>
+    <header class="sticky top-0 bg-white z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <h1 class="text-2xl font-bold"><a href="/" style="text-decoration:none;color:inherit;"><span style="color:var(--primary-green);">Curriculum</span> <span style="color:var(--primary-blue);">Social</span></a></h1>
+            <nav class="hidden md:flex items-center space-x-2">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="pods.html" class="nav-link">Learning Pods</a>
+                <a href="portfolio.html" class="nav-link">School-Ready Portfolio</a>
+                <a href="venue-management.html" class="nav-link active">Venue Approval</a>
+                <a href="report-incident.html" class="nav-link">Report an Issue</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a href="interest.html" class="btn-secondary">Express Interest</a>
+                <div id="userInfo" class="hidden md:inline-block"><span id="userName" class="font-medium"></span></div>
+                <button id="logoutBtn" class="btn-outline" style="display:none;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold mb-4" style="color: var(--primary-blue);">Venue Approval Scaffold</h2>
+            <p class="text-gray-600 max-w-3xl mx-auto">Review how home, teacher, and outdoor learning spaces can be prepared for private pod use or future public platform visibility.</p>
+        </div>
+
+        <div class="card p-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="field-label" for="venueSelector">Demo Venue</label>
+                    <select id="venueSelector" class="w-full mt-2 p-3 border rounded-lg"></select>
+                </div>
+                <div>
+                    <p class="field-label">Visibility Rule</p>
+                    <p class="mt-2 text-gray-700">General area is public. Exact address is only visible after joining, RSVP, or approval.</p>
+                </div>
+                <div class="flex items-end">
+                    <a href="report-incident.html" class="btn-outline w-full">Report an Issue</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="venueProfile" class="grid grid-cols-1 lg:grid-cols-3 gap-6"></div>
+    </main>
+
+    <script>
+        let currentUser = null;
+        let currentUserData = null;
+        let selectedVenueId = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAuth();
+            document.getElementById('venueSelector').addEventListener('change', function(e) {
+                selectedVenueId = e.target.value;
+                renderVenue();
+            });
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+        });
+
+        function initializeAuth() {
+            if (window.firebaseAuth && window.auth) {
+                window.firebaseAuth.onAuthStateChanged(window.auth, (user) => {
+                    if (user) {
+                        window.isDemoMode = false;
+                        currentUser = user;
+                        currentUserData = { displayName: user.displayName || user.email?.split('@')[0] || 'Member', role: 'parent' };
+                    } else {
+                        currentUser = window.curriculumSocialDemo.activate();
+                        currentUserData = window.curriculumSocialDemo.demoProfile;
+                    }
+                    updateUserInterface();
+                    loadVenues();
+                });
+            } else {
+                currentUserData = { displayName: 'Demo', role: 'parent' };
+                window.isDemoMode = true;
+                updateUserInterface();
+                loadVenues();
+            }
+        }
+
+        function updateUserInterface() {
+            document.getElementById('userName').textContent = currentUserData?.displayName || 'Demo';
+            document.getElementById('userInfo').classList.remove('hidden');
+            const logoutBtn = document.getElementById('logoutBtn');
+            logoutBtn.style.display = 'inline-block';
+            logoutBtn.textContent = window.isDemoMode ? 'Sign Up' : 'Logout';
+        }
+
+        function loadVenues() {
+            const selector = document.getElementById('venueSelector');
+            const venues = window.CurriculumSocialModel.DEMO_DATA.venues;
+            selector.innerHTML = venues.map(venue => `<option value="${venue.id}">${venue.name}</option>`).join('');
+            selectedVenueId = selectedVenueId || venues[0].id;
+            selector.value = selectedVenueId;
+            renderVenue();
+        }
+
+        function renderVenue() {
+            const venue = window.CurriculumSocialModel.DEMO_DATA.venues.find(item => item.id === selectedVenueId);
+            if (!venue) return;
+            document.getElementById('venueProfile').innerHTML = `
+                <div class="card p-6 lg:col-span-2">
+                    <div class="flex justify-between items-start mb-5">
+                        <div>
+                            <h3 class="text-2xl font-bold mb-2" style="color: var(--primary-blue);">${venue.name}</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="badge">${formatLabel(venue.type)}</span>
+                                <span class="badge badge-green">${formatLabel(venue.approvalStatus)}</span>
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="handleVenueAction('submit this venue for review')">Submit for Review</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        ${renderField('General area', venue.generalArea)}
+                        ${renderField('Venue type', formatLabel(venue.type))}
+                        ${renderField('Capacity', `${venue.capacity} learners`)}
+                        ${renderField('Indoor/outdoor', venue.indoorOutdoor)}
+                        ${renderField('Bathroom/access notes', venue.bathroomAccess)}
+                        ${renderField('Safety notes', venue.safetyNotes)}
+                        ${renderField('Age suitability suggested', venue.suggestedAgeSuitability.map(formatLabel).join(', '))}
+                        ${renderField('Age suitability approved', venue.approvedAgeSuitability.length ? venue.approvedAgeSuitability.map(formatLabel).join(', ') : 'Pending review')}
+                        ${renderField('Allowed activity types', venue.allowedActivityTypes.map(formatLabel).join(', '))}
+                        ${renderField('Compensation model', formatLabel(venue.compensationModel))}
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="card p-6">
+                        <h3 class="text-xl font-semibold mb-4" style="color: var(--primary-blue);">Photos Checklist</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li><i class="fas fa-square-check text-green-600 mr-2"></i>Learning area</li>
+                            <li><i class="fas fa-square text-gray-400 mr-2"></i>Bathroom/access route</li>
+                            <li><i class="fas fa-square text-gray-400 mr-2"></i>Entry/pickup point</li>
+                            <li><i class="fas fa-square text-gray-400 mr-2"></i>Safety considerations</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="text-xl font-semibold mb-3" style="color: var(--primary-blue);">Approval Notes</h3>
+                        <p class="text-gray-700 mb-4">Home venues can be drafted freely. Private pod use can be approved by trusted pod/program admins. Public platform visibility requires Curriculum Social admin approval.</p>
+                        <button class="btn-outline w-full" onclick="handleVenueAction('adjust venue approval settings')">Review Approval</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderField(label, value) {
+            return `<div><p class="field-label">${label}</p><p class="mt-1 text-gray-700">${value}</p></div>`;
+        }
+
+        function formatLabel(value) {
+            return String(value || '').replace(/_/g, ' ').replace(/-/g, ' ');
+        }
+
+        function handleVenueAction(actionLabel) {
+            if (window.requireRealAccount && !window.requireRealAccount(actionLabel)) return;
+            if (window.isDemoMode) {
+                alert('Create an account to use this feature.');
+                return;
+            }
+            alert('Venue approval workflow is coming soon.');
+        }
+
+        async function handleLogout() {
+            if (window.isDemoMode) {
+                window.location.href = 'signup.html';
+                return;
+            }
+            if (window.curriculumSocial) await window.curriculumSocial.signOut();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
