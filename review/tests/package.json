@@ -1,0 +1,10 @@
+{
+  "name": "curriculumsocial-preview-checks",
+  "private": true,
+  "scripts": {
+    "test": "node request-flow.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "30.1.2"
+  }
+}
