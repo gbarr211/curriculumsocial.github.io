@@ -18,6 +18,17 @@ const submit = () => get('request-form').dispatchEvent(new dom.window.Event('sub
 const results=[];
 function check(name, fn){try{fn(); results.push({name,status:'PASS'});}catch(e){results.push({name,status:'FAIL',reason:e.message});}}
 const close=()=>click('.close');
+check('initial workspace button shows a label and an actual SVG, not SVG source',()=>{
+  assert.equal(get('workspace-action').textContent.trim(),'Explore joining a group');
+  assert.equal(get('workspace-action').querySelectorAll('svg').length,1);
+});
+check('all workspace tabs retain clean labels and exactly one decorative icon',()=>{
+  for(const key of ['community','learning','continuity','contribution','community']){
+    click(`[data-workspace="${key}"]`);
+    assert.equal(get('workspace-action').querySelectorAll('svg[aria-hidden="true"]').length,1,key);
+    for(const button of d.querySelectorAll('button'))assert(!/<svg|<path|viewBox=/.test(button.textContent),key+' contains literal SVG');
+  }
+});
 check('workspace requests preserve the selected topic',()=>{
   const topics={community:'Community plans',learning:'Learning approach',continuity:'Learning continuity',contribution:'Contribution access'};
   for(const [key,topic] of Object.entries(topics)){
