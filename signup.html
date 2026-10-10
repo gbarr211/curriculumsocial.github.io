@@ -163,10 +163,11 @@
             <div class="text-center">
                 <h2 class="text-3xl font-bold text-gray-900">Create your account</h2>
                 <p class="mt-2 text-gray-600">Join the Curriculum Social community</p>
+                <p class="mt-2 text-sm text-gray-600">Choose your role below before continuing with Google.</p>
             </div>
             
             <form id="signupForm" class="mt-8 space-y-6 bg-white p-8 rounded-lg shadow-md">
-                <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
+                <div id="errorMessage" role="alert" aria-live="polite" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
                 
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
@@ -229,91 +230,9 @@
         </div>
     </main>
 
-    <script>
-        // Signup functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const signupForm = document.getElementById('signupForm');
-            const googleSignupBtn = document.getElementById('googleSignup');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            function showError(message) {
-                errorMessage.textContent = message;
-                errorMessage.classList.remove('hidden');
-            }
-            
-            function hideError() {
-                errorMessage.classList.add('hidden');
-            }
-            
-            // Email/Password Signup
-            signupForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                hideError();
-                
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const displayName = document.getElementById('displayName').value;
-                const role = document.getElementById('role').value;
-                
-                try {
-                    const userCredential = await window.firebaseAuth.createUserWithEmailAndPassword(window.auth, email, password);
-                    
-                    // Update the user's display name
-                    await window.firebaseAuth.updateProfile(userCredential.user, {
-                        displayName: displayName
-                    });
-                    
-                    // Create user profile in Firestore
-                    await window.curriculumSocial.createUserProfile(userCredential.user.uid, {
-                        email: email,
-                        displayName: displayName,
-                        role: role,
-                        emailVerified: false
-                    });
-                    
-                    alert('Account created successfully!');
-                    window.location.href = 'dashboard.html';
-                } catch (error) {
-                    showError(error.message);
-                }
-            });
-            
-            // Google Signup
-            googleSignupBtn.addEventListener('click', async () => {
-                hideError();
-                try {
-                    const result = await window.firebaseAuth.signInWithPopup(window.auth, window.googleProvider);
-                    
-                    // Check if user profile already exists
-                    const existingProfile = await window.curriculumSocial.getUserProfile(result.user.uid);
-                    
-                    if (!existingProfile.success) {
-                        // New user - need to set role
-                        const role = prompt("Please select your role:\n1. parent\n2. teacher\n3. venue\n\nEnter one of the above:");
-                        
-                        if (role && ['parent', 'teacher', 'venue'].includes(role.toLowerCase())) {
-                            await window.curriculumSocial.createUserProfile(result.user.uid, {
-                                email: result.user.email,
-                                displayName: result.user.displayName,
-                                role: role.toLowerCase(),
-                                emailVerified: result.user.emailVerified,
-                                photoURL: result.user.photoURL
-                            });
-                        } else {
-                            showError('Please select a valid role');
-                            return;
-                        }
-                    }
-                    
-                    window.location.href = 'dashboard.html';
-                } catch (error) {
-                    showError(error.message);
-                }
-            });
-        });
-    </script>
+
     
     <!-- Firebase configuration -->
-    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/auth-entry.js"></script>
 </body>
 </html>

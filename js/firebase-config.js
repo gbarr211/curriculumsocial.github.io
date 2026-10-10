@@ -259,8 +259,7 @@ window.curriculumSocial = {
             });
             return { success: true };
         } catch (error) {
-            console.error('Error creating user profile:', error);
-            return { success: false, error: error.message };
+            return { success: false, code: error.code || 'service/unavailable', error: error.message };
         }
     },
 
@@ -271,11 +270,10 @@ window.curriculumSocial = {
             if (userDoc.exists()) {
                 return { success: true, data: userDoc.data() };
             } else {
-                return { success: false, error: 'User profile not found' };
+                return { success: false, code: 'profile/not-found', error: 'User profile not found' };
             }
         } catch (error) {
-            console.error('Error getting user profile:', error);
-            return { success: false, error: error.message };
+            return { success: false, code: error.code || 'service/unavailable', error: error.message };
         }
     },
 
@@ -288,8 +286,7 @@ window.curriculumSocial = {
             });
             return { success: true };
         } catch (error) {
-            console.error('Error updating user profile:', error);
-            return { success: false, error: error.message };
+            return { success: false, code: error.code || 'service/unavailable', error: error.message };
         }
     },
 
@@ -301,8 +298,7 @@ window.curriculumSocial = {
             const downloadURL = await getDownloadURL(snapshot.ref);
             return { success: true, url: downloadURL };
         } catch (error) {
-            console.error('Error uploading file:', error);
-            return { success: false, error: error.message };
+            return { success: false, code: error.code || 'service/unavailable', error: error.message };
         }
     },
 
@@ -317,8 +313,7 @@ window.curriculumSocial = {
             await signOut(auth);
             return { success: true };
         } catch (error) {
-            console.error('Error signing out:', error);
-            return { success: false, error: error.message };
+            return { success: false, code: error.code || 'service/unavailable', error: error.message };
         }
     }
 };
@@ -327,14 +322,10 @@ window.curriculumSocial = {
 onAuthStateChanged(auth, (user) => {
     if (user) {
         // User is signed in
-        console.log('User signed in:', user.uid);
         // You can add global user state management here
         window.currentUser = user;
     } else {
         // User is signed out
-        console.log('User signed out');
         window.currentUser = null;
     }
 });
-
-console.log('Firebase initialized successfully');

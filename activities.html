@@ -747,7 +747,7 @@
 
         async function initializeAuth() {
             if (window.auth) {
-                window.auth.onAuthStateChanged(async (user) => {
+                window.firebaseAuth.onAuthStateChanged(window.auth, async (user) => {
                     if (user) {
                         currentUser = user;
                         

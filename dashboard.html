@@ -504,7 +504,7 @@
     
         async function initializeAuth() {
             // Use your existing Firebase auth state listener
-            window.auth.onAuthStateChanged(async (user) => {
+            window.firebaseAuth.onAuthStateChanged(window.auth, async (user) => {
                 if (user) {
                     currentUser = user;
                     console.log('User authenticated:', user.uid);

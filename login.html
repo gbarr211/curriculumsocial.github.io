@@ -88,7 +88,7 @@
             </div>
             
             <form id="loginForm" class="mt-8 space-y-6 bg-white p-8 rounded-lg shadow-md">
-                <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
+                <div id="errorMessage" role="alert" aria-live="polite" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
                 
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
@@ -135,49 +135,6 @@
     </main>
 
     <script>
-        // Login functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            const googleLoginBtn = document.getElementById('googleLogin');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            function showError(message) {
-                errorMessage.textContent = message;
-                errorMessage.classList.remove('hidden');
-            }
-            
-            function hideError() {
-                errorMessage.classList.add('hidden');
-            }
-            
-            // Email/Password Login
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                hideError();
-                
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                
-                try {
-                    await window.firebaseAuth.signInWithEmailAndPassword(window.auth, email, password);
-                    window.location.href = 'dashboard.html';
-                } catch (error) {
-                    showError(error.message);
-                }
-            });
-            
-            // Google Login
-            googleLoginBtn.addEventListener('click', async () => {
-                hideError();
-                try {
-                    await window.firebaseAuth.signInWithPopup(window.auth, window.googleProvider);
-                    window.location.href = 'dashboard.html';
-                } catch (error) {
-                    showError(error.message);
-                }
-            });
-        });
-
         // Navigation links config
         const navLinks = [
             { href: 'dashboard.html', label: 'Dashboard' },
@@ -257,6 +214,6 @@
     </script>
     
     <!-- Firebase configuration -->
-    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/auth-entry.js"></script>
 </body>
 </html>

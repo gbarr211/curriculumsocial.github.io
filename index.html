@@ -1069,7 +1069,7 @@
             buildNavLinks(document.getElementById('mobileNavLinks'), true);
             
             // Add auth state listener to update navigation
-            window.auth.onAuthStateChanged((user) => {
+            window.firebaseAuth.onAuthStateChanged(window.auth, (user) => {
                 buildNavLinks(document.getElementById('desktopNav'), false);
                 buildNavLinks(document.getElementById('mobileNavLinks'), true);
             });

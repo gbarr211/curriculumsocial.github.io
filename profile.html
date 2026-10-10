@@ -355,6 +355,10 @@
     </div>
 
     <!-- Main Content -->
+    <div id="profileError" role="alert" aria-live="polite" class="container mx-auto px-4 py-4" hidden>
+        <p id="profileErrorText"></p>
+        <button id="retryProfile" type="button" class="btn-outline">Retry loading profile</button>
+    </div>
     <main id="profileContent" class="container mx-auto px-4 py-8" style="display: none;">
         <!-- Profile Header -->
         <div class="profile-card text-center">
@@ -545,6 +549,13 @@
             document.addEventListener('DOMContentLoaded', function() {
                 let currentUser = null;
                 let currentStudentId = null;
+                let savingProfile = false;
+                function showProfileError(message) {
+                    document.getElementById('profileErrorText').textContent = message;
+                    document.getElementById('profileError').hidden = false;
+                    document.getElementById('loadingState').style.display = 'none';
+                }
+                document.getElementById('retryProfile').addEventListener('click', () => { void loadProfile(); });
                 document.getElementById('profileAvatar').addEventListener('click', (e) => {
                     if (window.isDemoMode) {
                         e.preventDefault();
@@ -555,7 +566,11 @@
                 
                 // Check authentication
                 window.firebaseAuth.onAuthStateChanged(window.auth, async (user) => {
+                    document.getElementById('profileContent').style.display = 'none';
+                    document.getElementById('studentsSection').style.display = 'none';
+                    document.getElementById('studentsList').textContent = '';
                     if (user) {
+                        window.isDemoMode = false;
                         currentUser = user;
                         await loadProfile();
                     } else {
@@ -565,6 +580,7 @@
                 });
                 
                 async function loadProfile() {
+                    document.getElementById('profileError').hidden = true;
                     try {
                         if (window.isDemoMode) {
                             displayProfile(window.curriculumSocialDemo.demoProfile);
@@ -588,9 +604,13 @@
                             
                             document.getElementById('loadingState').style.display = 'none';
                             document.getElementById('profileContent').style.display = 'block';
+                        } else {
+                            showProfileError(profileResult.code === 'profile/not-found'
+                                ? 'Your profile setup is incomplete. Open Sign up to finish setup with your signed-in account.'
+                                : 'Your profile could not be loaded. Please try again.');
                         }
                     } catch (error) {
-                        console.error('Error loading profile:', error);
+                        showProfileError('Your profile could not be loaded. Please try again.');
                     }
                 }
                 
@@ -703,7 +723,7 @@
                 
                 document.getElementById('profileUpdateForm').addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    if (!window.requireRealAccount('save profile changes')) return;
+                    if (savingProfile || !window.requireRealAccount('save profile changes')) return;
                     
                     const philosophies = Array.from(document.querySelectorAll('input[name="philosophy"]:checked'))
                         .map(cb => cb.value);
@@ -717,13 +737,27 @@
                     };
                     
                     try {
-                        await window.curriculumSocial.updateUserProfile(currentUser.uid, updateData);
+                        if (!updateData.displayName.trim() || updateData.displayName.length > 100 ||
+                            updateData.bio.length > 2000 || updateData.location.length > 200 ||
+                            ![5, 10, 25, 50, 100].includes(updateData.matchingRadius)) {
+                            showProfileError('Please check your name, bio, location and matching radius.');
+                            return;
+                        }
+                        savingProfile = true;
+                        const saved = await window.curriculumSocial.updateUserProfile(currentUser.uid, updateData);
+                        if (!saved.success) {
+                            showProfileError('Your profile changes could not be saved. Your edits are still here. Please try again.');
+                            return;
+                        }
+                        document.getElementById('profileError').hidden = true;
                         alert('Profile updated successfully!');
                         document.getElementById('profileForm').style.display = 'none';
                         document.getElementById('editModeBtn').textContent = 'Edit Profile';
                         await loadProfile();
                     } catch (error) {
-                        alert('Error updating profile: ' + error.message);
+                        showProfileError('Your profile changes could not be saved. Your edits are still here. Please try again.');
+                    } finally {
+                        savingProfile = false;
                     }
                 });
                 

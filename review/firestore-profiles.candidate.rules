@@ -1,0 +1,46 @@
+// REVIEW CANDIDATE ONLY. Not deployed; the production default-deny remains active.
+// Adult profile ownership only. Selected roles are descriptions, never permissions.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+    function shortText(value, maximum) {
+      return value is string && value.size() <= maximum;
+    }
+    match /users/{uid} {
+      allow get: if owner(uid);
+      allow list, delete: if false;
+      allow create: if owner(uid)
+        && request.resource.data.keys().hasAll(['email', 'displayName', 'role', 'emailVerified', 'createdAt', 'updatedAt'])
+        && request.resource.data.keys().hasOnly(['email', 'displayName', 'role', 'emailVerified', 'photoURL', 'createdAt', 'updatedAt'])
+        && request.resource.data.email == request.auth.token.email
+        && shortText(request.resource.data.displayName, 100)
+        && request.resource.data.displayName.size() > 0
+        && request.resource.data.role in ['parent', 'teacher', 'venue']
+        && request.resource.data.emailVerified == request.auth.token.email_verified
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.updatedAt is timestamp
+        && (!('photoURL' in request.resource.data)
+          || (shortText(request.resource.data.photoURL, 2048)
+            && request.resource.data.photoURL.matches('https://.*')));
+      allow update: if owner(uid)
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['displayName', 'bio', 'location', 'matchingRadius', 'philosophies', 'updatedAt'])
+        && shortText(request.resource.data.displayName, 100)
+        && request.resource.data.displayName.size() > 0
+        && (!('bio' in request.resource.data) || shortText(request.resource.data.bio, 2000))
+        && (!('location' in request.resource.data) || shortText(request.resource.data.location, 200))
+        && (!('matchingRadius' in request.resource.data) || request.resource.data.matchingRadius in [5, 10, 25, 50, 100])
+        && (!('philosophies' in request.resource.data)
+          || (request.resource.data.philosophies is list
+            && request.resource.data.philosophies.size() <= 6
+            && request.resource.data.philosophies.hasOnly(['montessori', 'charlotte_mason', 'classical', 'waldorf', 'unschooling', 'eclectic'])))
+        && request.resource.data.updatedAt is timestamp;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
