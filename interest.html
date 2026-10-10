@@ -169,7 +169,7 @@
                 <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Express Your Interest</h2>
                 
                 <!-- Form Status Messages -->
-                <div id="form-success" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+                <div id="form-success" role="status" aria-live="polite" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
                     <div class="flex">
                         <div class="py-1"><i class="fas fa-check-circle mr-3"></i></div>
                         <div>
@@ -179,7 +179,7 @@
                     </div>
                 </div>
                 
-                <div id="form-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                <div id="form-error" role="alert" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
                     <div class="flex">
                         <div class="py-1"><i class="fas fa-exclamation-circle mr-3"></i></div>
                         <div>
@@ -347,10 +347,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize EmailJS
-            emailjs.init("4On4QsjS27mAhw0AB");
-            console.log('EmailJS initialized with public key: 4On4QsjS27mAhw0AB');
-            
             // Stakeholder Type Selection
             const stakeholderTypes = document.querySelectorAll('.stakeholder-type');
             const stakeholderInput = document.getElementById('stakeholder-type');
@@ -371,89 +367,78 @@
             const successMessage = document.getElementById('form-success');
             const errorMessage = document.getElementById('form-error');
             
+            const submitButton = form.querySelector('[type="submit"]');
+            let submitting = false;
+            let saved = false;
+
             form.addEventListener('submit', async function(event) {
                 event.preventDefault();
-                console.log('Form submission started');
-                
-                // Basic form validation
-                let isValid = true;
-                const requiredFields = form.querySelectorAll('[required]');
-                
+                if (submitting || saved) return;
+                errorMessage.classList.add('hidden');
+                successMessage.classList.add('hidden');
+
+                // Hidden role inputs and checkboxes need explicit validation.
+                const requiredFields = [...form.querySelectorAll('[required]')];
+                let isValid = form.checkValidity();
                 requiredFields.forEach(field => {
-                    if (!field.value) {
-                        isValid = false;
-                        field.classList.add('border-red-500');
-                        console.log('Required field missing:', field.name);
-                    } else {
-                        field.classList.remove('border-red-500');
-                    }
+                    const valid = field.type === 'checkbox' ? field.checked : Boolean(field.value.trim());
+                    field.classList.toggle('border-red-500', !valid);
+                    if (!valid) isValid = false;
                 });
-                
-                if (isValid) {
-                    try {
-                        console.log('Form validation passed, proceeding with submission');
-                        
-                        // Get form data
-                        const formData = new FormData(form);
-                        const formValues = Object.fromEntries(formData.entries());
-                        
-                        // Add timestamp and status
-                        const interestData = {
-                            ...formValues,
-                            timestamp: new Date(),
-                            status: 'new',
-                            emailUpdates: formData.get('email-updates') === 'on',
-                            newsletter: formData.get('newsletter') === 'on',
-                            eventInvites: formData.get('event-invites') === 'on'
-                        };
-                        
-                        console.log('Form data prepared:', interestData);
-                        
-                        // Save to Firebase first
-                        console.log('Saving to Firebase...');
-                        const docRef = await window.firebaseFirestore.addDoc(
-                            window.firebaseFirestore.collection(window.db, 'interest_submissions'),
-                            interestData
-                        );
-                        console.log('Firebase save successful with ID:', docRef.id);
-                        
-                        // Send auto-reply email to user
-                        console.log('Sending auto-reply email to user...');
-                        try {
-                            const autoReplyResult = await emailjs.sendForm(
-                                'service_nbff6ju',
-                                'template_rbse5nw',
-                                form,
-                                '4On4QsjS27mAhw0AB'
-                            );
-                            console.log('Auto-reply email sent successfully:', autoReplyResult);
-                        } catch (emailError) {
-                            console.error('Auto-reply email failed:', emailError);
-                            // Continue with success flow even if auto-reply fails
-                        }
-                        
-                        // Hide form and show success message
-                        form.classList.add('hidden');
-                        successMessage.classList.remove('hidden');
-                        successMessage.classList.add('animated', 'fadeIn');
-                        
-                        // Reset form
-                        form.reset();
-                        stakeholderTypes.forEach(t => t.classList.remove('selected'));
-                        
-                        console.log('Form submission completed successfully');
-                    } catch (error) {
-                        console.error('Error in form submission process:', error);
-                        errorMessage.querySelector('p.text-sm').textContent = 
-                            'There was an error submitting your information. Please try again later.';
-                        errorMessage.classList.remove('hidden');
-                        errorMessage.classList.add('animated', 'fadeIn');
-                    }
-                } else {
-                    console.log('Form validation failed');
-                    // Show error message
+                if (!isValid) {
+                    errorMessage.querySelector('p.font-bold').textContent = 'Please check your information';
+                    errorMessage.querySelector('p.text-sm').textContent = 'Complete the required fields, choose your role and confirm privacy consent.';
                     errorMessage.classList.remove('hidden');
-                    errorMessage.classList.add('animated', 'fadeIn');
+                    form.reportValidity();
+                    return;
+                }
+
+                submitting = true;
+                submitButton.disabled = true;
+                form.setAttribute('aria-busy', 'true');
+                try {
+                    const firestore = window.firebaseFirestore;
+                    if (!window.db || !firestore || typeof firestore.addDoc !== 'function' || typeof firestore.collection !== 'function') {
+                        throw new Error('Capture unavailable');
+                    }
+                    const formData = new FormData(form);
+                    const interestData = {
+                        ...Object.fromEntries(formData.entries()),
+                        timestamp: new Date(),
+                        status: 'new',
+                        emailUpdates: formData.get('email-updates') === 'on',
+                        newsletter: formData.get('newsletter') === 'on',
+                        eventInvites: formData.get('event-invites') === 'on'
+                    };
+                    // Freeze the notification snapshot before the asynchronous save.
+                    const replyForm = form.cloneNode(true);
+                    [...form.elements].forEach((field, index) => {
+                        const copy = replyForm.elements[index];
+                        if (copy) { copy.value = field.value; if ('checked' in field) copy.checked = field.checked; }
+                    });
+                    await firestore.addDoc(firestore.collection(window.db, 'interest_submissions'), interestData);
+                    saved = true;
+                    form.classList.add('hidden');
+                    errorMessage.classList.add('hidden');
+                    successMessage.querySelector('p.text-sm').textContent = 'Your interest has been saved. A confirmation email may not arrive; you do not need to submit again.';
+                    successMessage.classList.remove('hidden');
+                    form.reset();
+                    stakeholderTypes.forEach(t => t.classList.remove('selected'));
+
+                    // Email is optional: it must never block capture or undo a confirmed save.
+                    try {
+                        if (window.emailjs && typeof window.emailjs.sendForm === 'function') {
+                            Promise.resolve(window.emailjs.sendForm('service_nbff6ju', 'template_rbse5nw', replyForm, '4On4QsjS27mAhw0AB')).catch(() => {});
+                        }
+                    } catch (_) { /* Saved successfully; no email retry or contact-payload logging. */ }
+                } catch (_) {
+                    errorMessage.querySelector('p.font-bold').textContent = 'We could not confirm your submission';
+                    errorMessage.querySelector('p.text-sm').textContent = 'Your information is still in this form. Please try again later. If the connection was interrupted, your request may already have been saved.';
+                    errorMessage.classList.remove('hidden');
+                } finally {
+                    submitting = false;
+                    submitButton.disabled = saved;
+                    form.removeAttribute('aria-busy');
                 }
             });
         });
