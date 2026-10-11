@@ -7,6 +7,7 @@ const data={displayName:'Synthetic Adult',email:person.email,role:'teacher',bio:
 async function setup(opts={}) {
  let observer;const alerts=[],saves=[],errors=[];const vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));
  const dom=new JSDOM(source.replace(/<script\b[^>]*src=[^>]*>[\s\S]*?<\/script>/gi,''),{runScripts:'dangerously',virtualConsole:vc,url:'https://example.invalid/profile.html',beforeParse(w){
+  w.curriculumSocialDemo={demoProfile:{...data,role:'parent'},demoStudents:opts.students || [{id:'sample-child',name:'Sample Child',age:6,grade:'Sample grade',interests:['nature']}],activate(){w.isDemoMode=true;return {uid:'demo'};}};
   w.auth={currentUser:person};w.alert=x=>alerts.push(x);w.requireRealAccount=()=>true;
   w.firebaseAuth={onAuthStateChanged(auth,cb){observer=cb;}};
   w.curriculumSocial={getUserProfile:async()=>opts.get?opts.get():{success:true,data},updateUserProfile:async(uid,record)=>{saves.push(record);return opts.save?opts.save():{success:true};}};
@@ -39,4 +40,18 @@ async function setup(opts={}) {
  x=await setup({get:async()=>({success:true,data:{...data,displayName:'<img src=x onerror=alert(1)>',bio:'<script>bad</script>',philosophies:'bad historical field',role:{}}})});
  assert.equal(x.d.getElementById('profileName').textContent,'<img src=x onerror=alert(1)>');assert.equal(x.d.querySelector('#profileName img'),null);assert.equal(x.d.getElementById('profileContent').style.display,'block');assert.equal(x.errors.length,0);x.dom.window.close();
  console.log('PASS malformed historical fields and markup names render safely');
+
+ x=await setup({get:async()=>({success:true,data:{...data,role:'parent'}})});
+ assert.equal(x.d.querySelectorAll('#studentsList .student-card').length,0,'real parent must not inherit sample children');
+ assert.match(x.d.getElementById('studentsList').textContent,/not enabled/i);
+ assert(x.d.getElementById('addStudentBtn').disabled);
+ x.d.getElementById('studentForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await tick();assert(!x.alerts.some(a=>/saved successfully/i.test(a)));assert.equal(x.saves.length,0);x.dom.window.close();
+ console.log('PASS future real-parent path has no sample children or false save confirmation');
+ x=await setup();await x.observer(null);assert.equal(x.d.querySelectorAll('#studentsList .student-card').length,1);assert.match(x.d.getElementById('studentsList').textContent,/Sample Child/);assert(!x.d.getElementById('addStudentBtn').disabled);
+ await x.observer(person);assert.equal(x.d.querySelectorAll('#studentsList .student-card').length,0);await x.observer(null);assert.equal(x.d.querySelectorAll('#studentsList .student-card').length,1);x.dom.window.close();
+ console.log('PASS demo children preserved through demo/account/demo switching');
+ x=await setup({students:[{id:"');window.injected=true;//",name:'<img src=x onerror=alert(1)>',age:6,grade:'<svg onload=alert(1)>',interests:['<b>nature</b>']}]});await x.observer(null);
+ assert.equal(x.d.querySelector('#studentsList img, #studentsList svg, #studentsList [onclick]'),null);
+ assert.match(x.d.getElementById('studentsList').textContent,/<img src=x/);let chosen;x.w.editStudent=id=>chosen=id;x.d.querySelector('#studentsList button').click();assert.equal(chosen,"');window.injected=true;//");assert.equal(x.w.injected,undefined);assert.equal(x.errors.length,0);x.dom.window.close();
+ console.log('PASS child labels and IDs remain data, including event handlers');
 })().catch(e=>{console.error(e);process.exitCode=1;});

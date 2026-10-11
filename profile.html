@@ -587,6 +587,7 @@
                         if (window.isDemoMode) {
                             displayProfile(window.curriculumSocialDemo.demoProfile);
                             document.getElementById('studentsSection').style.display = 'block';
+                            document.getElementById('addStudentBtn').disabled = false;
                             displayStudents(window.curriculumSocialDemo.demoStudents);
                             document.getElementById('loadingState').style.display = 'none';
                             document.getElementById('profileContent').style.display = 'block';
@@ -683,49 +684,61 @@
                 }
                 
                 async function loadStudents() {
-                    // In a real implementation, this would fetch from Firestore
-                    // For now, using sample data
-                    const sampleStudents = [
-                        {
-                            id: 'student1',
-                            name: 'Emma',
-                            age: 6,
-                            grade: 'Grade 1',
-                            interests: ['arts', 'nature', 'reading']
-                        }
-                    ];
-                    
-                    displayStudents(sampleStudents);
+                    // Real child storage is not enabled. Demo records belong only to demo mode.
+                    const container = document.getElementById('studentsList');
+                    container.replaceChildren();
+                    const notice = document.createElement('p');
+                    notice.className = 'text-gray-600';
+                    notice.textContent = 'Child profiles are not enabled for this account yet.';
+                    container.appendChild(notice);
+                    document.getElementById('addStudentBtn').disabled = true;
                 }
-                
+
                 function displayStudents(students) {
                     const container = document.getElementById('studentsList');
-                    container.innerHTML = '';
-                    
+                    container.replaceChildren();
+                    if (!Array.isArray(students)) return;
                     students.forEach(student => {
-                        const studentCard = document.createElement('div');
-                        studentCard.className = 'student-card';
-                        studentCard.innerHTML = `
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="text-lg font-semibold" style="color: var(--primary-blue);">${student.name}</h4>
-                                    <p class="text-gray-600">Age ${student.age} • ${student.grade}</p>
-                                    <p class="text-sm text-gray-500 mt-1">Interests: ${student.interests.join(', ')}</p>
-                                </div>
-                                <div class="flex gap-2">
-                                    <button class="btn-outline" onclick="editStudent('${student.id}')">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-outline" onclick="deleteStudent('${student.id}')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                        container.appendChild(studentCard);
+                        if (!student || typeof student !== 'object') return;
+                        const card = document.createElement('div');
+                        card.className = 'student-card';
+                        const row = document.createElement('div');
+                        row.className = 'flex justify-between items-start';
+                        const details = document.createElement('div');
+                        const name = document.createElement('h4');
+                        name.className = 'text-lg font-semibold';
+                        name.style.color = 'var(--primary-blue)';
+                        name.textContent = typeof student.name === 'string' ? student.name : 'Sample child';
+                        const grade = document.createElement('p');
+                        grade.className = 'text-gray-600';
+                        grade.textContent = `Age ${Number.isFinite(student.age) ? student.age : '—'} • ${typeof student.grade === 'string' ? student.grade : ''}`;
+                        const interests = document.createElement('p');
+                        interests.className = 'text-sm text-gray-500 mt-1';
+                        interests.textContent = 'Interests: ' + (Array.isArray(student.interests) ? student.interests.filter(value => typeof value === 'string').join(', ') : '');
+                        details.append(name, grade, interests);
+                        const actions = document.createElement('div');
+                        actions.className = 'flex gap-2';
+                        for (const [label, iconClass, action] of [
+                            ['Edit child', 'fas fa-edit', () => window.editStudent(student.id)],
+                            ['Remove child', 'fas fa-trash', () => window.deleteStudent(student.id)]
+                        ]) {
+                            const button = document.createElement('button');
+                            button.type = 'button';
+                            button.className = 'btn-outline';
+                            button.setAttribute('aria-label', label);
+                            const icon = document.createElement('i');
+                            icon.className = iconClass;
+                            icon.setAttribute('aria-hidden', 'true');
+                            button.appendChild(icon);
+                            button.addEventListener('click', action);
+                            actions.appendChild(button);
+                        }
+                        row.append(details, actions);
+                        card.appendChild(row);
+                        container.appendChild(card);
                     });
                 }
-                
+
                 // Event listeners
                 document.getElementById('editModeBtn').addEventListener('click', () => {
                     if (!window.requireRealAccount('edit your profile')) return;
@@ -781,10 +794,7 @@
                 // Student management
                 document.getElementById('addStudentBtn').addEventListener('click', () => {
                     if (!window.requireRealAccount('add a child')) return;
-                    currentStudentId = null;
-                    document.getElementById('studentModalTitle').textContent = 'Add Child';
-                    document.getElementById('studentForm').reset();
-                    document.getElementById('studentModal').style.display = 'flex';
+                    showProfileError('Child profiles are not enabled for this account yet.');
                 });
                 
                 document.getElementById('cancelStudentBtn').addEventListener('click', () => {
@@ -795,21 +805,7 @@
                     e.preventDefault();
                     if (!window.requireRealAccount('save a child profile')) return;
                     
-                    const interests = Array.from(document.querySelectorAll('input[name="interests"]:checked'))
-                        .map(cb => cb.value);
-                    
-                    const studentData = {
-                        name: document.getElementById('studentName').value,
-                        age: parseInt(document.getElementById('studentAge').value),
-                        grade: document.getElementById('studentGrade').value,
-                        interests: interests,
-                        parentId: currentUser.uid
-                    };
-                    
-                    // In real implementation, save to Firestore
-                    alert('Student saved successfully!');
-                    document.getElementById('studentModal').style.display = 'none';
-                    await loadStudents();
+                    showProfileError('Child profiles are not enabled for this account yet. No child information was saved.');
                 });
                 
                 // Photo upload
