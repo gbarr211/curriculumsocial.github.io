@@ -26,6 +26,19 @@ const polls = [
   {id:'v4',group:'class',title:'Which project should our class try?',detail:'A sample class vote, shown separately from pod choices.',choices:[['garden','Design a tiny garden',8],['sound','Create a sound adventure',5],['bridge','Build a paper bridge',4]]}
 ];
 const state = {route:document.body.dataset.page || 'dashboard',filters:{matching:{q:'',area:'All areas',kind:'All approaches'},activities:{q:'',area:'All areas',kind:'All topics'},pods:{q:'',area:'All areas',kind:'All focuses'}},connections:new Set(),joined:new Set(),waitlist:new Set(),podRequests:new Set(),applications:[],votes:{},group:'p1',suggestions:[],quests:new Set()};
+const tourSteps = [
+  {route:'matching',title:'Find people you could learn with',text:'Try an area or interest filter. Open a sample family and explore a connection request. Shared interests become a starting point for real relationships.'},
+  {route:'activities',title:'Turn a connection into a shared experience',text:'Open a sample event and join it in the preview. It will appear in My community for the rest of this visit. No booking or message is sent.'},
+  {route:'pods',title:'Build a circle you can return to',text:'Explore a recurring learning pod or draft your own. Pods give families a familiar group to plan and learn with over time.'},
+  {route:'curriculum',title:'Shape what your group learns',text:'Try a vote or suggest a project. Change the selected group to see how each pod or class can make its own learning choices.'},
+  {route:'student',title:'Take the learning into the real world',text:'Open the Leaf detectives grown-up guide. See the age range, challenge and learning purpose, then imagine trying it together away from a screen.'}
+];
+let tourIndex = null;
+function tourPanel() {
+  if(tourIndex === null) return state.route === 'dashboard' ? `<section class="cs-card" aria-label="Guided demo" style="margin-bottom:24px"><div class="cs-eyebrow">See how it fits together</div><h2>Try a family’s journey.</h2><p>Five short stops, from finding your people to learning together. Explore with sample data; no account needed.</p><div class="cs-actions">${button('Start the walkthrough','tour-start','','light')}</div></section>` : '';
+  const step=tourSteps[tourIndex];
+  return `<section class="cs-card" aria-label="Guided demo" style="margin-bottom:24px"><div class="cs-eyebrow">Family walkthrough · ${tourIndex+1} of ${tourSteps.length}</div><h2>${step.title}</h2><p>${step.text}</p><div class="cs-actions">${tourIndex>0?button('Previous','tour-back','','outline small'):''}${button(tourIndex===tourSteps.length-1?'Finish & see my plan':'Next stop','tour-next','','small')}${button('Explore on my own','tour-exit','','outline small')}</div><p class="cs-meta">You can try the controls below or move on. Demo changes reset when you reload.</p></section>`;
+}
 const main = document.getElementById('cs-main');
 const dialog = document.getElementById('community-dialog');
 let restoreFocus = null, noticeTimer;
@@ -41,13 +54,14 @@ function notify(text){const box=document.getElementById('community-status');box.
 function header(title,description,action='',eyebrow='Your community'){return `<div class="cs-pagehead"><div><div class="cs-eyebrow">${eyebrow}</div><h1>${title}</h1><p>${description}</p></div>${action}</div>`;}
 function navigate(route,push=true){
   if(!['dashboard','matching','activities','pods','curriculum','apply','student'].includes(route))return;
+  if(tourIndex !== null){const step=tourSteps.findIndex(item=>item.route===route);tourIndex=step<0?null:step;}
   state.route=route;if(push)history.pushState({route},'',urlFor(route));render();main.focus({preventScroll:true});
 }
 function render(){
   document.body.classList.toggle('cs-student',state.route==='student');
   document.getElementById('community-header').innerHTML=communityHeader(state.route,'',true);
   const renders={dashboard:dashboardView,matching:matchingView,activities:eventsView,pods:podsView,curriculum:votesView,apply:applyView,student:studentView};
-  main.innerHTML=renders[state.route]();main.tabIndex=-1;
+  main.innerHTML=tourPanel()+renders[state.route]();main.tabIndex=-1;
   document.title={dashboard:'My community',matching:'Find families',activities:'Events',pods:'Pods',curriculum:'Learning votes',apply:'Contribute',student:'Student space'}[state.route]+' · Curriculum Social';
 }
 function dashboardView(){
@@ -118,6 +132,18 @@ function submitAction(formElement){
 }
 document.addEventListener('click',event=>{
   const routeLink=event.target.closest('[data-app-route]');if(routeLink){if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();if(routeLink.dataset.group)state.group=routeLink.dataset.group;navigate(routeLink.dataset.appRoute);return;}
+  const tourTrigger=event.target.closest('[data-action^="tour-"]');
+  if(tourTrigger){
+    const kind=tourTrigger.dataset.action;
+    if(kind==='tour-start'){tourIndex=0;navigate(tourSteps[0].route);}
+    else if(kind==='tour-exit'){tourIndex=null;render();main.focus({preventScroll:true});}
+    else if(tourIndex!==null && kind==='tour-back' && tourIndex>0){navigate(tourSteps[tourIndex-1].route);}
+    else if(tourIndex!==null && kind==='tour-next'){
+      if(tourIndex===tourSteps.length-1){tourIndex=null;navigate('dashboard');notify('Walkthrough complete. Keep exploring; any sample events you joined are in your plan.');}
+      else navigate(tourSteps[tourIndex+1].route);
+    }
+    return;
+  }
   const trigger=event.target.closest('[data-action]');if(trigger)action(trigger.dataset.action,trigger.dataset.id,trigger);
 });
 document.addEventListener('submit',event=>{

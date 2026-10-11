@@ -36,4 +36,17 @@ test('keyboard arrows and Escape close only picker and restore focus',x=>{x.rout
 test('pod icons render and a fresh form resets selection',x=>{x.route('pods');x.click('[data-action=create-pod]');x.click('.cs-icon-trigger');x.click('[data-icon-choice=flask]');x.fill('name','Sample science circle');x.fill('about','A synthetic group');x.fill('max','5');x.submit('action-form');assert.equal(x.d.querySelector('.cs-card .cs-icon').dataset.icon,'flask');x.click('[data-action=create-pod]');assert.equal(x.d.querySelector('[name=icon]').value,'circle');});
 test('learning idea uses selected icon and safely falls back for unknown IDs',x=>{x.route('curriculum');x.click('[data-action=suggest]');x.fill('name','Sample idea');x.fill('about','Synthetic');x.d.querySelector('[name=icon]').value='<svg onload=alert(1)>';x.submit('action-form');assert(x.d.querySelector('.cs-card [data-icon=circle]'));assert.equal(x.d.querySelectorAll('[onload]').length,0);});
 test('picker title is never rendered as markup and outside clicks close it',x=>{x.route('activities');x.click('[data-action=create-event]');x.fill('name','<img src=x onerror=alert(1)>');x.d.getElementById('name').dispatchEvent(new x.w.Event('input',{bubbles:true}));x.click('.cs-icon-trigger');assert.equal(x.d.querySelectorAll('.cs-icon-picker img').length,0);x.click('#about');assert(x.d.querySelector('.cs-icon-popout').hidden);assert.equal(x.d.querySelector('.cs-icon-trigger').getAttribute('aria-expanded'),'false');});
+test('guided family tour visits five stops and preserves sample actions',x=>{
+ x.click('[data-action="tour-start"]');assert.equal(x.d.querySelector('[aria-current="page"]').dataset.appRoute,'matching');assert.match(x.d.querySelector('[aria-label="Guided demo"]').textContent,/1 of 5/);
+ for(const route of ['activities','pods','curriculum','student']){x.click('[data-action="tour-next"]');assert.equal(x.d.querySelector('[aria-current="page"]').dataset.appRoute,route);}
+ x.click('[data-action="quest"][data-id="nature"]');assert.match(x.d.querySelector('[data-action="quest"][data-id="nature"]').textContent,/Marked/);
+ x.click('[data-action="tour-back"]');assert.match(x.d.querySelector('[aria-label="Guided demo"]').textContent,/4 of 5/);
+ x.click('[data-action="tour-next"]');x.click('[data-action="tour-next"]');assert.equal(x.d.querySelector('[aria-current="page"]').dataset.appRoute,'dashboard');
+ x.route('student');assert.match(x.d.querySelector('[data-action="quest"][data-id="nature"]').textContent,/Marked/);
+});
+test('guided tour can exit or follow navigation without stale steps',x=>{
+ x.click('[data-action="tour-start"]');x.route('pods');assert.match(x.d.querySelector('[aria-label="Guided demo"]').textContent,/3 of 5/);
+ x.click('[data-action="tour-exit"]');assert.equal(x.d.querySelector('[aria-label="Guided demo"]'),null);
+ x.route('dashboard');x.click('[data-action="tour-start"]');x.route('apply');assert.equal(x.d.querySelector('[aria-label="Guided demo"]'),null);
+});
 console.log(passed+' community scenario groups passed; native dialogs adapted, no browser rendering');
