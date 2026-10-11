@@ -12,7 +12,7 @@ const deferred = () => { let resolve; const promise = new Promise(r => resolve =
     function setup(page='signup', opts={}) {
         const dom = new JSDOM(fs.readFileSync(path.join(root,page+'.html'),'utf8'), {url:'https://example.invalid/'+page+'.html'});
         const w = dom.window, d = w.document, calls = {create:0, popup:0, login:0, save:[], update:0, navigate:[]};
-        w.auth = {currentUser:opts.currentUser || null};
+        w.auth = {currentUser:opts.currentUser || null, authStateReady:async()=>{if(opts.ready)await opts.ready(w);}};
         w.googleProvider = {};
         w.firebaseAuth = {
             async createUserWithEmailAndPassword(){calls.create++; const u=opts.create ? await opts.create() : user; w.auth.currentUser=u; return {user:u};},
@@ -73,6 +73,19 @@ const deferred = () => { let resolve; const promise = new Promise(r => resolve =
         for(const name of fs.readdirSync(root).filter(n=>n.endsWith('.html'))){const s=fs.readFileSync(path.join(root,name),'utf8');assert(!/window\.auth\.(onAuthStateChanged|signOut)\(/.test(s),name);}
         for(const name of ['login','signup']){const s=fs.readFileSync(path.join(root,name+'.html'),'utf8');assert(s.includes('src="js/auth-entry.js"'));assert(s.includes('role="alert"'));}
         assert(fs.readFileSync(path.join(root,'js/firebase-config.js'),'utf8').includes("code: 'profile/not-found'"));
+    });
+    await test('reload waits for restored session before attempting account creation',async()=>{
+        const ready=deferred();const x=setup('signup',{ready:async w=>{await ready.promise;w.auth.currentUser=user;}});
+        x.submit();x.submit();await tick();assert.equal(x.calls.create,0);assert.equal(x.calls.save.length,0);assert(x.d.getElementById('signupBtn').disabled);
+        ready.resolve();await tick();assert.equal(x.calls.create,0);assert.equal(x.calls.save.length,1);assert.equal(x.calls.navigate.length,1);x.dom.window.close();
+    });
+    await test('session initialization failure is recoverable without account creation',async()=>{
+        let fail=true;const x=setup('signup',{ready:async()=>{if(fail)throw {code:'auth/network-request-failed'};}});
+        x.submit();await tick();assert.equal(x.calls.create,0);assert.equal(x.calls.navigate.length,0);assert(!x.d.getElementById('signupBtn').disabled);
+        fail=false;x.submit();await tick();assert.equal(x.calls.create,1);assert.equal(x.calls.navigate.length,1);x.dom.window.close();
+    });
+    await test('Google popup remains synchronous with click rather than waiting for session restore',async()=>{
+        const x=setup('signup',{ready:()=>new Promise(()=>{})});x.google();assert.equal(x.calls.popup,1);await tick();assert.equal(x.calls.navigate.length,1);x.dom.window.close();
     });
     console.log(passed+' account scenario groups passed; no network or real accounts');
 })().catch(error=>{console.error(error);process.exitCode=1;});

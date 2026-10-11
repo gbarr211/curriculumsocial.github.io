@@ -65,6 +65,11 @@ export function bindAuthForms(w, navigate = url => w.location.assign(url)) {
         }
         setBusy(true);
         try {
+            // Firebase restores persisted sessions asynchronously after reload.
+            // Preserve the direct user gesture for Google popup authentication.
+            if (provider === 'password' && typeof w.auth.authStateReady === 'function') {
+                await w.auth.authStateReady();
+            }
             let user;
             if (pendingUser && pendingProvider === provider && w.auth.currentUser?.uid === pendingUser.uid &&
                 (provider === 'google' || pendingUser.email?.toLowerCase() === email.toLowerCase())) {
