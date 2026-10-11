@@ -20,4 +20,23 @@ async function setup(opts={}) {
  submit();await tick();assert.equal(x.alerts.length,0);assert(!x.d.getElementById('profileError').hidden);assert.equal(x.d.getElementById('bio').value,'Edited synthetic bio');assert.equal(x.d.getElementById('profileForm').style.display,'block');failed=false;submit();await tick();assert.equal(x.alerts.length,1);assert.equal(x.saves.length,2);assert.equal(x.errors.length,0);x.dom.window.close();console.log('PASS denied profile save retains edits and retry confirms save');
  let done;x=await setup({save:()=>new Promise(r=>done=r)});x.d.getElementById('profileUpdateForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));x.d.getElementById('profileUpdateForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));assert.equal(x.saves.length,1);done({success:true});await tick();x.dom.window.close();console.log('PASS concurrent profile saves write once');
  x=await setup();x.w.isDemoMode=true;x.d.getElementById('studentsSection').style.display='block';x.d.getElementById('studentsList').textContent='Sample child placeholder';await x.observer(person);assert.equal(x.w.isDemoMode,false);assert.equal(x.d.getElementById('studentsSection').style.display,'none');assert.equal(x.d.getElementById('studentsList').textContent,'');x.dom.window.close();console.log('PASS real session clears previous demo child placeholders');
+
+ for (const photoURL of ['https://example.invalid/x" onerror="window.injected=true', 'javascript:alert(1)', 'data:image/svg+xml,<svg/>', '//example.invalid/a.png', 'http://example.invalid/a.png']) {
+  x=await setup({get:async()=>({success:true,data:{...data,photoURL}})});
+  const avatar=x.d.getElementById('profileAvatar');
+  assert.equal(avatar.querySelector('[onerror]'),null,'avatar must not parse attributes from stored URL');
+  const img=avatar.querySelector('img');if(img)assert.equal(new URL(img.src).protocol,'https:');
+  assert.equal(x.w.injected,undefined);assert.equal(x.errors.length,0);x.dom.window.close();
+ }
+ console.log('PASS untrusted avatar URLs cannot inject HTML or non-HTTPS sources');
+ x=await setup({get:async()=>({success:true,data:{...data,photoURL:'https://example.invalid/avatar.png'}})});
+ let img=x.d.querySelector('#profileAvatar img');assert(img);assert.equal(img.src,'https://example.invalid/avatar.png');assert.equal(img.referrerPolicy,'no-referrer');
+ img.dispatchEvent(new x.w.Event('error'));assert.equal(x.d.getElementById('profileAvatar').textContent,'S');x.dom.window.close();
+ console.log('PASS HTTPS avatar renders and failed image falls back to initial');
+ let record={...data,philosophies:['montessori']};x=await setup({get:async()=>({success:true,data:record})});assert(x.d.getElementById('montessori').checked);
+ record={...data,philosophies:[]};await x.observer(person);assert(!x.d.getElementById('montessori').checked);x.dom.window.close();
+ console.log('PASS profile reload clears stale philosophy choices');
+ x=await setup({get:async()=>({success:true,data:{...data,displayName:'<img src=x onerror=alert(1)>',bio:'<script>bad</script>',philosophies:'bad historical field',role:{}}})});
+ assert.equal(x.d.getElementById('profileName').textContent,'<img src=x onerror=alert(1)>');assert.equal(x.d.querySelector('#profileName img'),null);assert.equal(x.d.getElementById('profileContent').style.display,'block');assert.equal(x.errors.length,0);x.dom.window.close();
+ console.log('PASS malformed historical fields and markup names render safely');
 })().catch(e=>{console.error(e);process.exitCode=1;});

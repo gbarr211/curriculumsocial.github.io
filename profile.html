@@ -616,7 +616,30 @@
                     }
                 }
                 
+                function renderProfileAvatar(photoURL, displayName) {
+                    const avatar = document.getElementById('profileAvatar');
+                    const initial = (typeof displayName === 'string' && displayName ? displayName : 'U').charAt(0).toUpperCase();
+                    avatar.textContent = initial;
+                    if (typeof photoURL !== 'string' || photoURL.length > 2048) return;
+                    let url;
+                    try { url = new URL(photoURL); } catch { return; }
+                    if (url.protocol !== 'https:' || url.username || url.password) return;
+                    const image = document.createElement('img');
+                    image.alt = 'Profile Picture';
+                    image.referrerPolicy = 'no-referrer';
+                    image.addEventListener('error', () => {
+                        if (image.parentNode === avatar) avatar.textContent = initial;
+                    }, {once: true});
+                    image.src = url.href;
+                    avatar.replaceChildren(image);
+                }
+
                 function displayProfile(userData) {
+                    userData = userData && typeof userData === 'object' ? {...userData} : {};
+                    for (const field of ['displayName', 'email', 'bio', 'location']) {
+                        if (typeof userData[field] !== 'string') userData[field] = '';
+                    }
+                    if (!['parent', 'teacher', 'venue'].includes(userData.role)) userData.role = 'member';
                     document.getElementById('profileName').textContent = userData.displayName || 'Your Name';
                     document.getElementById('profileRole').textContent = userData.role || 'Member';
                     const userName = document.getElementById('userName');
@@ -650,21 +673,13 @@
                     document.getElementById('location').value = userData.location || '';
                     document.getElementById('matchingRadius').value = userData.matchingRadius || '25';
                     
-                    // Update philosophy checkboxes
-                    if (userData.philosophies) {
-                        userData.philosophies.forEach(philosophy => {
-                            const checkbox = document.getElementById(philosophy);
-                            if (checkbox) checkbox.checked = true;
-                        });
+                    // Reset only recognized controls; stored values never select arbitrary elements.
+                    const philosophies = Array.isArray(userData.philosophies) ? userData.philosophies : [];
+                    for (const id of ['montessori', 'charlotte_mason', 'classical', 'waldorf', 'unschooling', 'eclectic']) {
+                        const checkbox = document.getElementById(id);
+                        if (checkbox) checkbox.checked = philosophies.includes(id);
                     }
-                    
-                    // Update avatar
-                    const avatar = document.getElementById('profileAvatar');
-                    if (userData.photoURL) {
-                        avatar.innerHTML = `<img src="${userData.photoURL}" alt="Profile Picture">`;
-                    } else {
-                        avatar.textContent = (userData.displayName || 'U').charAt(0).toUpperCase();
-                    }
+                    renderProfileAvatar(userData.photoURL, userData.displayName);
                 }
                 
                 async function loadStudents() {
@@ -812,12 +827,14 @@
                             );
                             
                             if (uploadResult.success) {
-                                await window.curriculumSocial.updateUserProfile(currentUser.uid, {
+                                const saved = await window.curriculumSocial.updateUserProfile(currentUser.uid, {
                                     photoURL: uploadResult.url
                                 });
-                                
-                                document.getElementById('profileAvatar').innerHTML = 
-                                    `<img src="${uploadResult.url}" alt="Profile Picture">`;
+                                if (!saved.success) {
+                                    showProfileError('Your photo could not be saved. Please try again.');
+                                    return;
+                                }
+                                renderProfileAvatar(uploadResult.url, document.getElementById('displayName').value);
                             }
                         } catch (error) {
                             alert('Error uploading photo: ' + error.message);
