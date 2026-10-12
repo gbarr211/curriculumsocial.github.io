@@ -52,10 +52,13 @@ const iconAvatar = (id,color) => `<span class="cs-avatar ${color}" aria-hidden="
 const empty = (title,detail) => `<div class="cs-empty"><h2>${title}</h2><p>${detail}</p>${button('Clear filters','clear-filters','','outline')}</div>`;
 function notify(text){const box=document.getElementById('community-status');box.textContent=text;box.hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>{box.hidden=true;},7000);}
 function header(title,description,action='',eyebrow='Your community'){return `<div class="cs-pagehead"><div><div class="cs-eyebrow">${eyebrow}</div><h1>${title}</h1><p>${description}</p></div>${action}</div>`;}
+// Route changes own scroll position; in-page rerenders deliberately do not.
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 function navigate(route,push=true){
   if(!['dashboard','matching','activities','pods','curriculum','apply','student'].includes(route))return;
   if(tourIndex !== null){const step=tourSteps.findIndex(item=>item.route===route);tourIndex=step<0?null:step;}
   state.route=route;if(push)history.pushState({route},'',urlFor(route));render();main.focus({preventScroll:true});
+  window.scrollTo({top:0,left:0,behavior:'instant'});
 }
 function render(){
   document.body.classList.toggle('cs-student',state.route==='student');
