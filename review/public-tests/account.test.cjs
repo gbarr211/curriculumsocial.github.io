@@ -1,0 +1,18 @@
+const fs=require('fs'),assert=require('node:assert/strict'),{JSDOM}=require('jsdom');
+const root=require('path').resolve(__dirname,'../..');
+const html=fs.readFileSync(root+'/signup.html','utf8'),src=fs.readFileSync(root+'/js/public-account-ui.js','utf8').replace('export function','function');
+const tick=()=>new Promise(r=>setTimeout(r,0));
+(async()=>{let pass=0;
+async function check(name,fn){const dom=new JSDOM(html,{runScripts:'outside-only',url:'https://example.invalid/signup.html'}),w=dom.window,d=w.document,calls=[];let observer;
+const service={ready:async()=>{},observe:cb=>{observer=cb;cb(null);},signup:async()=>{calls.push('signup');observer({email:'<b>adult@example.invalid</b>'});},login:async()=>calls.push('login'),google:async()=>calls.push('google'),logout:async()=>observer(null),reset:async()=>calls.push('reset'),remove:async()=>{calls.push('delete');observer(null);}};
+w.eval(src+';window.bind=bindPublicAccount;');await w.bind(d,service);d.getElementById('email').value='adult@example.invalid';d.getElementById('password').value='synthetic-password';d.getElementById('consent').checked=true;
+try{await fn({w,d,calls,service,observer,submit:()=>d.getElementById('account-form').dispatchEvent(new w.Event('submit',{cancelable:true}))});console.log('PASS '+name);pass++;}finally{dom.window.close();}}
+await check('signup confirms account, clears password and renders identity as text',async x=>{x.submit();await tick();assert.deepEqual(x.calls,['signup']);assert.equal(x.d.getElementById('password').value,'');assert.equal(x.d.querySelector('#identity b'),null);assert.equal(x.d.getElementById('signed-in').hidden,false);});
+await check('restored session displays account without creating another',async x=>{x.observer({email:'restored@example.invalid'});assert.equal(x.d.getElementById('signed-out').hidden,true);assert.deepEqual(x.calls,[]);});
+await check('double submit blocked and service errors preserve fields',async x=>{x.service.signup=async()=>{x.calls.push('failed');throw {code:'auth/network-request-failed'};};x.submit();x.submit();await tick();assert.deepEqual(x.calls,['failed']);assert.equal(x.d.getElementById('password').value,'synthetic-password');assert.match(x.d.getElementById('account-status').textContent,/Could not/);assert.equal(x.d.querySelector('button').disabled,false);});
+await check('Google keeps click gesture and requires notice acknowledgement',async x=>{x.d.getElementById('consent').checked=false;x.d.getElementById('google').click();assert.deepEqual(x.calls,[]);x.d.getElementById('consent').checked=true;x.d.getElementById('google').click();assert.deepEqual(x.calls,['google']);await tick();});
+await check('sign in uses existing account',async x=>{x.d.getElementById('mode').value='login';x.submit();await tick();assert.deepEqual(x.calls,['login']);});
+await check('password reset has neutral acknowledgement',async x=>{x.d.getElementById('reset').click();await tick();assert.deepEqual(x.calls,['reset']);assert.match(x.d.getElementById('account-status').textContent,/If this address/);});
+await check('delete requires separate explicit confirmation',async x=>{x.observer({email:'adult@example.invalid'});x.d.getElementById('delete-account').click();assert.deepEqual(x.calls,[]);assert.equal(x.d.getElementById('delete-confirm').hidden,false);x.d.getElementById('confirm-delete').click();await tick();assert.deepEqual(x.calls,['delete']);assert.equal(x.d.getElementById('signed-in').hidden,true);});
+assert(!/firestore|setDoc|getDoc/.test(fs.readFileSync(root+'/js/public-account.js','utf8')));console.log(pass+' authentication scenario groups passed; mocked Firebase, no real accounts.');
+})().catch(e=>{console.error(e);process.exitCode=1;});

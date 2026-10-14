@@ -1,0 +1,12 @@
+{
+  "name": "curriculumsocial-public-account-checks",
+  "private": true,
+  "scripts": {
+    "test": "node account.test.cjs && node account-loading.test.cjs",
+    "test:browser": "node account-browser.test.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0",
+    "playwright-core": "1.56.1"
+  }
+}
