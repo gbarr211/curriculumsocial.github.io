@@ -6,7 +6,9 @@ Updated 15 October 2026 (Asia/Bangkok).
 
 Continue the prepared ChatGPT release in Codex, retain the approved Sites experience, and fix adult login/signup. Use this repository for the public website and durable engineering records. Future advanced workflows are developed and approved in the existing private Sites project before committing them here.
 
-The ChatGPT and Codex project containers cannot be merged using the available project tools. The uploaded handoff and seven supporting documents have been preserved in the current cloud workspace under `/workspace/CurriculumSocial/sources`, with a provenance index in `/workspace/CurriculumSocial/README.md`. That archive is outside the website root and is not a full migration of ChatGPT conversations or Sites. The Windows project shown in the app is a separate checkout; this task cannot edit that host's files.
+The ChatGPT and Codex project containers cannot be merged using the available project tools. Nine uploaded documents, including the handoff and the subsequently supplied daily build record, have been preserved in the current cloud workspace under `/workspace/CurriculumSocial/sources`, with a provenance index in `/workspace/CurriculumSocial/README.md`. That archive is outside the website root and is not a full migration of ChatGPT conversations or Sites. The Windows project shown in the app is a separate checkout; this task cannot edit that host's files.
+
+The supplied Shared Circle board and the daily build record's latest hero selection are indexed in [BRAND_REFERENCE.md](BRAND_REFERENCE.md). The latest hero uses a left-edge desktop fade; option 3 remains reserved. The record supplies useful hashes and layout details but does not supply the missing release source. Its older brand-publication and preview-status entries are historical evidence and must be reconciled with later explicit user direction.
 
 ## Verified source state
 
