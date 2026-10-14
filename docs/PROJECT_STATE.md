@@ -29,6 +29,8 @@ Recovered the account preparation source and seven tests from the original work 
 
 This is an independently reviewable account fix. It does **not** contain the missing newer Sites homepage, community changes, or hero asset, and must not be presented as the completed prepared release. Other legacy pages remain on the public-main baseline.
 
+The account implementation was committed as `99a6d2a4a9be0629068219e3da15746f2ecad60d` and pushed to `codex/adult-account-handoff`; its remote SHA was verified. This branch is for reconciliation with the prepared Sites release. `main` remains at the original rollback reference. No production deployment was performed. GitHub API access returned Forbidden, so a pull request could not be created from this session; the branch is available for review.
+
 ## Validation
 
 Use the locked dependencies in `review/public-tests`:
@@ -40,6 +42,8 @@ npm run test:browser --prefix review/public-tests
 ```
 
 The DOM suite covers the seven recovered scenarios and ten additional loading, consent, reset, error, and deletion scenarios. Chromium checks cover all six routes, native form validation, session restoration, account actions, popup click activation, local assets, SDK failure, and layouts at 320, 390, and 1280 pixels. All Firebase services in these suites are mocked; passing checks do not verify live provider configuration, authorized domains, or production sign-in.
+
+Current run: all 17 DOM scenarios and 14 Chromium checks passed; `git diff --check` passed. Dependency installation from the lockfile (`npm ci`) passed. A mobile screenshot was inspected and screenshots are retained in `/workspace/CurriculumSocial/validation` outside the public website.
 
 For local development, run `python3 -m http.server 8000 --bind 127.0.0.1` from the repository root. Account CSS and modules are local. Live SDK/authentication additionally depend on Google's Firebase endpoints and authorized-domain settings. Do not describe a local server as a published deployment.
 
@@ -55,6 +59,8 @@ git -C /workspace/scratch/bdf329276ed6/curriculum-release bundle create /tmp/Cur
 Expected prepared HEAD from the handoff: `32182464535a31b7bdda8afe941af3760e042cf0`. Preserve any newer work rather than resetting it. Once transferred, inspect the bundle, reconcile these account fixes with the prepared release, run the Sites-derived landing/community tests and account/browser checks, and then complete the authorized release. Retain `c08e1a367822e6ee930ea8dd0eaa8c13cab189c1` as the original main rollback reference.
 
 The environment's proxy returned 403 for the public site and private Sites URL during inspection. Neither live content nor the new authentication integration has been verified from this environment. The original handoff's landing/community test results are historical, not checks executed on the current checkout.
+
+Cloud environment setup and startup instructions were saved to the environment draft, including test dependency installation and the restartable static server. Network additions for Firebase authentication and the public/private site hosts were also saved. Saving a draft did not apply the policy or publish an environment; the user can review/save the settings and publish the environment separately from any website release.
 
 ## Later work
 
