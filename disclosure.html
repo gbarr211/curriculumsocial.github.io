@@ -167,6 +167,8 @@
             overflow-y: auto;
         }
     </style>
+    <link rel="stylesheet" href="css/community.css">
+    <script type="module" src="js/community-shell.js"></script>
 </head>
 <body>
     <!-- Header & Navigation -->
@@ -352,7 +354,7 @@
             buildNavLinks(document.getElementById('mobileNavLinks'), true);
             
             // Add auth state listener to update navigation
-            window.auth.onAuthStateChanged((user) => {
+            window.firebaseAuth.onAuthStateChanged(window.auth, (user) => {
                 buildNavLinks(document.getElementById('desktopNav'), false);
                 buildNavLinks(document.getElementById('mobileNavLinks'), true);
             });

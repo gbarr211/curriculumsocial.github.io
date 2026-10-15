@@ -1,0 +1,10 @@
+{
+  "release": "2026-10-15-public-launch",
+  "reviewed_source": "5b5fdf6099116faba768658a02d3c6ff0ffc6848",
+  "account_source": "99a6d2a4a9be0629068219e3da15746f2ecad60d",
+  "community_mode": "synthetic-demo",
+  "accounts": "firebase-authentication-only",
+  "private_submissions": false,
+  "reviewer_access": false,
+  "enrollment_and_payments": false
+}

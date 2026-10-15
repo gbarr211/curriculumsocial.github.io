@@ -2,68 +2,48 @@
 
 Updated 15 October 2026 (Asia/Bangkok).
 
-## Current request and workflow
+## Public launch
 
-Continue the prepared ChatGPT release in Codex, retain the approved Sites experience, and fix adult login/signup. Use this repository for the public website and durable engineering records. Future advanced workflows are developed and approved in the existing private Sites project before committing them here.
+The user explicitly directed Codex to make the website live now, while keeping advanced builds in Sites for future approval. The release is assembled from the reviewed GitHub homepage/community at `5b5fdf6099116faba768658a02d3c6ff0ffc6848` and the authentication-only account work beginning at `99a6d2a4a9be0629068219e3da15746f2ecad60d`.
 
-The ChatGPT and Codex project containers cannot be merged using the available project tools. Nine uploaded documents, including the handoff and the subsequently supplied daily build record, have been preserved in the current cloud workspace under `/workspace/CurriculumSocial/sources`, with a provenance index in `/workspace/CurriculumSocial/README.md`. That archive is outside the website root and is not a full migration of ChatGPT conversations or Sites. The Windows project shown in the app is a separate checkout; this task cannot edit that host's files.
+The reviewed branch includes the family-led homepage, seven community screens, navigation scroll fixes and guided walkthrough. Accounts use Firebase Authentication only. The public pages distinguish sample community actions from actual adult accounts. Legacy direct routes for unfinished submissions, reviewer tools, venue management, incident reports and portfolios are informational pages without forms or backend scripts.
 
-The supplied Shared Circle board and the daily build record's latest hero selection are indexed in [BRAND_REFERENCE.md](BRAND_REFERENCE.md). The latest hero uses a left-edge desktop fade; option 3 remains reserved. The record supplies useful hashes and layout details but does not supply the missing release source. Its older brand-publication and preview-status entries are historical evidence and must be reconciled with later explicit user direction.
+The exact public/future boundary and source handoff procedure are in [RELEASE_SCOPE.md](RELEASE_SCOPE.md). This supersedes the earlier decision to hold the entire launch for the missing Sites bundle. The selected final Sites hero and unrecovered branding remain a follow-up, and this release does not claim exact parity with that newer source.
 
-## Verified source state
+Publication state at this checkpoint: release assembled and validated locally; GitHub main push and live verification are the next steps. See the final deployment evidence once added below. Original main/rollback reference: `c08e1a367822e6ee930ea8dd0eaa8c13cab189c1`.
 
-- Public GitHub `main`: `c08e1a367822e6ee930ea8dd0eaa8c13cab189c1` at inspection.
-- GitHub review branch `review/movement-homepage-20261008`: `5b5fdf6099116faba768658a02d3c6ff0ffc6848`.
-- Handoff's newer Sites source: `5e74b516131f96377f20697f2f64c83ea034cbd7` (historical evidence; unavailable in this checkout).
-- Handoff's prepared release: `32182464535a31b7bdda8afe941af3760e042cf0`, formerly at `/workspace/scratch/bdf329276ed6/curriculum-release`. The commit and checkout are absent here, and its intended release branch was not found on GitHub.
-- The original work history confirms public release authorization, preparation of that commit, and a failed Git push. It does not establish deployment.
+## Validation completed on this release
 
-## Account work recovered in Codex
+- 17 account DOM scenarios passed with mocked Firebase.
+- 21 community DOM scenarios passed against the packaged public demo.
+- 14 account Chromium checks passed, with mocked Firebase and no real accounts.
+- 12 public-release Chromium checks passed: homepage/account entry points at 320, 390, 1024 and 1280px; interest-preview defaults; five-stop walkthrough; seven demo screens on mobile/desktop; scroll/history navigation; simulated actions; deferred pages; local asset/browser errors.
+- All static links/assets resolved across 15 public entry pages. Previously reviewed generator-code removals were preserved. JavaScript syntax and whitespace checks passed.
+- Firebase's public project configuration returned HTTP 200 and includes `curriculumsocial.com` in its authorized domains. The public site and real Firebase SDK are reachable from this environment. No production accounts, password-reset emails, account deletions, database writes or permission changes were made by testing.
 
-Recovered the account preparation source and seven tests from the original work history without executing historical shell commands. Restored the authentication-only approach and hardened it on the current checkout:
-
-- Six direct routes: `signup.html`, `login.html`, `profile.html`, and their `account/` equivalents.
-- Email/password signup and login, Google popup sign-in, restored session, sign out, password reset, and separately confirmed deletion.
-- Correct signup/login autocomplete, signup acknowledgement, guarded duplicate submissions, escaped identity display, and actionable service errors.
-- Firebase initialization is isolated from the legacy `firebase-config.js`, with disabled controls until ready and an explicit recovery message for SDK/loading failure.
-- Existing Firebase project configuration and provider SDK version are retained. No Firestore imports/writes, database permission changes, live test accounts, reset emails, or production deletions were performed.
-- Local CSS uses the established Shared Circle colors and works without external fonts or CSS dependencies.
-
-This is an independently reviewable account fix. It does **not** contain the missing newer Sites homepage, community changes, or hero asset, and must not be presented as the completed prepared release. Other legacy pages remain on the public-main baseline.
-
-The account implementation was committed as `99a6d2a4a9be0629068219e3da15746f2ecad60d` and pushed to `codex/adult-account-handoff`; its remote SHA was verified. This branch is for reconciliation with the prepared Sites release. `main` remains at the original rollback reference. No production deployment was performed. GitHub API access returned Forbidden, so a pull request could not be created from this session; the branch is available for review.
-
-## Validation
-
-Use the locked dependencies in `review/public-tests`:
+Run from the repository root:
 
 ```sh
 npm ci --prefix review/public-tests
 npm test --prefix review/public-tests
 npm run test:browser --prefix review/public-tests
+python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-The DOM suite covers the seven recovered scenarios and ten additional loading, consent, reset, error, and deletion scenarios. Chromium checks cover all six routes, native form validation, session restoration, account actions, popup click activation, local assets, SDK failure, and layouts at 320, 390, and 1280 pixels. All Firebase services in these suites are mocked; passing checks do not verify live provider configuration, authorized domains, or production sign-in.
+The browser suite uses `/usr/bin/chromium`; `CHROMIUM_PATH` overrides it. Browser tests start/close their own local servers and may need the environment's local-listener permission. No application build step is required. `.nojekyll` marks the public site as static files.
 
-Current run: all 17 DOM scenarios and 14 Chromium checks passed; `git diff --check` passed. Dependency installation from the lockfile (`npm ci`) passed. A mobile screenshot was inspected and screenshots are retained in `/workspace/CurriculumSocial/validation` outside the public website.
+## Source continuity and other-chat updates
 
-For local development, run `python3 -m http.server 8000 --bind 127.0.0.1` from the repository root. Account CSS and modules are local. Live SDK/authentication additionally depend on Google's Firebase endpoints and authorized-domain settings. Do not describe a local server as a published deployment.
+Nine uploaded documents are preserved unchanged under `/workspace/CurriculumSocial/sources`, outside the website root, with hashes in `/workspace/CurriculumSocial/README.md`. The Shared Circle board and later selected-hero hashes are recorded in [BRAND_REFERENCE.md](BRAND_REFERENCE.md). Historical instructions in uploads remain source evidence and do not override the current request.
 
-## Blocking source transfer and next release
+The original ChatGPT work was **Build Educational Movement**. The cross-chat reader now reports it is unavailable without the Codex app MCP server; that server is not exposed here. Direct scheduled-chat synchronization cannot currently run. Native GitHub fetch/push works. GitHub API/PR creation is blocked by this environment, so release uses native Git and live HTTP verification.
 
-The latest prepared release is required to preserve the user's approved Sites experience. Transfer a Git bundle from the original ChatGPT workspace, or push the prepared release to a review branch there using its available authenticated GitHub tools. Example export in the original workspace, after checking the intended HEAD:
+Still-unavailable sources: prepared release `32182464535a31b7bdda8afe941af3760e042cf0`, newer Sites source `5e74b516131f96377f20697f2f64c83ea034cbd7`, and separate branding candidate `242995f4de87fa67f4273d88b2e88b83714158e4`. The original scratch directories are absent here. Do not claim these commits have been recovered. Transfer approved updates through a review branch or a Git bundle, then reconcile them with the launched account flow.
 
-```sh
-git -C /workspace/scratch/bdf329276ed6/curriculum-release rev-parse HEAD
-git -C /workspace/scratch/bdf329276ed6/curriculum-release bundle create /tmp/CurriculumSocial-release.bundle HEAD
-```
+A full ChatGPT-to-Codex project-container merge is not supported by the available tools. The app's Windows project is separate from this cloud checkout. The project archive and Git repository preserve the available context and implementation.
 
-Expected prepared HEAD from the handoff: `32182464535a31b7bdda8afe941af3760e042cf0`. Preserve any newer work rather than resetting it. Once transferred, inspect the bundle, reconcile these account fixes with the prepared release, run the Sites-derived landing/community tests and account/browser checks, and then complete the authorized release. Retain `c08e1a367822e6ee930ea8dd0eaa8c13cab189c1` as the original main rollback reference.
+## Future Sites work
 
-The environment's proxy returned 403 for the public site and private Sites URL during inspection. Neither live content nor the new authentication integration has been verified from this environment. The original handoff's landing/community test results are historical, not checks executed on the current checkout.
+Private interest capture, private profiles, trusted reviewer membership, narrowly scoped permissions, recoverable saves, real child records, enrollment and payments remain future work. Build and review those increments in the existing Sites project before committing an approved release to the public repository. Preserve Sites sharing configuration; do not infer permission to widen Firestore access from account-release authorization.
 
-Cloud environment setup and startup instructions were saved to the environment draft, including test dependency installation and the restartable static server. Network additions for Firebase authentication and the public/private site hosts were also saved. Saving a draft did not apply the policy or publish an environment; the user can review/save the settings and publish the environment separately from any website release.
-
-## Later work
-
-Private interest submission, trusted reviewer membership, permission tests, and recoverable saves remain future Sites work. Their scope and acceptance are separate from authentication-only adult accounts. Product focus remains family-led pods, human teaching, minimal child data, and a manageable founder workload.
+The selected later hero and accurate logo/font assets remain visual follow-ups. The current board palette is used, with local typography fallbacks; do not substitute a new generated logo or claim the unrecovered SVG candidate exactly matches the board.

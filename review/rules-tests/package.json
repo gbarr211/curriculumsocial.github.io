@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@firebase/rules-unit-testing": "6.0.0",
+    "firebase": "13.0.0",
+    "firebase-tools": "15.33.0"
+  },
+  "name": "curriculumsocial-rules-checks",
+  "private": true,
+  "scripts": {
+    "test": "firebase emulators:exec --config ../firebase.rules-test.json --only firestore --project demo-curriculumsocial-rules \"node profiles.test.mjs\""
+  }
+}
