@@ -10,7 +10,7 @@ The reviewed branch includes the family-led homepage, seven community screens, n
 
 The exact public/future boundary and source handoff procedure are in [RELEASE_SCOPE.md](RELEASE_SCOPE.md). This supersedes the earlier decision to hold the entire launch for the missing Sites bundle. The selected final Sites hero and unrecovered branding remain a follow-up, and this release does not claim exact parity with that newer source.
 
-Publication state at this checkpoint: release assembled and validated locally; GitHub main push and live verification are the next steps. See the final deployment evidence once added below. Original main/rollback reference: `c08e1a367822e6ee930ea8dd0eaa8c13cab189c1`.
+Publication state: **live and verified** at https://curriculumsocial.com/. Application commit `7a22a47bea15d903de5fa315a7c54ff37b011a79` was pushed to `main`; 34 live endpoints matched the tested source, and fresh Chromium checks confirmed real Firebase initialization on login/signup. See [deployment evidence](DEPLOYMENT_20261015.md). Original main/rollback reference: `c08e1a367822e6ee930ea8dd0eaa8c13cab189c1`.
 
 ## Validation completed on this release
 
