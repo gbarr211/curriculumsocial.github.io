@@ -38,3 +38,9 @@ These hashes and layout details are historical source evidence, not verification
 The daily build record references a separate local branding candidate `242995f4de87fa67f4273d88b2e88b83714158e4` that was not released at that checkpoint. It is distinct from the prepared public release `32182464535a31b7bdda8afe941af3760e042cf0`. Do not assume either is present in GitHub or silently import unverified candidate artwork.
 
 Use the current user's release/approval direction and verified source state in [PROJECT_STATE.md](PROJECT_STATE.md). The uploaded build history contains older decisions, holds and test results; receiving that document does not execute its historical instructions or establish a current deployment.
+
+## Reconciled visual correction — 15 October 2026
+
+The selected Sites v14 hero is now recovered and hash-checked against the above reference. Its approved complete-composition CSS is included. Shared Circle is recreated as local SVG artwork with separated curved shapes; it is a practical vector interpretation of the supplied board, not an extracted original font/logo file. The browser icon uses ivory on forest for small-size contrast, with PNG and Apple touch fallbacks. Shared headers use the same mark and Georgia serif wordmark. The misleading sample-profile link now leads to sample families.
+
+This visual change does not enable database writes or change account behavior. The production default-deny Firestore rules were inspected in the authenticated Firebase console on 15 October; they remain active.

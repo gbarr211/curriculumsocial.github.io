@@ -44,3 +44,14 @@ body.cs-legacy>header:not(.cs-header),body.cs-legacy>.min-h-screen>header{displa
 .cs-tour-active #cs-main{padding-bottom:300px}
 @media(max-width:600px){.cs-tour-overlay{bottom:12px;right:12px;width:calc(100% - 24px);padding:14px 16px}.cs-tour-overlay h2{font-size:18px}.cs-tour-overlay p{font-size:12px;line-height:1.4}.cs-tour-overlay .cs-actions{margin-top:10px}.cs-tour-active #cs-main{padding-bottom:310px}.cs-tour-invite{gap:10px}.cs-tour-invite .cs-actions{margin-left:0}}
 @media(max-height:650px){.cs-tour-overlay{max-height:45dvh;overflow-y:auto}}
+
+/* Keep the chosen hero's complete composition, with a short fade toward the copy. */
+.hero{grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);gap:32px}
+.hero-visual{padding-bottom:0;min-width:0}
+.hero .photo-frame{height:auto;border-radius:12px;overflow:hidden;mask-image:linear-gradient(to right,transparent 0%,#000 5%,#000 100%);-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 5%,#000 100%)}
+.hero .photo-frame img{display:block;width:100%;height:auto;object-fit:contain;object-position:center}
+.hero .visual-card{position:static;max-width:none;margin-top:16px;border-radius:12px;padding:18px 22px}
+.hero .visual-card p{font-size:23px}.hero .sun{display:none}
+@media(max-width:1000px) and (min-width:761px){.hero{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:24px}.hero h1{font-size:clamp(46px,5.4vw,64px)}}
+@media(max-width:760px){.hero{grid-template-columns:1fr;gap:28px}.hero-visual{width:calc(100% + 36px);max-width:none;margin-left:-18px;margin-right:-18px;padding-bottom:0}.hero .photo-frame{height:auto;border-radius:8px;mask-image:none;-webkit-mask-image:none}.hero .visual-card{margin:16px 18px 0;padding:18px}.hero .image-label{right:12px}}
+.brand,.cs-brand{display:inline-flex;align-items:center;gap:10px;font-family:Georgia,serif;font-weight:600;letter-spacing:-.045em}.brand img,.cs-brand img{width:34px;height:34px;flex-shrink:0}.cs-brand{white-space:normal}@media(max-width:380px){.cs-brand{font-size:19px;gap:7px}.cs-brand img{width:28px;height:28px}}

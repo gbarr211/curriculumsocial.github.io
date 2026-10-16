@@ -36,3 +36,5 @@ fieldset:disabled button { cursor: wait; opacity: .6; }
 #delete-confirm { margin-top: 20px; border-top: 1px solid var(--line); }
 .notice { max-width: 760px; }
 @media (max-width: 620px) { .account { margin: 12px 16px 40px; padding: 24px 20px; } .account-header { padding: 20px 16px; } .account-header > a:last-child { font-size: 14px; } }
+
+.brand{display:inline-flex;align-items:center;gap:10px}.brand img{width:34px;height:34px;flex-shrink:0}@media(max-width:380px){.brand{font-size:21px}.account-header{gap:14px}}
