@@ -31,6 +31,8 @@ fieldset:disabled button { cursor: wait; opacity: .6; }
 .text-button { background: transparent; color: var(--ink); border: 0; text-decoration: underline; padding: 12px 0; }
 .text-button:hover { background: transparent; }
 #account-status { padding: 14px 16px; background: #e6ebdc; border-radius: 9px; }
+#account-feedback, #account-status.is-error { color: #942d24; background: #fff0ec; border: 1px solid #c7786d; border-radius: 9px; padding: 12px 14px; font-weight: 600; }
+#account-feedback::before { content: '✕ '; }
 .fine-print { color: var(--muted); font-size: 14px; }
 .account-footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line); }
 #delete-confirm { margin-top: 20px; border-top: 1px solid var(--line); }

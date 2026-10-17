@@ -4,7 +4,18 @@ export function bindPublicAccount(d, service) {
     let ready = false;
     let busy = false;
     let signedIn = false;
-    const message = text => { get('account-status').textContent = text; };
+    const feedback = d.createElement('p');
+    feedback.id = 'account-feedback';
+    feedback.hidden = true;
+    feedback.setAttribute('role', 'alert');
+    get('submit-account').closest('.actions').before(feedback);
+    get('password').setAttribute('aria-describedby', 'account-feedback');
+    const message = (text, failed = false) => {
+        get('account-status').textContent = text;
+        get('account-status').classList.toggle('is-error', failed);
+        feedback.textContent = failed ? text : '';
+        feedback.hidden = !failed;
+    };
     const controls = () => {
         get('account-controls').disabled = !ready || busy;
         d.querySelectorAll('#signed-in button').forEach(button => {
@@ -28,17 +39,17 @@ export function bindPublicAccount(d, service) {
             'auth/too-many-requests': 'Too many attempts. Please wait a little before trying again.',
             'auth/network-request-failed': 'Could not connect to sign-in. Check your connection and try again.'
         };
-        message(messages[e?.code] || 'Could not complete this action. Check your connection and details, then try again.');
+        message(messages[e?.code] || 'Could not complete this action. Check your connection and details, then try again.', true);
     };
     function updateMode() {
         const signup = get('mode').value === 'signup';
-        get('account-title').textContent = signup ? 'Your place to begin.' : 'Welcome back.';
+        get('account-title').textContent = signup ? 'Create your account.' : 'Welcome back.';
         get('submit-account').textContent = signup ? 'Create account' : 'Sign in';
         get('password').autocomplete = signup ? 'new-password' : 'current-password';
         if (signup) get('password').setAttribute('minlength', '6');
         else get('password').removeAttribute('minlength');
         get('consent').required = signup;
-        get('consent-row').hidden = !signup;
+        get('consent-row').hidden = false;
         get('login-notice').hidden = signup;
     }
     async function run(action, success) {
@@ -85,7 +96,7 @@ export function bindPublicAccount(d, service) {
         // Google sign-in can create a new account even from the login mode.
         if (!get('consent').checked) {
             get('consent-row').hidden = false;
-            message('Please confirm the adult account notice first.');
+            message('To continue with Google, tick the adult account notice above, then select Continue with Google again.', true);
             get('consent').focus();
             return;
         }
