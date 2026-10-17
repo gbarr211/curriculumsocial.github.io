@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function owner(uid){return request.auth != null && request.auth.uid == uid;}
+  function text(v,max){return v is string && v.size() <= max;}
+  function card(d){return {'displayName':d.displayName,'area':d.area,'languages':d.languages,'philosophies':d.philosophies,'interests':d.interests,'about':d.about,'photo':d.photo,'updatedAt':d.updatedAt};}
+  function valid(d){return d.keys().hasAll(['displayName','area','languages','philosophies','interests','about','photo','contribution','availability','discoverable','consentVersion','createdAt','updatedAt'])
+   && d.keys().hasOnly(['displayName','area','languages','philosophies','interests','about','photo','contribution','availability','discoverable','consentVersion','createdAt','updatedAt'])
+   && text(d.displayName,80) && d.displayName.size()>0
+   && d.area in ['samui-undecided','samui-north','samui-east','samui-south','samui-west','elsewhere','prefer-not-to-say']
+   && text(d.languages,120) && text(d.about,600)
+   && d.philosophies is list && d.philosophies.size()>0 && d.philosophies.size()<=10
+   && d.philosophies.hasOnly(['montessori','waldorf','reggio','charlotte_mason','classical','unschooling','nature-based','project-based','eclectic','exploring'])
+   && d.philosophies.toSet().size()==d.philosophies.size()
+   && d.interests is list && d.interests.size()<=10 && d.interests.hasOnly(['nature','art','music','science','books','languages','movement','practical','community','travel'])
+   && d.interests.toSet().size()==d.interests.size()
+   && text(d.photo,180000) && (d.photo=='' || d.photo.matches('^data:image/jpeg;base64,[A-Za-z0-9+/=]+$'))
+   && d.contribution in ['exploring','share-teaching','host','specialist','organise']
+   && d.availability in ['exploring','weekdays','weekends','flexible']
+   && d.discoverable is bool && d.consentVersion=='family-profile-2026-10-17'
+   && d.createdAt is timestamp && d.updatedAt==request.time;
+  }
+  function paired(uid,d){return d.discoverable
+   ? getAfter(/databases/$(database)/documents/family_directory/$(uid)).data == card(d)
+   : !existsAfter(/databases/$(database)/documents/family_directory/$(uid));}
+  function directoryMatches(uid,d){let p=getAfter(/databases/$(database)/documents/adult_profiles/$(uid)).data;return p.discoverable==true && d==card(p);}
+  match /adult_profiles/{uid}{
+   allow get: if owner(uid);
+   allow list: if false;
+   allow create: if owner(uid) && valid(request.resource.data) && request.resource.data.createdAt==request.time && paired(uid,request.resource.data);
+   allow update: if owner(uid) && valid(request.resource.data) && request.resource.data.createdAt==resource.data.createdAt && paired(uid,request.resource.data);
+   allow delete: if owner(uid) && !existsAfter(/databases/$(database)/documents/family_directory/$(uid));
+  }
+  match /family_directory/{uid}{
+   allow get: if request.auth != null;
+   allow list: if request.auth != null && request.query.limit != null && request.query.limit<=50;
+   allow create,update: if owner(uid) && directoryMatches(uid,request.resource.data);
+   allow delete: if owner(uid);
+  }
+  match /{document=**}{allow read,write: if false;}
+ }
+}
