@@ -7,7 +7,7 @@ const root = path.resolve(__dirname, '../..');
 
 // Real Chromium, but synthetic Firebase modules: no production accounts, reset
 // emails, database requests, or account deletions are sent by this suite.
-const firebaseApp = 'export function initializeApp(config) { return { config }; }';
+const { firebaseApp, firebaseFirestore } = require('./firebase-browser-fixtures.cjs');
 const firebaseAuth = `
 let user = JSON.parse(sessionStorage.getItem('cs-test-user') || 'null');
 const observers = [];
@@ -17,11 +17,11 @@ window.accountCalls = [];
 export function getAuth() { return auth; }
 export class GoogleAuthProvider { setCustomParameters() {} }
 export function onAuthStateChanged(auth, cb) { observers.push(cb); queueMicrotask(() => cb(user)); return () => {}; }
-export async function createUserWithEmailAndPassword(auth, email) { window.accountCalls.push('signup'); emit({ email }); }
-export async function signInWithEmailAndPassword(auth, email) { window.accountCalls.push('login'); emit({ email }); }
+export async function createUserWithEmailAndPassword(auth, email) { window.accountCalls.push('signup'); emit({ uid:'synthetic-a', email }); }
+export async function signInWithEmailAndPassword(auth, email) { window.accountCalls.push('login'); emit({ uid:'synthetic-a', email }); }
 export async function signInWithPopup() {
     if (!navigator.userActivation.isActive) throw new Error('Lost browser click gesture');
-    window.accountCalls.push('google'); emit({ email: 'google@example.invalid' });
+    window.accountCalls.push('google'); emit({ uid:'synthetic-a', email: 'google@example.invalid' });
 }
 export async function signOut() { window.accountCalls.push('logout'); emit(null); }
 export async function sendPasswordResetEmail() { window.accountCalls.push('reset'); }
@@ -50,20 +50,22 @@ const pass = message => { console.log('PASS ' + message); passed++; };
         const url = route.request().url();
         if (url === 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js') return route.fulfill({ contentType: 'text/javascript', body: firebaseApp });
         if (url === 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js') return route.fulfill({ contentType: 'text/javascript', body: firebaseAuth });
+        if (url === 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js') return route.fulfill({ contentType: 'text/javascript', body: firebaseFirestore });
         if (url.startsWith(base + '/')) return route.continue();
         external.push(url); return route.abort();
     });
     const page = await context.newPage();
     page.on('pageerror', error => errors.push(error.message));
     page.on('response', response => { if (response.status() >= 400) missing.push(response.url()); });
-    for (const route of ['/signup.html', '/login.html', '/profile.html', '/account/signup.html', '/account/login.html', '/account/profile.html']) {
+    for (const route of ['/signup.html', '/login.html', '/account/signup.html', '/account/login.html', '/account/profile.html']) {
         await page.goto(base + route);
         await page.waitForFunction(() => !document.getElementById('account-controls').disabled);
         assert.equal(await page.locator('#mode').inputValue(), route.endsWith('signup.html') ? 'signup' : 'login');
         pass('account route loads: ' + route);
     }
-    await page.goto(base + '/signup.html');
+    await page.goto(base + '/account/profile.html');
     await page.waitForFunction(() => !document.getElementById('account-controls').disabled);
+    await page.locator('#mode').selectOption('signup');
     await page.locator('#email').fill('adult@example.invalid');
     await page.locator('#password').fill('synthetic-password');
     await page.locator('#submit-account').click();

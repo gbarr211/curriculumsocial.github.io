@@ -6,7 +6,7 @@ const root = path.resolve(__dirname, '../..');
 const html = fs.readFileSync(path.join(root, 'signup.html'), 'utf8').replace('data-member-redirect="true"','');
 const ui = fs.readFileSync(path.join(root, 'js/public-account-ui.js'), 'utf8').replace('export function', 'function');
 const entry = fs.readFileSync(path.join(root, 'js/public-account.js'), 'utf8')
-    .replace(/^import .*;\n/, '').split("if (typeof document !== 'undefined')")[0]
+    .replace(/^import [^\r\n]*;\r?\n/, '').split("if (typeof document !== 'undefined')")[0]
     .replace('export async function', 'async function');
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
 let passed = 0;
