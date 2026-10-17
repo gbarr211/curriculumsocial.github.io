@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
+const {firebaseApp,firebaseSignedOutAuth}=require('./firebase-browser-fixtures.cjs');
 const root = path.resolve(__dirname, '../..');
 const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png' };
 const server = http.createServer((req, res) => {
@@ -23,6 +24,8 @@ const pass = name => { console.log('PASS ' + name); passed++; };
     const context = await browser.newContext();
     const unexpected = [], errors = [], missing = [];
     await context.route('**/*', route => {
+        if (route.request().url() === 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js') return route.fulfill({contentType:'text/javascript',body:firebaseApp});
+        if (route.request().url() === 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js') return route.fulfill({contentType:'text/javascript',body:firebaseSignedOutAuth});
         if (route.request().url().startsWith(base + '/')) return route.continue();
         unexpected.push(route.request().url()); return route.abort();
     });
@@ -76,7 +79,7 @@ const pass = name => { console.log('PASS ' + name); passed++; };
             await page.locator('#cs-main h1').waitFor();
             assert.equal(await page.locator('.cs-header').count(), 1);
             assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, route + ' overflow at ' + width);
-            assert.match(await page.locator('.cs-preview-note').textContent(), /Sample community/);
+            assert.match(await page.locator('.cs-preview-note').textContent(), /Community demo.*Fictional families and activities/);
         }
         pass('all seven demo screens load and fit at ' + width + 'px');
     }
@@ -111,7 +114,7 @@ const pass = name => { console.log('PASS ' + name); passed++; };
     assert.deepEqual(unexpected, []);
     assert.deepEqual(errors, []);
     assert.deepEqual(missing, []);
-    pass('homepage and demo make no external requests and have no browser or asset errors');
+    pass('homepage and demo load with mocked signed-out auth, no other external requests or browser/asset errors');
     console.log(`${passed} release browser checks passed; no backend writes.`);
 })().catch(error => { console.error(error); process.exitCode = 1; }).finally(async () => {
     if (browser) await browser.close();

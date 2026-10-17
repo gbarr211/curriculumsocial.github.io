@@ -1,5 +1,13 @@
 # Curriculum Social — current project state
 
+Current checkpoint, 17 October 2026: the approved hero and Shared Circle assets
+have been recovered and are already live on main `4f254964`. Family profiles and
+discovery are prepared on `review/family-matching-20261017` (`6b03bb2`), pending
+production rules activation and live verification. Search and Windows/browser
+validation improvements are described in [FAMILY_VALIDATION_20261017.md](FAMILY_VALIDATION_20261017.md).
+The historical missing-asset and authentication-only descriptions below refer
+to the earlier launch; use the newer family release scope for that increment.
+
 Updated 15 October 2026 (Asia/Bangkok).
 
 ## Public launch

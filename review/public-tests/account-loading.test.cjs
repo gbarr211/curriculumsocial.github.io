@@ -3,10 +3,10 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '../..');
-const html = fs.readFileSync(path.join(root, 'signup.html'), 'utf8');
+const html = fs.readFileSync(path.join(root, 'signup.html'), 'utf8').replace('data-member-redirect="true"','');
 const ui = fs.readFileSync(path.join(root, 'js/public-account-ui.js'), 'utf8').replace('export function', 'function');
 const entry = fs.readFileSync(path.join(root, 'js/public-account.js'), 'utf8')
-    .replace(/^import .*;\n/, '').split("if (typeof document !== 'undefined')")[0]
+    .replace(/^import [^\r\n]*;\r?\n/, '').split("if (typeof document !== 'undefined')")[0]
     .replace('export async function', 'async function');
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
 let passed = 0;
@@ -32,6 +32,20 @@ async function check(name, fn) {
     } finally { w.close(); }
 }
 (async () => {
+    await check('wrong password displays an inline accessible error beside submit', async x => {
+        await x.w.bind(x.d, x.service);
+        x.get('mode').value = 'login'; x.get('mode').dispatchEvent(new x.w.Event('change'));
+        x.service.login = async () => { throw { code: 'auth/invalid-credential' }; };
+        x.get('email').value = 'adult@example.invalid'; x.get('password').value = 'incorrect';
+        x.submit(); await tick();
+        const feedback = x.get('account-feedback');
+        assert.equal(feedback.hidden, false);
+        assert.equal(feedback.getAttribute('role'), 'alert');
+        assert.match(feedback.textContent, /email or password was not accepted/);
+        assert.equal(feedback.nextElementSibling.className, 'actions');
+        assert.equal(x.get('password').value, 'incorrect');
+        assert.equal(x.get('submit-account').disabled, false);
+    });
     await check('blocked SDK reports failure and leaves controls disabled', async x => {
         await x.w.start(x.d, async () => { throw new Error('blocked'); }, 25);
         assert.match(x.get('account-status').textContent, /could not load/);

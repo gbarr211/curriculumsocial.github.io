@@ -6,10 +6,10 @@
     <meta name="robots" content="noindex,follow">
     <title>Create account · Curriculum Social</title>
 
-    <link rel="stylesheet" href="/css/public-account.css?v=copy-20261017">
-    <script type="module" src="/js/public-account.js?v=copy-20261017"></script>
+    <link rel="stylesheet" href="/css/public-account.css?v=family-1">
+    <script type="module" src="/js/member-account-start.js?v=family-1"></script>
 <link rel="icon" href="/favicon.svg?v=shared-circle-2" type="image/svg+xml"><link rel="alternate icon" href="/favicon.png?v=shared-circle-2" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#193C32"></head>
-<body>
+<body data-member-redirect="true">
     <header class="account-header">
         <a class="brand" href="/index.html"><img src="/brand-mark.svg" alt="" width="34" height="34">curriculum social</a>
         <a href="/index.html">Back to home</a>
@@ -50,13 +50,13 @@
         </section>
         <section id="signed-in" aria-label="Your account" hidden>
             <p>Signed in as <strong id="identity"></strong></p>
-            <p>Your sign-in account is saved. Private profiles, interest submissions and reviewer access are not available yet. Creating an account does not enroll your family or subscribe you to marketing.</p>
+            <p>Your account is ready. <a href="/member.html">Open your family profile</a> to manage your private profile.</p>
             <div class="actions">
                 <button class="outline" id="logout" type="button" disabled>Sign out</button>
                 <button class="outline" id="delete-account" type="button" disabled>Delete account</button>
             </div>
             <div id="delete-confirm" hidden>
-                <p>Delete your sign-in account permanently? You can create a new one later.</p>
+                <p>Delete your sign-in account permanently? First delete your saved profile from <a href="/member.html">your family profile</a>.</p>
                 <div class="actions">
                     <button id="confirm-delete" type="button" disabled>Yes, delete my account</button>
                     <button class="outline" id="cancel-delete" type="button" disabled>Cancel</button>
