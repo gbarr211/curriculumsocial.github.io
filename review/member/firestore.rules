@@ -103,6 +103,53 @@ service cloud.firestore {
     || getAfter(/databases/$(database)/documents/contributions/$(id)).data.shareWithMembers==false);
   }
 
+  // Adult introductions are shared only by sender and named recipient.
+  // Canonical path encodes both adults; at most one retained request per direction/pair.
+  // Required fields: senderId/recipientId immutable UID <=128, targetType family|contribution,
+  // targetId <=270, targetName/senderName 1..80, message 10..800, response 0..500,
+  // adultConfirmed true, consentVersion, immutable createdAt, updatedAt request time,
+  // revision positive integer<=1m, status enum. No account email or child record copied.
+  function introAdult(){return request.auth!=null && request.auth.token.firebase.sign_in_provider!='anonymous';}
+  function introVerified(){return introAdult() && request.auth.token.email_verified==true;}
+  function introParticipant(d){return introAdult() && (owner(d.senderId) || owner(d.recipientId));}
+  function introValid(d,sender,recipient){return d.keys().hasAll(['senderId','recipientId','targetType','targetId','targetName','senderName','message','response','adultConfirmed','consentVersion','createdAt','updatedAt','revision','status'])
+   && d.keys().hasOnly(['senderId','recipientId','targetType','targetId','targetName','senderName','message','response','adultConfirmed','consentVersion','createdAt','updatedAt','revision','status'])
+   && text(d.senderId,128) && d.senderId==sender && text(d.recipientId,128) && d.recipientId==recipient && sender!=recipient
+   && d.targetType in ['family','contribution'] && text(d.targetId,270) && d.targetId.size()>0 && !d.targetId.matches('.*[/].*')
+   && text(d.targetName,80) && d.targetName.matches('.*[^\\s].*') && text(d.senderName,80) && d.senderName.matches('.*[^\\s].*')
+   && text(d.message,800) && d.message.size()>=10 && d.message.matches('(?s).*[^\\s].*') && text(d.response,500)
+   && d.adultConfirmed==true && d.consentVersion=='introductions-2026-10-19'
+   && d.createdAt is timestamp && d.updatedAt==request.time && d.revision is int && d.revision>=1 && d.revision<=1000000
+   && d.status in ['pending','accepted','declined','withdrawn','closed'];}
+  function introTarget(d){return d.targetType=='family'
+    ? (d.targetId==d.recipientId && exists(/databases/$(database)/documents/family_directory/$(d.targetId)) && get(/databases/$(database)/documents/family_directory/$(d.targetId)).data.displayName==d.targetName)
+    : (exists(/databases/$(database)/documents/contribution_directory/$(d.targetId)) && get(/databases/$(database)/documents/contribution_directory/$(d.targetId)).data.ownerId==d.recipientId && get(/databases/$(database)/documents/contribution_directory/$(d.targetId)).data.displayName==d.targetName);}
+  function introUpdate(sender,recipient){let before=resource.data;let after=request.resource.data;return introAdult() && introValid(after,sender,recipient)
+   && after.createdAt==before.createdAt && after.revision==before.revision+1
+   && ((owner(sender) && before.status in ['pending','accepted'] && after.status=='withdrawn' && after.diff(before).affectedKeys().hasOnly(['status','updatedAt','revision']))
+    || (introVerified() && owner(recipient) && ((before.status=='pending' && after.status in ['accepted','declined']) || (before.status=='accepted' && after.status in ['accepted','closed']))
+       && (after.status!='accepted' || (after.response.size()>=10 && after.response.matches('(?s).*[^\\s].*')))
+       && after.diff(before).affectedKeys().hasOnly(['status','response','updatedAt','revision'])));}
+  match /introduction_requests/{sender}/introduction_threads/{recipient}{
+   allow get: if introAdult() && request.auth.uid in [sender,recipient];
+   allow create: if introVerified() && owner(sender) && introValid(request.resource.data,sender,recipient)
+    && request.resource.data.createdAt==request.time && request.resource.data.revision==1 && request.resource.data.status=='pending' && request.resource.data.response==''
+    && introTarget(request.resource.data) && !exists(/databases/$(database)/documents/introduction_blocks/$(recipient)/blocked/$(sender));
+   allow update: if introUpdate(sender,recipient);
+   allow delete: if introAdult() && request.auth.uid in [sender,recipient];
+  }
+  // Collection-group inbox queries must prove participant identity and use pagination.
+  match /{path=**}/introduction_threads/{recipient}{allow list: if introParticipant(resource.data) && request.query.limit!=null && request.query.limit<=20;}
+  // Private recipient-owned block list. Blocking stops new requests; history remains.
+  match /introduction_blocks/{ownerId}/blocked/{senderId}{
+   allow get: if introAdult() && owner(ownerId);
+   allow list: if introAdult() && owner(ownerId) && request.query.limit!=null && request.query.limit<=25;
+   allow create: if introVerified() && owner(ownerId) && ownerId!=senderId && text(senderId,128) && senderId.size()>0
+    && request.resource.data.keys().hasAll(['ownerId','blockedId','label','createdAt']) && request.resource.data.keys().hasOnly(['ownerId','blockedId','label','createdAt'])
+    && request.resource.data.ownerId==ownerId && request.resource.data.blockedId==senderId && text(request.resource.data.label,80) && request.resource.data.label.matches('.*[^\\s].*') && request.resource.data.createdAt==request.time;
+   allow delete: if introAdult() && owner(ownerId);
+  }
+
   match /{document=**}{allow read,write: if false;}
  }
 }

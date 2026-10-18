@@ -64,6 +64,7 @@ const pass = name => { console.log('PASS ' + name); passed++; };
 
     for (const width of [390, 1280]) {
         await page.setViewportSize({width, height:900});
+        if(!await page.locator('.editorial-demo').evaluate(e=>e.open))await page.locator('.editorial-demo summary').click();
         await page.locator('[data-workspace=community]').click();
         await page.locator('.workspace').scrollIntoViewIfNeeded();
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
@@ -149,7 +150,7 @@ const pass = name => { console.log('PASS ' + name); passed++; };
 
     signedInForDemo = true;
     for (const [key,file] of [['contribution','apply.html'],['community','pods.html'],['learning','student.html'],['continuity','matching.html']]) {
-        await page.goto(base + '/');await page.locator('[data-workspace='+key+']').click();
+        await page.goto(base + '/');await page.locator('.editorial-demo summary').click();await page.locator('[data-workspace='+key+']').click();
         if(key==='contribution'){assert.equal(await page.locator('#workspace-action').getAttribute('href'),'/contributions.html');continue;}assert.equal(await page.locator('#workspace-action').getAttribute('href'),file+'?demo=1');
         await page.locator('#workspace-action').click();await page.waitForURL('**/'+file+'?demo=1');
         await page.locator('#cs-main h1').waitFor();assert.equal(new URL(page.url()).pathname,'/'+file);

@@ -1,4 +1,4 @@
-import { bindPublicAccount } from './public-account-ui.js?v=copy-20261017';
+import { bindPublicAccount } from './public-account-ui.js?intro-release=20261019&v=copy-20261017';
 
 // Dynamic loading lets the page explain a blocked SDK instead of staying on
 // "Loading sign-in" forever. Never load the legacy Firestore/profile module here.

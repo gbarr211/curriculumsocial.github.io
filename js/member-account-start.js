@@ -1,4 +1,4 @@
-import { bindPublicAccount } from './public-account-ui.js?v=family-1';
+import { bindPublicAccount } from './public-account-ui.js?intro-release=20261019&v=family-1';
 import {bindAccountName} from './account-name-ui.js?v=family-first-1';
 
 // Dynamic loading lets the page explain a blocked SDK instead of staying on
@@ -28,7 +28,7 @@ export async function startPublicAccount(d, loadService, timeoutMs = 15000) {
 if (typeof document !== 'undefined') {
     // The existing, public Firebase client configuration belongs to the service.
     void startPublicAccount(document, async () => {
-        const { createAccountService } = await import('./member-account-service.js?v=family-first-1');
+        const { createAccountService } = await import('./member-account-service.js?intro-release=20261019&v=family-first-1');
         return createAccountService();
     });
 }

@@ -25,6 +25,8 @@ export function bindPublicAccount(d, service, navigate = path => d.defaultView.l
     };
     const error = e => {
         const messages = {
+            'member/introductions-exist':'Delete your introductions before deleting your account. Open Introductions to manage both inboxes.',
+            'member/blocks-exist':'Clear your blocked-adult list in Introductions before deleting your account.',
             'member/contributions-exist': 'Delete your contributions before deleting your account. Open My contributions to manage them.',
         'member/profile-exists': 'Delete your saved profile from your member home before deleting your sign-in account.',
             'auth/requires-recent-login': 'Please sign out and sign in again before deleting your account.',
@@ -75,7 +77,7 @@ export function bindPublicAccount(d, service, navigate = path => d.defaultView.l
     get('mode').addEventListener('change', updateMode);
     service.observe(user => {
         signedIn = Boolean(user);
-        if (signedIn && d.body.dataset.memberRedirect === 'true') navigate(new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='contributions'?'/contributions.html':'/member.html');
+        if (signedIn && d.body.dataset.memberRedirect === 'true') navigate(new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='contributions'?'/contributions.html':new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='introductions'?'/introductions.html':'/member.html');
         get('signed-out').hidden = signedIn;
         get('signed-in').hidden = !signedIn;
         get('identity').textContent = user?.email || 'your account';
