@@ -6,7 +6,11 @@ const read = () => JSON.parse(localStorage.getItem('cs-test-db') || '{}');
 const snapshot = (id, data) => ({ id, exists: () => !!data, data: () => data ? {...data, updatedAt:{toJSON:()=>data.updatedAt}} : undefined });
 export function getFirestore() { return {}; }
 export function doc(db, collection, id) { return collection+'/'+id; }
-export function collection(db, name) { return name; }
+export function collection(db, ...parts) { return parts.join('/'); }
+export function collectionGroup(db,name) { return name; }
+export function where(...args) { return args; }
+export function orderBy(...args) { return args; }
+export function startAfter(value) { return value; }
 export function query(name) { return name; }
 export function limit(value) { return value; }
 export function serverTimestamp() { return Date.now(); }
