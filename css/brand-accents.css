@@ -4,6 +4,9 @@
 /* Forest indicates focus; clay remains a section/action accent. The citron
    surround keeps focus visible on both light and forest backgrounds. */
 :focus-visible{outline:3px solid #193c32!important;outline-offset:3px;box-shadow:0 0 0 6px var(--brand-citron)}
+/* Route and skip-link targets retain focus for reading/navigation without
+   framing the entire page. Interactive controls keep their visible ring. */
+main:focus,[role="main"]:focus,section[tabindex="-1"]:focus,article[tabindex="-1"]:focus{outline:none!important;box-shadow:none!important}
 @media(forced-colors:active){:focus-visible{outline-color:CanvasText!important;box-shadow:none}}
 
 /* Landing workspace: the same palette as the member and account pages. */
