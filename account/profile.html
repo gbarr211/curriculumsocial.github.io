@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex,follow">
-    <title>Sign in · Curriculum Social</title>
+    <title>Your account · Curriculum Social</title>
 
     <link rel="stylesheet" href="/css/public-account.css?v=family-1">
-    <script type="module" src="/js/member-account-start.js?v=family-1"></script>
+    <script type="module" src="/js/member-account-start.js?v=family-first-1"></script>
 <link rel="icon" href="/favicon.svg?v=shared-circle-2" type="image/svg+xml"><link rel="alternate icon" href="/favicon.png?v=shared-circle-2" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#193C32"></head>
 <body>
     <header class="account-header">
@@ -51,6 +51,7 @@
         <section id="signed-in" aria-label="Your account" hidden>
             <p>Signed in as <strong id="identity"></strong></p>
             <p>Your account is ready. <a href="/member.html">Open your family profile</a> to manage your private profile.</p>
+            <form id="adult-name-form"><label for="adult-name">Your name <span class="fine-print">(optional)</span><input id="adult-name" maxlength="80" autocomplete="name" disabled></label><p class="fine-print">Start with your family; add a little about yourself whenever you’re ready. This name is saved to your adult sign-in account, separate from your family matching profile. A nickname is fine.</p><button type="submit" id="save-adult-name" disabled>Save your name</button><p id="adult-name-status" role="status" aria-live="polite"></p></form>
             <div class="actions">
                 <button class="outline" id="logout" type="button" disabled>Sign out</button>
                 <button class="outline" id="delete-account" type="button" disabled>Delete account</button>

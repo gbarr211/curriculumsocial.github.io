@@ -1,4 +1,5 @@
 import { bindPublicAccount } from './public-account-ui.js?v=family-1';
+import {bindAccountName} from './account-name-ui.js?v=family-first-1';
 
 // Dynamic loading lets the page explain a blocked SDK instead of staying on
 // "Loading sign-in" forever. Never load the legacy Firestore/profile module here.
@@ -13,6 +14,7 @@ export async function startPublicAccount(d, loadService, timeoutMs = 15000) {
         // silently re-enable a form that has already reported startup failure.
         await Promise.race([service.ready(), timeout]);
         await bindPublicAccount(d, { ...service, ready: () => Promise.resolve() });
+        bindAccountName(d,service);
     } catch {
         d.getElementById('account-status').textContent = 'Sign-in could not load. Check your connection, then reload this page to try again.';
         d.getElementById('reload-account').hidden = false;
@@ -26,7 +28,7 @@ export async function startPublicAccount(d, loadService, timeoutMs = 15000) {
 if (typeof document !== 'undefined') {
     // The existing, public Firebase client configuration belongs to the service.
     void startPublicAccount(document, async () => {
-        const { createAccountService } = await import('./member-account-service.js?v=family-1');
+        const { createAccountService } = await import('./member-account-service.js?v=family-first-1');
         return createAccountService();
     });
 }

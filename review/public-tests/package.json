@@ -2,8 +2,8 @@
   "name": "curriculumsocial-public-account-checks",
   "private": true,
   "scripts": {
-    "test": "node account.test.cjs && node account-loading.test.cjs && node community.test.cjs",
-    "test:browser": "node account-browser.test.cjs && node release-browser.test.cjs && node family-browser.test.cjs"
+    "test": "node account.test.cjs && node account-loading.test.cjs && node community.test.cjs && node account-name.test.cjs",
+    "test:browser": "node account-browser.test.cjs && node release-browser.test.cjs && node family-browser.test.cjs && node family-identity-browser.test.cjs && node standalone-events-browser.test.cjs"
   },
   "devDependencies": {
     "jsdom": "26.1.0",
