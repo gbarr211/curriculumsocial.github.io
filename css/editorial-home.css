@@ -9,3 +9,24 @@
 @media(max-width:1100px){.public-home .nav{display:grid;grid-template-columns:1fr auto;gap:14px;width:calc(100% - 40px);min-height:76px;position:relative}.public-home .nav>.brand{grid-column:1;grid-row:1}.public-home .menu-toggle{grid-column:2;grid-row:1;font-size:13px;min-height:44px;padding:8px 13px}.public-home .nav-links{z-index:45;width:calc(100vw - 40px);left:0;right:auto}.public-home .brand{font-size:21px}.public-home .brand img{width:30px;height:30px}}
 @media(max-width:700px){.public-home .nav{width:calc(100% - 32px);gap:8px}.public-home .brand{font-size:clamp(16px,4.7vw,21px);gap:6px}.public-home .brand img{width:27px;height:27px}.public-home .brand>span{display:none}.public-home .nav-links{width:calc(100vw - 32px)}.editorial-hero{padding:58px 20px 52px}.editorial-hero h1{font-size:clamp(48px,12.6vw,72px);letter-spacing:-.06em;margin:24px 0}.editorial-lead{font-size:18px}.editorial-hero .eyebrow{font-size:9px}.public-home .hero-actions{gap:18px}.editorial-photo img,.editorial-hero-photo img,.editorial-chapter .editorial-photo img,.editorial-learning .editorial-photo img,.editorial-neighborhood img{aspect-ratio:4/3}.editorial-photo figcaption{font-size:10px;padding:12px 20px 0}.editorial-prose{padding:66px 24px 45px}.editorial-prose h2{font-size:42px}.editorial-prose p:not(.eyebrow){font-size:17px}.editorial-chapter .editorial-prose{padding-top:30px}.public-home .editorial-learning{padding-top:65px}.public-home .learning-grid{margin:48px auto 0;gap:42px;display:flex;flex-direction:column-reverse}.public-home .learning-copy h2{font-size:40px}.public-home .editorial-human{padding:55px 24px;margin-top:50px}.public-home .editorial-experience{padding:65px 24px 40px}.editorial-actions{gap:18px;margin-bottom:35px}.editorial-demo>summary{font-size:14px}.public-home .workspace h3{font-size:30px}.editorial-neighborhood{margin-top:20px}.public-home .editorial-participate{padding:65px 24px 20px}.editorial-participate .role-tabs{gap:14px}.editorial-participate .role-tabs button{font-size:11px}.public-home .editorial-faq{padding:45px 24px}.editorial-closing{padding:60px 24px 75px}}
 @media(prefers-reduced-motion:reduce){.editorial-photo img{transform:none!important;transition:none!important}}
+
+/* Readable on the original ivory palette; this is an informational label. */
+.public-home .editorial-human .ai-label{color:var(--ink);background:var(--brand-citron-wash,#edf5cb);border:1px solid var(--brand-citron-line,#b6c96b);font-weight:600;line-height:1.5;padding:10px 16px}
+/* Photograph windows sit behind the reading flow; copy stays on solid paper. */
+.editorial-photo.photo-reveal,.editorial-chapter .editorial-photo.photo-reveal,.editorial-neighborhood.photo-reveal{max-width:none;width:100%;margin-inline:0}
+.public-home .editorial-learning{max-width:none}
+.photo-window{position:relative;height:clamp(320px,64svh,720px);overflow:hidden;isolation:isolate;background:var(--brand-sage-wash,#e7eee3)}
+.public-home .photo-window img{position:absolute;inset:-48px 0 auto;display:block;width:100%;height:calc(100% + 96px);aspect-ratio:auto;object-fit:cover;transform:translate3d(0,var(--photo-offset,0px),0)}
+.photo-window::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(245,242,233,.18),transparent 12%,transparent 90%,rgba(245,242,233,.22))}
+.photo-reveal figcaption{max-width:var(--story-width);background:var(--paper);padding:14px 24px 0}
+.public-home main>section,.public-home .learning-grid{position:relative;background:var(--paper)}
+.editorial-chapter .photo-window img{object-position:center 58%}
+.editorial-learning .photo-window img{object-position:center 48%}
+.editorial-neighborhood .photo-window img{object-position:center 56%}
+@media(max-width:700px){.photo-window{height:clamp(290px,48svh,440px)}.public-home .photo-window img{inset-block-start:-32px;height:calc(100% + 64px)}.photo-reveal figcaption{font-size:10px;padding:12px 20px 0}}
+@media(prefers-reduced-motion:reduce){.public-home .photo-window img{transform:none!important}}
+
+.public-home .editorial-human h2{color:var(--ink)}
+.public-home .editorial-learning .learning-grid{margin-top:0}
+.public-home .editorial-learning>.photo-reveal{margin-top:72px}
+@media(max-width:700px){.public-home .editorial-learning>.photo-reveal{margin-top:48px}}
