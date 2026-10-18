@@ -1,5 +1,7 @@
 # Curriculum Social — current project state
 
+18 October 2026 release increment: user authorized publishing the ready family-first work. See `FAMILY_FIRST_RELEASE_20261018.md`. Optional adult account name and clearly labeled reviewed family/Events demos are released alongside the existing real family profile/discovery tools. Shared-family backend, real email invitations, bookings and learner/guardian services remain staged. Previous baseline main/rollback is3e8914bda507141638d8a758f99a4587f4042880; the historical 17 October pending-rules note below is superseded by that earlier completed family release.
+
 Current checkpoint, 17 October 2026: the approved hero and Shared Circle assets
 have been recovered and are already live on main `4f254964`. Family profiles and
 discovery are prepared on `review/family-matching-20261017` (`6b03bb2`), pending

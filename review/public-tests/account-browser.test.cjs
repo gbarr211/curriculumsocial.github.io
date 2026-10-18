@@ -26,6 +26,7 @@ export async function signInWithPopup() {
 export async function signOut() { window.accountCalls.push('logout'); emit(null); }
 export async function sendPasswordResetEmail() { window.accountCalls.push('reset'); }
 export async function deleteUser() { window.accountCalls.push('delete'); emit(null); }
+export async function updateProfile(target,profile) { Object.assign(target,profile);sessionStorage.setItem('cs-test-user',JSON.stringify(target));window.accountCalls.push('name'); }
 `;
 const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png' };
 const server = http.createServer((req, res) => {
@@ -75,8 +76,15 @@ const pass = message => { console.log('PASS ' + message); passed++; };
     await page.locator('#signed-in').waitFor({ state: 'visible' });
     assert.equal(await page.locator('#identity').textContent(), 'adult@example.invalid');
     assert.equal(await page.locator('#password').inputValue(), '');
+    await page.locator('#adult-name:not([disabled])').waitFor();
+    await page.locator('#adult-name').fill('Avery Personal');await page.locator('#save-adult-name').click();
+    await page.locator('#adult-name-status').filter({hasText:'Your name is saved'}).waitFor();
     await page.reload();
     await page.locator('#signed-in').waitFor({ state: 'visible' });
+    await page.locator('#adult-name:not([disabled])').waitFor();assert.equal(await page.locator('#adult-name').inputValue(),'Avery Personal');
+    await page.locator('#adult-name').fill('');await page.locator('#save-adult-name').click();await page.locator('#adult-name-status').filter({hasText:'Your name is saved'}).waitFor();
+    await page.reload();await page.locator('#adult-name:not([disabled])').waitFor();assert.equal(await page.locator('#adult-name').inputValue(),'');
+    pass('optional personal name saves, reloads and clears through the mocked Auth SDK');
     await page.locator('#logout').click();
     await page.locator('#signed-out').waitFor({ state: 'visible' });
     pass('browser signup validation, restored session, cleared password and logout');

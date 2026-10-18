@@ -19,6 +19,7 @@ export async function signInWithPopup(){emit({uid:'synthetic-a',email:'synthetic
 export async function signOut(){emit(null);}
 export async function sendPasswordResetEmail(){}
 export async function deleteUser(){emit(null);}
+export async function updateProfile(target,profile){Object.assign(target,profile);sessionStorage.setItem('cs-test-user',JSON.stringify(target));}
 `;
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.png':'image/png','.svg':'image/svg+xml'};
 const server=http.createServer((req,res)=>{
