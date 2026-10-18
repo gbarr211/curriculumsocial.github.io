@@ -28,7 +28,7 @@ export async function sendPasswordResetEmail() { window.accountCalls.push('reset
 export async function deleteUser() { window.accountCalls.push('delete'); emit(null); }
 export async function updateProfile(target,profile) { Object.assign(target,profile);sessionStorage.setItem('cs-test-user',JSON.stringify(target));window.accountCalls.push('name'); }
 `;
-const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png' };
+const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg':'image/svg+xml','.mjs':'text/javascript','.webp':'image/webp','.png': 'image/png' };
 const server = http.createServer((req, res) => {
     const route = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
     const file = path.resolve(root, '.' + (route === '/' ? '/index.html' : route));

@@ -1,11 +1,11 @@
 {
   "firestore": {
-    "rules": "firestore-profiles.candidate.rules"
+    "rules": "member/firestore.rules"
   },
   "emulators": {
     "firestore": {
       "host": "127.0.0.1",
-      "port": 8188
+      "port": 8194
     },
     "ui": {
       "enabled": false

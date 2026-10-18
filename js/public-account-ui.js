@@ -25,7 +25,8 @@ export function bindPublicAccount(d, service, navigate = path => d.defaultView.l
     };
     const error = e => {
         const messages = {
-            'member/profile-exists': 'Delete your saved profile from your member home before deleting your sign-in account.',
+            'member/contributions-exist': 'Delete your contributions before deleting your account. Open My contributions to manage them.',
+        'member/profile-exists': 'Delete your saved profile from your member home before deleting your sign-in account.',
             'auth/requires-recent-login': 'Please sign out and sign in again before deleting your account.',
             'auth/email-already-in-use': 'Please sign in with your existing account or reset your password.',
             'auth/unauthorized-domain': 'Sign-in is not configured for this address yet. Please try the public website.',
@@ -74,7 +75,7 @@ export function bindPublicAccount(d, service, navigate = path => d.defaultView.l
     get('mode').addEventListener('change', updateMode);
     service.observe(user => {
         signedIn = Boolean(user);
-        if (signedIn && d.body.dataset.memberRedirect === 'true') navigate('/member.html');
+        if (signedIn && d.body.dataset.memberRedirect === 'true') navigate(new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='contributions'?'/contributions.html':'/member.html');
         get('signed-out').hidden = signedIn;
         get('signed-in').hidden = !signedIn;
         get('identity').textContent = user?.email || 'your account';
