@@ -110,15 +110,24 @@ const pass = name => { console.log('PASS ' + name); passed++; };
         }
         pass('all seven demo screens load and fit at ' + width + 'px');
     }
-    await page.goto(base + '/dashboard.html');
-    await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
-    await page.locator('#cs-main [data-app-route="activities"]').first().click();
-    await page.waitForFunction(() => location.pathname.endsWith('/activities.html'));
-    assert.equal(await page.evaluate(() => scrollY), 0);
-    await page.goBack();
-    await page.waitForFunction(() => location.pathname.endsWith('/dashboard.html'));
-    assert.equal(await page.evaluate(() => scrollY), 0);
-    pass('demo navigation and browser Back start at the top');
+    for (const width of [390,1280]) {
+        await page.setViewportSize({width,height:900});
+        await page.goto(base + '/dashboard.html');
+        await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
+        await page.locator('#cs-main [data-app-route="activities"]').first().click();
+        await page.waitForFunction(() => location.pathname.endsWith('/activities.html'));
+        assert.equal(await page.evaluate(() => scrollY), 0);
+        assert.equal(await page.locator('#cs-main').evaluate(el=>el===document.activeElement),true);
+        assert.deepEqual(await page.locator('#cs-main').evaluate(el=>({outline:getComputedStyle(el).outlineStyle,shadow:getComputedStyle(el).boxShadow})),{outline:'none',shadow:'none'});
+        await page.keyboard.press('Tab');
+        assert.deepEqual(await page.evaluate(()=>({outline:getComputedStyle(document.activeElement).outlineStyle,color:getComputedStyle(document.activeElement).outlineColor})),{outline:'solid',color:'rgb(25, 60, 50)'});
+        await page.goBack();
+        await page.waitForFunction(() => location.pathname.endsWith('/dashboard.html'));
+        assert.equal(await page.evaluate(() => scrollY), 0);
+        assert.deepEqual(await page.locator('#cs-main').evaluate(el=>({outline:getComputedStyle(el).outlineStyle,shadow:getComputedStyle(el).boxShadow})),{outline:'none',shadow:'none'});
+        if(process.env.CS_SCREENSHOT_DIR)await page.screenshot({path:path.join(process.env.CS_SCREENSHOT_DIR,'page-focus-'+width+'.png')});
+    }
+    pass('demo navigation and Back retain page focus/scroll without a page border; keyboard controls retain visible focus at390/1280px');
 
     await page.goto(base + '/activities.html');
     await page.locator('[data-action="event-detail"][data-id="e1"]').click();
