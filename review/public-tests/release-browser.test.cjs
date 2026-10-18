@@ -23,9 +23,10 @@ const pass = name => { console.log('PASS ' + name); passed++; };
     browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true });
     const context = await browser.newContext();
     const unexpected = [], errors = [], missing = [];
+    let signedInForDemo = false;
     await context.route('**/*', route => {
         if (route.request().url() === 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js') return route.fulfill({contentType:'text/javascript',body:firebaseApp});
-        if (route.request().url() === 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js') return route.fulfill({contentType:'text/javascript',body:firebaseSignedOutAuth});
+        if (route.request().url() === 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js') return route.fulfill({contentType:'text/javascript',body:signedInForDemo?firebaseSignedOutAuth.replace('cb(null)','cb({uid:"routing-test",email:"routing@example.invalid"})'):firebaseSignedOutAuth});
         if (route.request().url().startsWith(base + '/')) return route.continue();
         unexpected.push(route.request().url()); return route.abort();
     });
@@ -110,6 +111,16 @@ const pass = name => { console.log('PASS ' + name); passed++; };
         assert.equal(await page.locator('a[href="/signup.html"]').count(), 1);
     }
     pass('deferred collection/reviewer pages have no forms or backend code');
+
+    signedInForDemo = true;
+    for (const [key,file] of [['contribution','apply.html'],['community','pods.html'],['learning','student.html'],['continuity','matching.html']]) {
+        await page.goto(base + '/');await page.locator('[data-workspace='+key+']').click();
+        assert.equal(await page.locator('#workspace-action').getAttribute('href'),file+'?demo=1');
+        await page.locator('#workspace-action').click();await page.waitForURL('**/'+file+'?demo=1');
+        await page.locator('#cs-main h1').waitFor();assert.equal(new URL(page.url()).pathname,'/'+file);
+        if(key==='contribution'){assert.equal(await page.locator('[data-action=apply]').count(),3);assert.match(await page.locator('.cs-preview-note').innerText(),/Community demo/);await page.locator('.cs-appnav [data-app-route=dashboard]').click();await page.waitForURL('**/dashboard.html?demo=1');await page.reload();await page.locator('#cs-main h1').waitFor();assert.equal(new URL(page.url()).search,'?demo=1');await page.locator('.cs-appnav [data-app-route=apply]').click();await page.waitForURL('**/apply.html?demo=1');await page.locator('[data-action=apply]').first().waitFor();}
+    }
+    pass('signed-in visitors can explicitly explore contribution and other homepage demo paths without a member-home redirect');
 
     assert.deepEqual(unexpected, []);
     assert.deepEqual(errors, []);
