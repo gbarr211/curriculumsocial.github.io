@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {firebaseApp,firebaseSignedOutAuth}=require('./firebase-browser-fixtures.cjs');
 const root = path.resolve(__dirname, '../..');
-const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png' };
+const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg':'image/svg+xml','.webp':'image/webp','.mjs':'text/javascript','.png': 'image/png' };
 const server = http.createServer((req, res) => {
     const route = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
     const file = path.resolve(root, '.' + (route === '/' ? '/index.html' : route));
@@ -142,7 +142,7 @@ const pass = name => { console.log('PASS ' + name); passed++; };
 
     for (const file of ['interest.html', 'admin.html', 'admin-reports.html', 'admin-venues.html', 'venue-management.html', 'report-incident.html', 'portfolio.html']) {
         await page.goto(base + '/' + file);
-        assert.equal(await page.locator('form, input, textarea, script').count(), 0, file);
+        assert.equal(await page.locator('form, input, textarea, script:not([src*="appearance.js"])').count(), 0, file);
         assert.equal(await page.locator('a[href="/signup.html"]').count(), 1);
     }
     pass('deferred collection/reviewer pages have no forms or backend code');
@@ -150,12 +150,12 @@ const pass = name => { console.log('PASS ' + name); passed++; };
     signedInForDemo = true;
     for (const [key,file] of [['contribution','apply.html'],['community','pods.html'],['learning','student.html'],['continuity','matching.html']]) {
         await page.goto(base + '/');await page.locator('[data-workspace='+key+']').click();
-        assert.equal(await page.locator('#workspace-action').getAttribute('href'),file+'?demo=1');
+        if(key==='contribution'){assert.equal(await page.locator('#workspace-action').getAttribute('href'),'/contributions.html');continue;}assert.equal(await page.locator('#workspace-action').getAttribute('href'),file+'?demo=1');
         await page.locator('#workspace-action').click();await page.waitForURL('**/'+file+'?demo=1');
         await page.locator('#cs-main h1').waitFor();assert.equal(new URL(page.url()).pathname,'/'+file);
         if(key==='contribution'){assert.equal(await page.locator('[data-action=apply]').count(),3);assert.match(await page.locator('.cs-preview-note').innerText(),/Community demo/);await page.locator('.cs-appnav [data-app-route=dashboard]').click();await page.waitForURL('**/dashboard.html?demo=1');await page.reload();await page.locator('#cs-main h1').waitFor();assert.equal(new URL(page.url()).search,'?demo=1');await page.locator('.cs-appnav [data-app-route=apply]').click();await page.waitForURL('**/apply.html?demo=1');await page.locator('[data-action=apply]').first().waitFor();}
     }
-    pass('signed-in visitors can explicitly explore contribution and other homepage demo paths without a member-home redirect');
+    pass('homepage links to real contributions while other workspace paths remain explicitly marked demos');
 
     assert.deepEqual(unexpected, []);
     assert.deepEqual(errors, []);

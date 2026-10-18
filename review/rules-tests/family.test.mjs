@@ -1,9 +1,9 @@
 import {readFileSync} from 'node:fs';
 import {initializeTestEnvironment,assertFails,assertSucceeds} from '@firebase/rules-unit-testing';
 import {doc,collection,query,limit,getDoc,getDocs,setDoc,deleteDoc,writeBatch,serverTimestamp,Timestamp,setLogLevel} from 'firebase/firestore';
-if(process.env.FIRESTORE_EMULATOR_HOST!=='127.0.0.1:8188')throw Error('Local emulator required');
+if(process.env.FIRESTORE_EMULATOR_HOST!=='127.0.0.1:8194')throw Error('Local emulator required');
 setLogLevel('silent');
-const env=await initializeTestEnvironment({projectId:'demo-curriculumsocial-rules',firestore:{host:'127.0.0.1',port:8188,rules:readFileSync(new URL('../member/firestore.rules',import.meta.url),'utf8')}});
+const env=await initializeTestEnvironment({projectId:'demo-cs-contributions',firestore:{host:'127.0.0.1',port:8194,rules:readFileSync(new URL('../member/firestore.rules',import.meta.url),'utf8')}});
 const a=env.authenticatedContext('synthetic-family-a').firestore(),b=env.authenticatedContext('synthetic-family-b').firestore(),anon=env.unauthenticatedContext().firestore();
 const ref=(db,id='synthetic-family-a')=>doc(db,'adult_profiles',id),card=(db,id='synthetic-family-a')=>doc(db,'family_directory',id);
 const data=(extra={})=>({displayName:'Smith Family',area:'samui-north',languages:'English, Thai',philosophies:['montessori','nature-based'],interests:['music','nature'],about:'Synthetic adult test family.',photo:'',contribution:'exploring',availability:'weekends',discoverable:false,consentVersion:'family-profile-2026-10-17',createdAt:serverTimestamp(),updatedAt:serverTimestamp(),...extra});

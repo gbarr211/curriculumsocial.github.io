@@ -37,6 +37,72 @@ service cloud.firestore {
    allow create,update: if owner(uid) && directoryMatches(uid,request.resource.data);
    allow delete: if owner(uid);
   }
+  // Private adult contributions. One deterministic document per owner and kind.
+  // Required fields: ownerId (immutable UID <=128), kind (immutable enum),
+  // name (1..80), email (3..254), description (10..1600), availability (2..240),
+  // adultConfirmed=true, consentVersion, createdAt (immutable timestamp),
+  // updatedAt (server time), revision (positive int), status (enum),
+  // reviewMessage (0..1000, shared with contributor), reviewerId (0..128).
+  // Opt-in member card: no email, exact address, private description or review notes.
+  // shareWithMembers bool; listingName <=80; listingSummary 10..400; area enum;
+  // interests <=120 and listingAvailability 2..120. Empty strings when not sharing.
+  // contribution_directory fields exactly match contributionCard below, paired atomically.
+  function contributionReviewer(){return request.auth != null && request.auth.token.email_verified == true && request.auth.token.get('contributionsReviewer',false) == true;}
+  function contributionWriter(){return request.auth != null && request.auth.token.email_verified == true && request.auth.token.firebase.sign_in_provider != 'anonymous';}
+  function validContribution(d,id){return d.keys().hasAll(['ownerId','kind','name','email','description','availability','adultConfirmed','consentVersion','createdAt','updatedAt','revision','status','reviewMessage','reviewerId','shareWithMembers','listingName','listingSummary','area','interests','listingAvailability'])
+   && d.keys().hasOnly(['ownerId','kind','name','email','description','availability','adultConfirmed','consentVersion','createdAt','updatedAt','revision','status','reviewMessage','reviewerId','shareWithMembers','listingName','listingSummary','area','interests','listingAvailability'])
+   && text(d.ownerId,128) && d.ownerId.size()>0 && d.kind in ['teaching','hosting','helping'] && id==d.ownerId+'__'+d.kind
+   && text(d.name,80) && d.name.matches('.*[^\\s].*')
+   && text(d.email,254) && d.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+   && text(d.description,1600) && d.description.size()>=10 && d.description.matches('(?s).*[^\\s].*')
+   && text(d.availability,240) && d.availability.size()>=2 && d.availability.matches('.*[^\\s].*')
+   && d.adultConfirmed == true && d.consentVersion=='contributions-2026-10-18'
+   && d.createdAt is timestamp && d.updatedAt==request.time
+   && d.revision is int && d.revision>=1 && d.revision<=1000000
+   && d.status in ['submitted','under-review','needs-info','accepted','closed','withdrawn']
+   && text(d.reviewMessage,1000) && text(d.reviewerId,128) && validSharing(d);}
+  function validSharing(d){return d.shareWithMembers is bool && text(d.listingName,80) && text(d.listingSummary,400) && text(d.area,30) && text(d.interests,120) && text(d.listingAvailability,120)
+    && (d.shareWithMembers ? (d.listingName.matches('.*[^\\s].*') && d.listingSummary.size()>=10 && d.listingSummary.matches('(?s).*[^\\s].*') && d.area in ['samui-undecided','samui-north','samui-east','samui-south','samui-west','elsewhere'] && d.listingAvailability.size()>=2 && d.listingAvailability.matches('.*[^\\s].*'))
+       : (d.listingName=='' && d.listingSummary=='' && d.area=='' && d.interests=='' && d.listingAvailability==''));}
+  function contributionCard(d){return {'ownerId':d.ownerId,'kind':d.kind,'displayName':d.listingName,'summary':d.listingSummary,'area':d.area,'interests':d.interests,'availability':d.listingAvailability,'revision':d.revision,'updatedAt':d.updatedAt};}
+  function contributionPaired(id,d){return d.status=='accepted' && d.shareWithMembers
+    ? getAfter(/databases/$(database)/documents/contribution_directory/$(id)).data==contributionCard(d)
+    : !existsAfter(/databases/$(database)/documents/contribution_directory/$(id));}
+  function directoryAuthority(id){return request.auth!=null && (id in [request.auth.uid+'__teaching',request.auth.uid+'__hosting',request.auth.uid+'__helping'] || contributionReviewer());}
+  function memberReader(){return request.auth!=null && request.auth.token.firebase.sign_in_provider!='anonymous';}
+  function contributionCreate(id){let d=request.resource.data;return contributionWriter() && d.ownerId==request.auth.uid && validContribution(d,id) && contributionPaired(id,d) && d.email==request.auth.token.email && d.createdAt==request.time && d.revision==1 && d.status=='submitted' && d.reviewMessage=='' && d.reviewerId=='';}
+  function contributionUpdate(id){let before=resource.data;let after=request.resource.data;return validContribution(after,id) && contributionPaired(id,after)
+   && after.ownerId==before.ownerId && after.kind==before.kind && after.createdAt==before.createdAt && after.revision==before.revision+1
+   && (
+    (owner(before.ownerId) && contributionWriter() && after.status=='submitted' && after.email==request.auth.token.email && after.reviewMessage=='' && after.reviewerId=='')
+    || (owner(before.ownerId) && before.status!='withdrawn' && after.status=='withdrawn' && after.diff(before).affectedKeys().hasOnly(['status','updatedAt','revision']))
+    || (contributionReviewer() && request.auth.uid!=before.ownerId && before.status!='withdrawn'
+      && after.status in ['under-review','needs-info','accepted','closed'] && after.reviewerId==request.auth.uid
+      && (after.status=='under-review' || after.reviewMessage.size()>=10)
+      && after.diff(before).affectedKeys().hasOnly(['status','reviewMessage','reviewerId','updatedAt','revision']))
+   );}
+  match /contributions/{id}{
+   allow get: if owner(resource.data.ownerId) || contributionReviewer()
+     || (request.auth!=null && id in [request.auth.uid+'__teaching',request.auth.uid+'__hosting',request.auth.uid+'__helping'] && !exists(/databases/$(database)/documents/contributions/$(id)));
+   allow list: if request.auth!=null && request.query.limit!=null && ((owner(resource.data.ownerId) && request.query.limit<=3) || (contributionReviewer() && request.query.limit<=25));
+   allow create: if contributionCreate(id);
+   allow update: if contributionUpdate(id);
+   allow delete: if owner(resource.data.ownerId) && !existsAfter(/databases/$(database)/documents/contribution_directory/$(id));
+  }
+
+  match /contribution_directory/{id}{
+   allow get: if memberReader();
+   allow list: if memberReader() && request.query.limit!=null && request.query.limit<=24;
+   allow create,update: if directoryAuthority(id)
+    && getAfter(/databases/$(database)/documents/contributions/$(id)).data.status=='accepted'
+    && getAfter(/databases/$(database)/documents/contributions/$(id)).data.shareWithMembers==true
+    && getAfter(/databases/$(database)/documents/contributions/$(id)).data.updatedAt==request.time
+    && request.resource.data==contributionCard(getAfter(/databases/$(database)/documents/contributions/$(id)).data);
+   allow delete: if directoryAuthority(id) && (!existsAfter(/databases/$(database)/documents/contributions/$(id))
+    || getAfter(/databases/$(database)/documents/contributions/$(id)).data.status!='accepted'
+    || getAfter(/databases/$(database)/documents/contributions/$(id)).data.shareWithMembers==false);
+  }
+
   match /{document=**}{allow read,write: if false;}
  }
 }
