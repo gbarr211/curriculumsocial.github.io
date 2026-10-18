@@ -1,0 +1,53 @@
+/* Shared Circle accents: secondary colors help separate sections and actions. */
+:root{--brand-clay:#bd5233;--brand-clay-ink:#873b27;--brand-clay-wash:#f8e6dc;--brand-clay-line:#dab09b;--brand-citron:#d8ed89;--brand-citron-wash:#edf5cb;--brand-citron-line:#b6c96b;--brand-sage-wash:#e7eee3}
+
+/* Member home: three complementary treatments, with labels carrying meaning. */
+.member-next-steps{border-top:4px solid var(--brand-clay)}
+.member-action-card[href="/account/profile.html"]{background:var(--brand-sage-wash);border-color:#b6c5ae}
+.member-action-card[href="/review/events.html"]{background:var(--brand-clay-wash);border-color:var(--brand-clay-line)}
+.member-action-card[href="/review/family-accounts.html"]{background:var(--brand-citron-wash);border-color:var(--brand-citron-line)}
+.member-action-card[href="/review/events.html"] .member-action-title>span{color:var(--brand-clay-ink)}
+.member-action-card .member-action-badge{background:#fffdf7;border-color:currentColor}
+.member-action-card[href="/review/events.html"] .member-action-badge{color:var(--brand-clay-ink)}
+.member-action-card:hover{border-color:var(--ink);box-shadow:0 4px 14px #193c3210}
+.member-action-card[href="/review/events.html"]:hover{background:#f3d7c7}
+.member-action-card[href="/review/family-accounts.html"]:hover{background:var(--brand-citron)}
+.member #family-setup{border-top:4px solid var(--brand-citron)}
+.member #family-discovery>.eyebrow{color:var(--brand-clay-ink)}
+.member .family-filters{background:#f7ebe1;border:1px solid #e3c8b7}
+.member .family-filter-actions>button[type=submit]{background:var(--brand-clay);border-color:var(--brand-clay);color:#fffdf7}
+.member .family-filter-actions>button[type=submit]:hover{background:#9e432b;border-color:#9e432b}
+.member .family-tabs button[aria-current=page]{box-shadow:inset 0 -4px 0 var(--brand-citron)}
+.member #member-status:not(.family-error){border-left:4px solid var(--brand-citron)}
+.member .choice:has(input:checked){background:var(--brand-citron-wash);border-color:#879b4c}
+.member .discovery-next-steps{border-top-color:var(--brand-clay-line)}
+.member-action-links a[href="/review/family-accounts.html"]{background:var(--brand-clay-wash);border-color:var(--brand-clay-line)}
+.member-action-links a[href="/dashboard.html?demo=1"]{background:var(--brand-citron-wash);border-color:var(--brand-citron-line)}
+
+/* Adult account pages retain forest actions, with a citron edge and warm detail. */
+main.account{border-top:4px solid var(--brand-citron)}
+main.account>.eyebrow{color:var(--brand-clay-ink)}
+main.account #adult-name-form{background:var(--brand-clay-wash);border-left:4px solid var(--brand-clay);border-radius:14px;padding:4px 18px 14px;margin:24px 0}
+
+/* Shared family and gathering demos use the same restrained accents. */
+.connections .preview-banner{background:var(--brand-clay-wash);border-left-color:var(--brand-clay)}
+.connections .preview-controls{background:var(--brand-sage-wash)}
+.connections .connection-tabs button[aria-current=page]{box-shadow:inset 0 -4px 0 var(--brand-citron)}
+.connections .account-context{background:var(--brand-citron-wash);border-color:var(--brand-citron-line)}
+.connections .family-summary{border-top:4px solid var(--brand-clay)}
+.connections .sample-inbox{background:var(--brand-clay-wash)}
+.connections .compact-form{background:var(--brand-citron-wash)}
+.connections .event-art.beach{background:#e4efba}
+.connections .event-art.lunch{background:#f0cfba}
+.connections .event-art.play{background:#d4dfc9}
+.connections .event-art.lunch::before,.connections .event-art.lunch::after{border-color:#a44c303d}
+.connections .event-art .event-kind{border:1px solid #c7cbb7}
+.connections .pod-invitation{background:var(--brand-citron-wash);border:1px solid var(--brand-citron-line)}
+
+/* Community sample workspace: clear navigation and occasional warm framing. */
+.cs-header .cs-appnav a[aria-current=page]{background:var(--brand-citron);color:var(--ink)}
+.cs-main .cs-pagehead{border-bottom:2px solid var(--brand-clay-line);padding-bottom:22px}
+.cs-main .cs-pagehead .cs-eyebrow{color:var(--brand-clay-ink)}
+.cs-main .cs-notice{background:var(--brand-clay-wash);border-color:var(--brand-clay-line)}
+.cs-main .cs-avatar.peach{background:#f0cfba}
+.cs-main .cs-toolbar{background:var(--brand-sage-wash)}
