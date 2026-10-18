@@ -1,6 +1,24 @@
 /* Shared Circle accents: secondary colors help separate sections and actions. */
 :root{--brand-clay:#bd5233;--brand-clay-ink:#873b27;--brand-clay-wash:#f8e6dc;--brand-clay-line:#dab09b;--brand-citron:#d8ed89;--brand-citron-wash:#edf5cb;--brand-citron-line:#b6c96b;--brand-sage-wash:#e7eee3}
 
+/* Forest indicates focus; clay remains a section/action accent. The citron
+   surround keeps focus visible on both light and forest backgrounds. */
+:focus-visible{outline:3px solid #193c32!important;outline-offset:3px;box-shadow:0 0 0 6px var(--brand-citron)}
+@media(forced-colors:active){:focus-visible{outline-color:CanvasText!important;box-shadow:none}}
+
+/* Landing workspace: the same palette as the member and account pages. */
+#experience .workspace{border-top:4px solid var(--brand-clay)}
+#experience .workspace-head{border-bottom-color:#bac8b4}
+#experience .workspace-head>.demo-label{background:var(--brand-citron-wash);border-color:var(--brand-citron-line)}
+#experience .workspace .tabs{background:var(--brand-sage-wash);border-radius:16px;padding:12px;gap:10px}
+#experience .workspace .tabs button{background:var(--white);border-color:#b3c2ae}
+#experience .workspace .tabs button[aria-pressed="true"]{background:var(--brand-citron);border-color:#879b4c;color:var(--ink);font-weight:700}
+#experience .demo-card:nth-child(odd){background:var(--brand-clay-wash);border-color:var(--brand-clay-line)}
+#experience .demo-card:nth-child(even){background:var(--brand-citron-wash);border-color:var(--brand-citron-line)}
+#experience .demo-card .demo-label{background:var(--white);border-color:#adbda8;color:var(--ink)}
+#experience .workspace-content .button{background:var(--brand-clay);border-color:var(--brand-clay);color:var(--white)}
+#experience .workspace-content .button:hover{background:#9e432b;border-color:#9e432b}
+
 /* Member home: three complementary treatments, with labels carrying meaning. */
 .member-next-steps{border-top:4px solid var(--brand-clay)}
 .member-action-card[href="/account/profile.html"]{background:var(--brand-sage-wash);border-color:#b6c5ae}

@@ -62,6 +62,32 @@ const pass = name => { console.log('PASS ' + name); passed++; };
     await page.locator('#request-dialog .close').click();
     pass('landing interest previews retain role defaults and explicit no-submission notice');
 
+    for (const width of [390, 1280]) {
+        await page.setViewportSize({width, height:900});
+        await page.locator('[data-workspace=community]').click();
+        await page.locator('.workspace').scrollIntoViewIfNeeded();
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+        if (process.env.CS_SCREENSHOT_DIR) await page.locator('.workspace').screenshot({path:path.join(process.env.CS_SCREENSHOT_DIR,'workspace-'+width+'.png')});
+    }
+    await page.goto(base + '/apply.html?demo=1');
+    await page.locator('[data-action=apply][data-id=teach]').click();
+    await page.locator('#name').fill('Sample Adult');
+    await page.locator('#email').fill('sample@example.invalid');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Shift+Tab');
+    assert.equal(await page.locator('#email').evaluate(el => el.matches(':focus-visible') && el.validity.valid),true);
+    assert.equal(await page.locator('#email').evaluate(el => getComputedStyle(el).outlineColor),'rgb(25, 60, 50)');
+    assert.equal(await page.locator('#form-error').isVisible(),false);
+    if (process.env.CS_SCREENSHOT_DIR) await page.locator('#community-dialog').screenshot({path:path.join(process.env.CS_SCREENSHOT_DIR,'contribution-focus.png')});
+    await page.locator('#offer').fill('Synthetic learning experience');
+    await page.locator('#availability').fill('One hour a month');
+    await page.locator('#action-form button[type=submit]').click();
+    assert.match(await page.locator('#community-status').textContent(),/Nothing was sent/);
+    await page.reload();
+    await page.locator('[data-action=apply]').first().waitFor();
+    assert.doesNotMatch(await page.locator('#cs-main').textContent(),/Your application drafts/);
+    pass('valid keyboard-focused contribution fields use forest focus; preview drafts remain truthful and reset on reload');
+
     await page.goto(base + '/dashboard.html');
     await page.locator('[data-action="tour-start"]').click();
     const tour = page.locator('[aria-label="Family walkthrough"]');
