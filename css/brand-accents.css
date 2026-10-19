@@ -72,3 +72,5 @@ main.account #adult-name-form{background:var(--brand-clay-wash);border-left:4px 
 .cs-main .cs-notice{background:var(--brand-clay-wash);border-color:var(--brand-clay-line)}
 .cs-main .cs-avatar.peach{background:#f0cfba}
 .cs-main .cs-toolbar{background:var(--brand-sage-wash)}
+
+.way.teaching .symbol .cs-icon{display:block;width:40px;height:40px}
