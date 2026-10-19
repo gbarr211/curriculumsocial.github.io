@@ -70,7 +70,7 @@ const pass=name=>{console.log('PASS '+name);passed++;};
   pass('editing, exact card projection, label search and keyboard discovery at '+width+'px');
   await page.goto(base+'/account/profile.html');await page.locator('#signed-in').waitFor({state:'visible'});await page.locator('#delete-account').click();await page.locator('#confirm-delete').click();await page.locator('#account-status').filter({hasText:'Delete your saved profile'}).waitFor();
   pass('account deletion is guarded while a family profile exists at '+width+'px');
-  await page.goto(base+'/profile.html');await page.locator('#family-discovery').waitFor({state:'visible'});await page.locator('#show-profile').click();await page.locator('#discoverable').uncheck();await page.locator('#member-form button[type=submit]').click();await page.locator('#family-discovery').waitFor({state:'visible'});
+  await page.goto(base+'/profile.html');await page.waitForURL('**/member.html?view=profile');await page.locator('#profile-fields:not([disabled])').waitFor();await page.locator('#family-setup').waitFor({state:'visible'});await page.locator('#discoverable').uncheck();await page.locator('#member-form button[type=submit]').click();await page.locator('#family-discovery').waitFor({state:'visible'});
   assert.equal(await page.evaluate(()=>!!JSON.parse(localStorage.getItem('cs-test-db'))['family_directory/synthetic-a']),false);
   await page.locator('#show-profile').click();await page.locator('#member-delete').click();await page.locator('#profile-delete-yes').click();await page.locator('#member-status').filter({hasText:'were deleted'}).waitFor();
   assert.equal(await page.evaluate(()=>!!JSON.parse(localStorage.getItem('cs-test-db'))['adult_profiles/synthetic-a']),false);

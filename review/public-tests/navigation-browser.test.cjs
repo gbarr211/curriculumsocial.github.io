@@ -14,7 +14,7 @@ for(const width of [320,390,768,1024,1200,1280,1536]){
  await page.setViewportSize({width,height:900});await page.goto(base+'/');await page.waitForFunction(()=>typeof window.setNavigationTestUser==='function');
  const mobile=width<=1240,toggle=page.locator('.menu-toggle'),nav=page.locator('#navigation');
  if(mobile){await toggle.click();assert.equal(await toggle.getAttribute('aria-expanded'),'true');}
- const labels=await page.locator('.nav-explore>a').allTextContents();assert.deepEqual(labels.map(s=>s.trim()),['How it works','Explore community Demo','Get involved','Questions']);
+ const labels=await page.locator('.nav-explore>a').allTextContents();assert.deepEqual(labels.map(s=>s.trim()),['How it works','Events','Explore community Demo','Get involved','Questions']);
  assert.equal(await page.locator('.nav-explore a[href="dashboard.html?demo=1"]').count(),1);assert.equal(await page.locator('.nav-explore a[href="/contributions.html"]').count(),1);assert.equal(await nav.locator('h2,h3,h4,button[data-general]').count(),0);
  assert.equal(await nav.locator('[data-session="signed-out"]:visible').count(),2);assert.equal(await nav.locator('[data-session="signed-in"]:visible').count(),0);await surface(page,'#navigation a:visible');
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'overflow '+width);

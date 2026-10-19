@@ -1,4 +1,4 @@
-import { bindPublicAccount } from './public-account-ui.js?v=events-pilot-20261019';
+import { bindPublicAccount } from './public-account-ui.js?v=member-navigation-20261020';
 import {bindAccountName} from './account-name-ui.js?v=family-first-1';
 
 // Dynamic loading lets the page explain a blocked SDK instead of staying on

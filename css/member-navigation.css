@@ -1,0 +1,10 @@
+/* Shared routes to existing member tools; the Events content and palette stay intact. */
+.member-navigation-header{flex-direction:row;flex-wrap:wrap;gap:14px;align-items:center;position:sticky;top:0;z-index:20;background:#f5f2e9}
+.member-navigation-header .member-navigation{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+header.member-navigation-header .member-navigation>a{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 12px;border:1px solid #9cac94;border-radius:14px;background:#e7eee3;color:#193c32;font:600 13px/1.35 Arial,sans-serif;text-decoration:none;text-align:center}
+.member-navigation-header .member-navigation>a:hover{background:#edf5cb;border-color:#193c32;text-decoration:none}
+.member-navigation-header .member-navigation>a[aria-current=page]{background:#d8ed89;border-color:#879b4c;color:#193c32}
+.member-navigation-header .member-navigation>a:focus-visible{outline:3px solid #193c32;outline-offset:3px}
+@media(max-width:900px){.member-navigation-header .member-navigation{width:100%;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}.member-navigation-header .member-navigation>a{grid-column:span 2;min-width:0;padding:9px 4px}.member-navigation-header .member-navigation>a:nth-child(n+4){grid-column:span 3}}
+@media(max-width:900px){.member-navigation-header{top:-60px}}
+.account #signed-in>.account-family-shortcut>a{min-height:48px;border-radius:14px;background:#e7eee3;font-weight:600}
