@@ -146,6 +146,26 @@ const pass = name => { console.log('PASS ' + name); passed++; };
         assert.match(await page.locator('.cs-preview-note').innerText(),/Fictional families/);
     }
     pass('mobile demo keeps seven readable destinations in a 4+3 icon grid with44px targets and explicit demo routes');
+    for(const width of [320,390,430,1280]){
+        await page.setViewportSize({width,height:900});
+        await page.goto(base+'/curriculum.html?demo=1');
+        await page.locator('#vote-group').waitFor();
+        for(const value of ['p1','p2','p3','class']){
+            await page.selectOption('#vote-group',value);
+            assert.equal(await page.locator('#vote-group').inputValue(),value);
+            assert.equal(await page.locator('#vote-group').evaluate(e=>e===document.activeElement),true);
+            if(width<=760){
+                const fit=await page.locator('#vote-group').evaluate(e=>{const r=e.getBoundingClientRect(),f=e.parentElement.getBoundingClientRect(),h=e.closest('.cs-toolbar').querySelector('p').getBoundingClientRect(),s=getComputedStyle(e),c=document.createElement('canvas').getContext('2d');c.font=s.font;return {width:r.width,field:f.width,height:r.height,helper:h.top,bottom:r.bottom,text:c.measureText(e.selectedOptions[0].text).width,usable:e.clientWidth-parseFloat(s.paddingLeft)-parseFloat(s.paddingRight)};});
+                assert.ok(fit.width>=200&&fit.height>=44);
+                assert.ok(Math.abs(fit.width-fit.field)<1);
+                assert.ok(fit.helper>=fit.bottom);
+                assert.ok(fit.text<=fit.usable);
+            }
+        }
+        assert.equal(await page.locator('button .cs-entry-cue').count(),0);
+        assert.match(await page.locator('.cs-preview-note').innerText(),/Fictional families/);
+    }
+    pass('native pod/class selector fits all four labels on phones, keeps focus and places its helper below');
     await page.goto(base + '/activities.html');
     await page.locator('[data-action="event-detail"][data-id="e1"]').click();
     await page.locator('#community-dialog').waitFor({ state: 'visible' });
