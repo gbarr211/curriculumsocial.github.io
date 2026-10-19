@@ -150,6 +150,107 @@ service cloud.firestore {
    allow delete: if introAdult() && owner(ownerId);
   }
 
+  // Caregiver-attended, free Events. No pod, learner, payment or guardian records.
+  // events/{id}: bounded member listing; immutable host/time/area/title; capacity
+  // counts approved GUEST people only. A caregiver's adult account manages one
+  // household request; shared-family membership is not inferred.
+  // event_locations/{id}: exact address/directions, never included in listings
+  // or RSVP documents. Only host and currently approved attendees may get it.
+  // events/{id}/event_rsvps/{uid}: household label, counts, consent, saved status
+  // and bounded host reply; readable only by requester and that event's host.
+  // Every RSVP create/update pairs with a checked event counter transaction.
+  // event_mutations/{id}: private write-proof (eventId/hostId/requesterId,
+  // rsvpRevision/eventRevision/updatedAt); no client read access. This keeps
+  // even internal requester IDs out of member-visible event summaries.
+  function eventAdult(){return request.auth!=null && request.auth.token.firebase.sign_in_provider!='anonymous';}
+  function eventVerified(){return eventAdult() && request.auth.token.email_verified==true;}
+  function eventPublisher(){return eventVerified();}
+  function eventText(v,min,max){return text(v,max) && v.size()>=min && (min==0 || v.matches('(?s).*[^\\s].*'));}
+  function eventUid(v){return eventText(v,1,128) && !v.matches('.*[/].*');}
+  function eventId(id){return id.matches('^[A-Za-z0-9_-]{8,64}$');}
+  function eventValid(d){return d.keys().hasAll(['hostId','hostName','title','description','bring','area','kind','venueType','startsAt','endsAt','timeZone','capacity','approvedPeople','status','caregiverRequired','paymentMode','hostConfirmed','consentVersion','revision','createdAt','updatedAt'])
+   && d.keys().hasOnly(['hostId','hostName','title','description','bring','area','kind','venueType','startsAt','endsAt','timeZone','capacity','approvedPeople','status','caregiverRequired','paymentMode','hostConfirmed','consentVersion','revision','createdAt','updatedAt'])
+   && eventUid(d.hostId) && eventText(d.hostName,1,80) && eventText(d.title,3,100) && eventText(d.description,10,1000) && eventText(d.bring,0,400)
+   && d.area in ['north','east','south','west','central'] && d.kind in ['social','learning'] && d.venueType in ['outdoors','home','venue']
+   && d.startsAt is timestamp && d.endsAt is timestamp && d.endsAt>d.startsAt && d.endsAt<=d.startsAt+duration.value(24,'h') && d.timeZone=='Asia/Bangkok'
+   && d.capacity is int && d.capacity>=1 && d.capacity<=60 && d.approvedPeople is int && d.approvedPeople>=0 && d.approvedPeople<=d.capacity
+   && d.status in ['open','cancelled'] && d.caregiverRequired==true && d.paymentMode=='free' && d.hostConfirmed==true && d.consentVersion=='events-caregiver-2026-10-19'
+   && d.revision is int && d.revision>=1 && d.revision<=1000000
+   && d.createdAt is timestamp && d.updatedAt==request.time;
+  }
+  function eventLocationValid(d,id){return d.keys().hasAll(['eventId','hostId','address','directions','createdAt','updatedAt']) && d.keys().hasOnly(['eventId','hostId','address','directions','createdAt','updatedAt'])
+   && d.eventId==id && eventUid(d.hostId) && eventText(d.address,5,700) && eventText(d.directions,0,700) && d.createdAt==request.time && d.updatedAt==request.time;}
+  function eventPlaces(d){return d.status=='approved' ? d.adults+d.children : 0;}
+  function eventRsvpValid(d,id,uid){return d.keys().hasAll(['eventId','hostId','requesterId','eventTitle','eventStartsAt','eventArea','householdName','adults','children','caregiverConfirmed','status','hostMessage','consentVersion','createdAt','updatedAt','revision'])
+   && d.keys().hasOnly(['eventId','hostId','requesterId','eventTitle','eventStartsAt','eventArea','householdName','adults','children','caregiverConfirmed','status','hostMessage','consentVersion','createdAt','updatedAt','revision'])
+   && d.eventId==id && d.requesterId==uid && eventUid(d.requesterId) && eventUid(d.hostId) && d.hostId!=uid
+   && eventText(d.eventTitle,3,100) && d.eventStartsAt is timestamp && d.eventArea in ['north','east','south','west','central']
+   && eventText(d.householdName,1,80) && d.adults is int && d.adults>=1 && d.adults<=6 && d.children is int && d.children>=0 && d.adults+d.children<=12
+   && d.caregiverConfirmed==true && d.consentVersion=='events-caregiver-2026-10-19' && d.status in ['pending','approved','declined','withdrawn'] && eventText(d.hostMessage,0,300)
+   && d.createdAt is timestamp && d.updatedAt==request.time && d.revision is int && d.revision>=1 && d.revision<=1000000;}
+  function eventBeforeRsvp(id,uid){return exists(/databases/$(database)/documents/events/$(id)/event_rsvps/$(uid)) ? get(/databases/$(database)/documents/events/$(id)/event_rsvps/$(uid)).data : {'status':'none','adults':0,'children':0,'revision':0};}
+  function eventCounter(id){let b=resource.data;let a=request.resource.data;let mutation=getAfter(/databases/$(database)/documents/event_mutations/$(id)).data;let uid=mutation.requesterId;let r=eventBeforeRsvp(id,uid);let next=getAfter(/databases/$(database)/documents/events/$(id)/event_rsvps/$(uid)).data;return eventAdult() && b.status=='open' && a.status=='open' && eventUid(uid)
+   && (request.auth.uid==uid || request.auth.uid==b.hostId)
+   && a.diff(b).affectedKeys().hasOnly(['approvedPeople','revision','updatedAt'])
+   && next.eventId==id && next.requesterId==uid && next.hostId==b.hostId && next.revision==r.revision+1 && next.updatedAt==request.time
+   && mutation.eventId==id && mutation.hostId==b.hostId && mutation.rsvpRevision==next.revision && mutation.eventRevision==a.revision && mutation.updatedAt==request.time && a.approvedPeople==b.approvedPeople-eventPlaces(r)+eventPlaces(next);}
+  function eventRsvpPaired(id,uid,before,next){let e=get(/databases/$(database)/documents/events/$(id)).data;let after=getAfter(/databases/$(database)/documents/events/$(id)).data;let mutation=getAfter(/databases/$(database)/documents/event_mutations/$(id)).data;return e.status=='open' && after.status=='open' && after.revision==e.revision+1 && after.updatedAt==request.time
+   && mutation.requesterId==uid && mutation.rsvpRevision==next.revision && mutation.eventRevision==after.revision && mutation.updatedAt==request.time && after.approvedPeople==e.approvedPeople-eventPlaces(before)+eventPlaces(next);}
+  function eventMutationWrite(id){let d=request.resource.data;let e=get(/databases/$(database)/documents/events/$(id)).data;let after=getAfter(/databases/$(database)/documents/events/$(id)).data;let before=eventBeforeRsvp(id,d.requesterId);let next=getAfter(/databases/$(database)/documents/events/$(id)/event_rsvps/$(d.requesterId)).data;return eventAdult()
+   && d.keys().hasAll(['eventId','hostId','requesterId','rsvpRevision','eventRevision','updatedAt']) && d.keys().hasOnly(['eventId','hostId','requesterId','rsvpRevision','eventRevision','updatedAt'])
+   && d.eventId==id && eventUid(d.hostId) && eventUid(d.requesterId) && d.hostId==e.hostId && request.auth.uid in [d.requesterId,e.hostId]
+   && d.rsvpRevision is int && d.rsvpRevision>=1 && d.rsvpRevision<=1000000 && d.eventRevision is int && d.eventRevision>=2 && d.eventRevision<=1000000 && d.updatedAt==request.time
+   && e.status=='open' && after.status=='open' && after.revision==e.revision+1 && d.eventRevision==after.revision && next.revision==before.revision+1 && d.rsvpRevision==next.revision && next.updatedAt==request.time;}
+  function eventRsvpContext(d,id){let e=get(/databases/$(database)/documents/events/$(id)).data;return d.hostId==e.hostId && d.eventTitle==e.title && d.eventStartsAt==e.startsAt && d.eventArea==e.area;}
+  function eventRsvpUpdate(id,uid){let b=resource.data;let a=request.resource.data;let e=get(/databases/$(database)/documents/events/$(id)).data;return eventAdult() && eventRsvpValid(a,id,uid) && eventRsvpContext(a,id) && eventRsvpPaired(id,uid,b,a)
+   && a.hostId==b.hostId && a.requesterId==b.requesterId && a.createdAt==b.createdAt && a.revision==b.revision+1 && a.eventTitle==b.eventTitle && a.eventStartsAt==b.eventStartsAt && a.eventArea==b.eventArea
+   && ((request.auth.uid==uid && eventVerified() && e.startsAt>request.time && a.adults+a.children<=e.capacity && a.status=='pending' && a.hostMessage=='' && a.diff(b).affectedKeys().hasOnly(['householdName','adults','children','status','hostMessage','updatedAt','revision']))
+    || (request.auth.uid==uid && b.status in ['pending','approved'] && a.status=='withdrawn' && a.diff(b).affectedKeys().hasOnly(['status','updatedAt','revision']))
+    || (eventVerified() && request.auth.uid==e.hostId && ((b.status=='pending' && a.status in ['approved','declined']) || (b.status=='approved' && a.status=='declined'))
+      && (a.status!='approved' || e.startsAt>request.time) && a.diff(b).affectedKeys().hasOnly(['status','hostMessage','updatedAt','revision'])));}
+  match /events/{id}{
+   allow get: if eventAdult();
+   allow list: if eventAdult() && request.query.limit!=null && request.query.limit<=20 && (resource.data.status=='open' || resource.data.hostId==request.auth.uid);
+   allow create: if eventId(id) && !exists(/databases/$(database)/documents/event_retired_ids/$(id)) && eventPublisher() && eventValid(request.resource.data) && request.resource.data.hostId==request.auth.uid && request.resource.data.createdAt==request.time
+    && request.resource.data.startsAt>request.time && request.resource.data.startsAt<request.time+duration.value(366,'d') && request.resource.data.revision==1 && request.resource.data.status=='open' && request.resource.data.approvedPeople==0
+    && getAfter(/databases/$(database)/documents/event_locations/$(id)).data.hostId==request.auth.uid && getAfter(/databases/$(database)/documents/event_locations/$(id)).data.createdAt==request.time;
+   allow update: if eventAdult() && eventValid(request.resource.data) && request.resource.data.hostId==resource.data.hostId && request.resource.data.createdAt==resource.data.createdAt && request.resource.data.revision==resource.data.revision+1
+    && ((owner(resource.data.hostId) && eventVerified() && resource.data.status=='open' && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['description','bring','capacity','updatedAt','revision']))
+     || (owner(resource.data.hostId) && resource.data.status=='open' && request.resource.data.status=='cancelled' && request.resource.data.approvedPeople==0 && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','approvedPeople','updatedAt','revision']) && !existsAfter(/databases/$(database)/documents/event_locations/$(id)) && !existsAfter(/databases/$(database)/documents/event_mutations/$(id)))
+     || eventCounter(id));
+   allow delete: if eventAdult() && owner(resource.data.hostId) && resource.data.status=='cancelled' && !existsAfter(/databases/$(database)/documents/event_locations/$(id)) && !existsAfter(/databases/$(database)/documents/event_mutations/$(id)) && getAfter(/databases/$(database)/documents/event_retired_ids/$(id)).data.retiredAt==request.time;
+   match /event_rsvps/{uid}{
+    allow get: if eventAdult() && (request.auth.uid==uid || owner(get(/databases/$(database)/documents/events/$(id)).data.hostId));
+    allow list: if eventAdult() && owner(get(/databases/$(database)/documents/events/$(id)).data.hostId) && request.query.limit!=null && request.query.limit<=25;
+    allow create: if eventVerified() && owner(uid) && eventRsvpValid(request.resource.data,id,uid) && eventRsvpContext(request.resource.data,id)
+     && get(/databases/$(database)/documents/events/$(id)).data.startsAt>request.time && request.resource.data.adults+request.resource.data.children<=get(/databases/$(database)/documents/events/$(id)).data.capacity && request.resource.data.createdAt==request.time && request.resource.data.revision==1 && request.resource.data.status=='pending' && request.resource.data.hostMessage==''
+     && eventRsvpPaired(id,uid,{'status':'none','adults':0,'children':0},request.resource.data);
+    allow update: if eventRsvpUpdate(id,uid);
+    allow delete: if eventAdult() && owner(uid) && (resource.data.status in ['declined','withdrawn'] || !exists(/databases/$(database)/documents/events/$(id)) || get(/databases/$(database)/documents/events/$(id)).data.status=='cancelled' || get(/databases/$(database)/documents/events/$(id)).data.endsAt<=request.time);
+   }
+  }
+  match /{path=**}/event_rsvps/{uid}{allow list: if eventAdult() && resource.data.requesterId==request.auth.uid && request.query.limit!=null && request.query.limit<=20;}
+  match /event_mutations/{id}{
+   allow create,update: if eventMutationWrite(id);
+   allow read: if false;
+   allow delete: if eventAdult() && owner(get(/databases/$(database)/documents/events/$(id)).data.hostId) && (!existsAfter(/databases/$(database)/documents/events/$(id)) || getAfter(/databases/$(database)/documents/events/$(id)).data.status=='cancelled');
+  }
+  match /event_locations/{id}{
+   allow get: if eventAdult() && (owner(get(/databases/$(database)/documents/events/$(id)).data.hostId)
+    || (get(/databases/$(database)/documents/events/$(id)).data.status=='open' && get(/databases/$(database)/documents/events/$(id)).data.endsAt>request.time && get(/databases/$(database)/documents/events/$(id)/event_rsvps/$(request.auth.uid)).data.status=='approved'));
+   allow list: if false;
+   allow create: if eventPublisher() && eventId(id) && eventLocationValid(request.resource.data,id) && request.resource.data.hostId==request.auth.uid && getAfter(/databases/$(database)/documents/events/$(id)).data.hostId==request.auth.uid && getAfter(/databases/$(database)/documents/events/$(id)).data.createdAt==request.time;
+   allow update: if false;
+   allow delete: if eventAdult() && owner(resource.data.hostId) && (!existsAfter(/databases/$(database)/documents/events/$(id)) || getAfter(/databases/$(database)/documents/events/$(id)).data.status=='cancelled');
+  }
+  // Retirement prevents a deleted event ID from being reused around old RSVPs.
+  // This marker contains only a server timestamp, no adult identity or location.
+  match /event_retired_ids/{id}{
+   allow create: if eventAdult() && eventId(id) && owner(get(/databases/$(database)/documents/events/$(id)).data.hostId) && get(/databases/$(database)/documents/events/$(id)).data.status=='cancelled' && !existsAfter(/databases/$(database)/documents/events/$(id))
+    && request.resource.data.keys().hasAll(['retiredAt']) && request.resource.data.keys().hasOnly(['retiredAt']) && request.resource.data.retiredAt==request.time;
+   allow read,update,delete: if false;
+  }
+
   match /{document=**}{allow read,write: if false;}
  }
 }
