@@ -42,3 +42,13 @@
  .cs-demo-header .cs-nav-label{max-width:100%}
 }
 @media(max-width:350px){.cs-demo-header{padding-inline:12px}.cs-demo-header .cs-appnav{gap:5px!important}.cs-demo-header .cs-appnav a{font-size:12.5px;min-height:80px;padding-inline:2px!important}.cs-demo-header .cs-toplinks .cs-button{padding:8px 10px}.cs-demo-header .cs-brand img{width:24px;height:24px}}
+
+/* Entry cues decorate audited page/space links only. Hidden cues retain their
+   existing inline slot, so hover and focus never move the label or the button. */
+.cs-entry-cue{display:inline-block!important;width:16px;height:16px;flex:0 0 16px;vertical-align:-3px;margin-left:5px;opacity:0;pointer-events:none;transition:opacity .16s ease}
+a:hover .cs-entry-cue,a:focus-visible .cs-entry-cue{opacity:1}
+.button:has(>.cs-entry-cue):hover,.cs-button:has(>.cs-entry-cue):hover{transform:none}
+@media(prefers-reduced-motion:reduce){.cs-entry-cue{transition:none}}
+/* Native pod/class selection keeps its desktop layout; the helper sits below
+   a full-width selector on phones. No custom select or altered options. */
+@media(max-width:760px){.cs-vote-toolbar{grid-template-columns:minmax(0,1fr)!important;align-items:start;gap:12px}.cs-vote-toolbar .cs-field{min-width:0;width:100%}.cs-vote-toolbar select{min-width:0;width:100%;min-height:46px;padding-right:32px;font-size:16px}.cs-vote-toolbar .cs-quiet{margin:0}}

@@ -18,6 +18,19 @@ function test(name,fn){const x=setup();try{fn(x);assert.deepEqual(x.errors,[]);p
 test('one shell and current-page navigation across seven screens',x=>{
  for(const r of ['matching','activities','pods','curriculum','apply','student','dashboard']){x.route(r);assert.equal(x.d.querySelectorAll('.cs-header').length,1);assert.equal(x.d.querySelector('.cs-appnav [aria-current=page]').dataset.appRoute,r);assert(x.d.querySelector('h1'));}
 });
+test('inward entry artwork belongs only to page links; actions and category icons remain distinct',x=>{
+ for(const route of ['dashboard','matching','activities','pods','curriculum','apply','student']){
+  x.route(route);
+  for(const cue of x.d.querySelectorAll('.cs-entry-cue')){
+   assert(cue.closest('a[href]'));
+   assert.equal(cue.getAttribute('aria-hidden'),'true');
+   assert.equal(cue.querySelector('[data-door-leaf]').getAttribute('d'),'M5 3l8 4v10l-8 4Z');
+  }
+  assert.equal(x.d.querySelectorAll('button .cs-entry-cue,button .cs-icon-arrow').length,0);
+  assert.equal(x.d.querySelectorAll('.cs-nav-icon svg').length,7);
+ }
+ x.route('curriculum');assert.equal(x.d.getElementById('vote-group').tagName,'SELECT');assert.equal(x.d.querySelectorAll('#vote-group option').length,4);
+});
 test('family filters have empty/reset states and preserve search',x=>{x.route('matching');x.fill('area','Lamai');x.fill('kind','Nature & projects');x.submit('filter-form');assert.match(x.d.querySelector('.cs-result-count').textContent,/2 sample/);x.fill('search','no-such-topic');x.submit('filter-form');assert(x.d.querySelector('.cs-empty'));x.click('[data-action=clear-filters]');assert.equal(x.d.querySelectorAll('.cs-card').length,4);});
 test('connection drafts require meaningful text and clearly state nothing sent',x=>{x.route('matching');x.click('[data-action=connect]');x.fill('message','   ');x.submit('action-form');assert(x.d.querySelector('dialog').open);assert(!x.d.getElementById('form-error').hidden);x.fill('message','A sample nature walk.');x.submit('action-form');assert(!x.d.querySelector('dialog').open);assert.match(x.d.querySelector('[data-action=connect]').textContent,/drafted/);assert.match(x.d.getElementById('community-status').textContent,/Nothing was sent/);});
 test('event join, repeat protection, plan visibility and leaving',x=>{x.route('activities');x.click('[data-action=event-detail][data-id=e1]');x.submit('action-form');assert(!x.d.getElementById('form-error').hidden);x.d.getElementById('ack').checked=true;x.submit('action-form');assert.match(x.d.querySelector('[data-id=e1]').textContent,/Joined/);x.click('[data-action=event-detail][data-id=e1]');assert(!x.d.getElementById('action-form'));x.click('.cs-close');x.route('dashboard');assert.match(x.d.getElementById('cs-main').textContent,/Joined in preview/);x.route('activities');x.click('[data-action=event-detail][data-id=e1]');x.click('[data-action=leave-event]');assert.match(x.d.querySelector('[data-id=e1]').textContent,/View & join/);});
