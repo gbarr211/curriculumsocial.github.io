@@ -80,6 +80,11 @@ export function bindPublicAccount(d, service, navigate = path => d.defaultView.l
     get('mode').addEventListener('change', updateMode);
     service.observe(user => {
         signedIn = Boolean(user);
+        if (d.body.dataset.accountSettings === 'true') {
+            get('account-title').textContent = signedIn ? 'Account settings.' : 'Sign in to your account.';
+            const intro = get('account-intro');
+            if (intro) intro.textContent = signedIn ? 'Your name and sign-in details.' : 'Sign in to manage your name and sign-in details.';
+        }
         if (signedIn && d.body.dataset.memberRedirect === 'true') navigate(new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='contributions'?'/contributions.html':new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='introductions'?'/introductions.html':new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='events'?eventDestination(d.defaultView?.location.search):'/member.html');
         get('signed-out').hidden = signedIn;
         get('signed-in').hidden = !signedIn;

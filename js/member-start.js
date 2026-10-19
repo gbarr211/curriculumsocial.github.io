@@ -1,4 +1,4 @@
-import {bindMember} from './member-ui.js?intro-release=20261019&v=member-actions-1';
+import {bindMember} from './member-ui.js?v=member-navigation-20261020';
 let timer;
 try{
  const service=await Promise.race([import('./member-service.js?v=family-1').then(m=>m.createMemberService()),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('timeout')),15000);})]);
