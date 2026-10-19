@@ -52,3 +52,41 @@
 .public-home .editorial-participate .role-options small{color:inherit!important;opacity:1!important}
 .public-home .editorial-link .cs-icon-arrow{flex:none;vertical-align:middle}
 @media(max-width:700px){.public-home #experience .workspace .tabs button{width:100%}.public-home .editorial-participate .role-tabs button{flex-basis:100%;font-size:14px}.public-home .editorial-participate .role-panel{padding:24px 20px}}
+
+/* Approved shared action language: one shape, two clear levels. */
+.public-home .button,.public-home .editorial-link,.public-home .menu-toggle,
+.public-home .nav-links a,.cs-header .cs-toplinks>a,.account-header>a:not(.brand),.account-header>nav>a{border-radius:14px;min-height:48px;font-weight:600;line-height:1.4;text-decoration:none;box-sizing:border-box}
+.public-home .button,.public-home .editorial-link{transition:background-color .16s,border-color .16s}
+.public-home .button:hover{transform:none}
+.public-home .nav{gap:18px;height:auto;min-height:90px}
+.public-home .nav-links{display:flex;align-items:center;gap:18px;flex-wrap:nowrap;padding:0;position:static;max-height:none;overflow:visible;border:0}
+.public-home .nav-explore,.public-home .cs-account-actions{display:flex;align-items:center;gap:8px}
+.public-home .nav-links .cs-account-actions{border-left:1px solid #b3c2ae;padding-left:18px}
+.public-home .nav-links a,.cs-header .cs-toplinks>a,.public-home .menu-toggle,.account-header>a:not(.brand),.account-header>nav>a{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 12px;border:1px solid #9cac94;background:#e7eee3;color:#193c32;font-size:13px;white-space:nowrap;text-decoration:none}
+.public-home .nav-links a:hover,.cs-header .cs-toplinks>a:hover,.public-home .menu-toggle:hover,.account-header>a:not(.brand):hover,.account-header>nav>a:hover{background:#edf5cb;border-color:#193c32;text-decoration:none}
+.public-home .nav-links .nav-primary,.cs-header .cs-toplinks>.nav-primary{background:#193c32;color:#fffdf7;border-color:#193c32}
+.public-home .nav-links .nav-primary:hover,.cs-header .cs-toplinks>.nav-primary:hover{background:#294f43;color:#fffdf7;border-color:#294f43}
+.public-home .nav-demo{font-size:10px;line-height:1.2;font-weight:600;padding:3px 6px;border:1px solid #9cac94;border-radius:5px;background:#fffdf7;color:#193c32}
+.public-home .nav-links .cs-entry-cue,.cs-toplinks .cs-entry-cue{margin-left:0}
+.public-home .menu-toggle{display:none}
+@media(max-width:1240px){
+ .public-home .nav{display:grid;grid-template-columns:minmax(0,1fr) auto;position:relative;width:calc(100% - 40px);gap:12px;min-height:76px;padding-block:12px}
+ .public-home .nav>.brand{grid-column:1;grid-row:1;min-width:0}
+ .public-home .menu-toggle{display:inline-flex;grid-column:2;grid-row:1}
+ .public-home .nav-links{display:none;position:absolute;z-index:45;left:0;right:0;top:100%;width:auto;max-height:calc(100dvh - 100px);overflow-y:auto;overscroll-behavior:contain;background:#f5f2e9;border:1px solid #b3c2ae;border-radius:0 0 18px 18px;box-shadow:0 18px 32px #193c3214;padding:16px;gap:16px;align-items:stretch;flex-direction:column}
+ .public-home .nav-links.open{display:flex}
+ .public-home .nav-explore{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+ .public-home .nav-links .nav-explore>a{width:100%;justify-content:flex-start;white-space:normal;min-height:48px}
+ .public-home .nav-links .nav-explore .cs-entry-cue{margin-left:auto}
+ .public-home .nav-links .cs-account-actions{display:grid;align-items:stretch;grid-template-columns:repeat(2,minmax(0,1fr));border-left:0;border-top:1px solid #b3c2ae;padding:16px 0 0;gap:8px}
+ .public-home .nav-links .cs-account-actions>a{min-width:0;white-space:normal;text-align:center;padding:11px 8px}
+ .public-home .nav-links .cs-account-actions>a[data-session="signed-in"]{grid-column:1/-1}
+}
+@media(max-width:760px){
+ .cs-header.cs-demo-header .cs-header-row,.cs-header .cs-header-row{flex-wrap:wrap}
+ .cs-header .cs-toplinks{width:100%;display:flex;align-items:stretch;gap:8px!important}
+ .cs-header .cs-toplinks>a,.cs-header .cs-toplinks>a:first-child{display:inline-flex;flex:1;min-width:0;min-height:48px;font-size:13px;padding:10px 12px;white-space:normal}
+}
+@media(max-width:700px){.public-home .nav{width:calc(100% - 32px)}.public-home .brand{font-size:clamp(16px,4.7vw,21px);gap:6px}.public-home .brand img{width:27px;height:27px}.public-home .brand>span{display:none}.public-home .nav-links{max-height:calc(100dvh - 90px);padding:12px}}
+
+@media(max-width:1240px){.public-home .nav-links .cs-account-actions>a{align-self:stretch}}

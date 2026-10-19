@@ -63,3 +63,15 @@ button{text-decoration:none}
 .account-footer>a,.account #signed-in>p>a,.editorial-closing p:last-child>a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 14px;border:1px solid #9cac94;border-radius:12px;background:#fffdf7;color:#193c32;line-height:1.4;text-decoration:none}
 .account-footer>a:hover,.account #signed-in>p>a:hover,.editorial-closing p:last-child>a:hover{background:#edf5cb;border-color:#193c32}
 @media(max-width:760px){.cs-header .cs-toplinks>a:first-child{display:none}.public-home .nav-links>a:not(.button){width:100%;justify-content:flex-start}.editorial-link{white-space:normal;text-align:center}}
+
+/* Account entry actions share the approved public menu hierarchy. */
+.cs-header .cs-toplinks>a{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:11px 14px;border:1px solid #9cac94;border-radius:14px;background:#e7eee3;color:#193c32;font:600 13px/1.4 Arial,sans-serif;text-decoration:none;box-sizing:border-box}.cs-header .cs-toplinks>a:hover{background:#edf5cb;border-color:#193c32}.cs-header .cs-toplinks>.nav-primary{background:#193c32;color:#fffdf7;border-color:#193c32}.cs-header .cs-toplinks>.nav-primary:hover{background:#294f43;border-color:#294f43}.cs-toplinks .cs-entry-cue{margin-left:0}
+@media(max-width:760px){
+ .cs-header.cs-demo-header .cs-header-row,.cs-header .cs-header-row{flex-wrap:wrap}
+ .cs-header .cs-toplinks{width:100%;display:flex;align-items:stretch;gap:8px!important}
+ .cs-header .cs-toplinks>a,.cs-header .cs-toplinks>a:first-child{display:inline-flex;flex:1;min-width:0;min-height:48px;font-size:13px;padding:10px 12px;white-space:normal}
+}
+
+.cs-account-actions>[hidden]{display:none!important}
+
+.account-header>a:not(.brand),.account-header>nav>a{min-height:48px;border-radius:14px;font-weight:600;background:#e7eee3;color:#193c32}
