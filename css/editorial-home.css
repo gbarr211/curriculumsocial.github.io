@@ -30,3 +30,24 @@
 .public-home .editorial-learning .learning-grid{margin-top:0}
 .public-home .editorial-learning>.photo-reveal{margin-top:72px}
 @media(max-width:700px){.public-home .editorial-learning>.photo-reveal{margin-top:48px}}
+
+/* Restore the approved Shared Circle workspace menu (pre-theme treatment). */
+.public-home #experience .workspace .tabs{display:flex;flex-wrap:wrap;align-content:start;background:var(--brand-sage-wash)!important;border-radius:16px;padding:12px;gap:10px}
+.public-home #experience .workspace .tabs button{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;min-height:46px;max-width:100%;padding:11px 15px!important;border:1px solid #b3c2ae!important;border-radius:12px!important;background:var(--white)!important;color:var(--ink)!important;line-height:1.4;text-align:left;box-shadow:none!important}
+.public-home #experience .workspace .tabs button[aria-pressed=true]{background:var(--brand-citron)!important;border-color:#879b4c!important;color:var(--ink)!important;font-weight:700}
+.public-home #experience .workspace .tabs button svg{flex:none}
+/* Gentle role accents keep the open editorial layout and clear actions. */
+.public-home .editorial-participate .role-tabs{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:12px}
+.public-home .editorial-participate .role-tabs button{min-height:46px;flex:1 1 130px;padding:12px 15px!important;border:1px solid #b3c2ae!important;border-radius:12px!important;font-size:13px;color:var(--ink)!important;line-height:1.4;background:var(--brand-sage-wash)!important}
+.public-home .editorial-participate .role-tabs [data-role=educator]{background:var(--brand-clay-wash)!important;border-color:var(--brand-clay-line)!important}
+.public-home .editorial-participate .role-tabs [data-role=supporter]{background:var(--brand-citron-wash)!important;border-color:var(--brand-citron-line)!important}
+.public-home .editorial-participate .role-tabs button[aria-pressed=true]{box-shadow:inset 0 -3px 0 var(--ink)!important;font-weight:700}
+.public-home .editorial-participate .role-panel{padding:26px 24px;border-radius:16px!important;border:0!important;background:var(--brand-sage-wash)!important}
+.public-home .editorial-participate[data-role-selected=educator] .role-panel{background:var(--brand-clay-wash)!important}
+.public-home .editorial-participate[data-role-selected=supporter] .role-panel{background:var(--brand-citron-wash)!important}
+.public-home .editorial-participate .role-options button{min-height:48px;border-radius:12px!important;padding:16px 18px;background:var(--white)!important;border-color:#9cac94!important;color:var(--ink)!important}
+.public-home .editorial-participate[data-role-selected=educator] .role-options button{border-color:var(--brand-clay-line)!important;color:var(--brand-clay-ink)!important}
+.public-home .editorial-participate[data-role-selected=supporter] .role-options button{border-color:#879b4c!important;background:var(--brand-citron)!important}
+.public-home .editorial-participate .role-options small{color:inherit!important;opacity:1!important}
+.public-home .editorial-link .cs-icon-arrow{flex:none;vertical-align:middle}
+@media(max-width:700px){.public-home #experience .workspace .tabs button{width:100%}.public-home .editorial-participate .role-tabs button{flex-basis:100%;font-size:14px}.public-home .editorial-participate .role-panel{padding:24px 20px}}

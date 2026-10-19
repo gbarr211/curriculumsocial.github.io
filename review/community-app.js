@@ -64,7 +64,7 @@ function navigate(route,push=true){
 function render(){
   document.body.classList.toggle('cs-tour-active',tourIndex !== null);
   document.body.classList.toggle('cs-student',state.route==='student');
-  document.getElementById('community-header').innerHTML=communityHeader(state.route,'',true);
+  document.getElementById('community-header').innerHTML=communityHeader(state.route,'',true,true);
   const renders={dashboard:dashboardView,matching:matchingView,activities:eventsView,pods:podsView,curriculum:votesView,apply:applyView,student:studentView};
   main.innerHTML=tourPanel()+renders[state.route]();main.tabIndex=-1;
   document.title={dashboard:'My community',matching:'Find families',activities:'Events',pods:'Pods',curriculum:'Learning votes',apply:'Contribute',student:'Student space'}[state.route]+' · Curriculum Social';

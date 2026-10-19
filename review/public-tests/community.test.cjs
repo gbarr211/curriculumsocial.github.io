@@ -2,7 +2,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const {JSDOM,VirtualConsole}=require('jsdom');
 const root=path.resolve(__dirname,'../..');
 const source=fs.readFileSync(root+'/review/community-app.js','utf8').replace(/^import [^\r\n]*;\r?\n/gm,'');
-const shell=fs.readFileSync(root+'/js/community-shell.js','utf8').replace('export function','function');
+const shell=fs.readFileSync(root+'/js/community-shell.js','utf8').replace(/^import [^\r\n]*;\r?\n/gm,'').replace('export function','function');
 const icons=fs.readFileSync(root+'/js/community-icons.js','utf8').replace(/export /g,'');
 let passed=0;
 function setup(page='dashboard'){

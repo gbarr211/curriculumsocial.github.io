@@ -23,3 +23,22 @@
 @media(forced-colors:active){:focus-visible{outline:3px solid CanvasText!important}}
 
 .directory-kind{display:inline-block;padding:4px 12px;border:1px solid var(--line);border-radius:20px;font-size:13px}.community-scene{margin:0 0 28px}.community-scene img{aspect-ratio:3.5/1;object-position:center 55%}@media(max-width:760px){.community-scene img{aspect-ratio:2/1}}
+
+/* The fictional community alone uses the always-visible phone navigation. */
+.cs-demo-header .cs-demo-heading,.cs-demo-header .cs-nav-icon{display:none}
+@media(max-width:760px){
+ .cs-demo-header .cs-header-row{flex-wrap:nowrap;gap:8px!important}
+ .cs-demo-header .cs-brand{font-size:clamp(17px,5.2vw,25px)!important;gap:6px}
+ .cs-demo-header .cs-brand img{width:27px;height:27px}
+ .cs-demo-header .cs-toplinks .cs-button{font-size:13px;padding:9px 12px;min-height:44px;white-space:nowrap}
+ .cs-demo-header .cs-toplinks .cs-icon-arrow{display:none}
+ .cs-demo-header .cs-demo-heading{display:block;margin:20px 0 10px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#59695f}
+ .cs-demo-header .cs-appnav{display:grid!important;grid-template-columns:repeat(12,minmax(0,1fr));gap:7px!important;margin-top:0!important;padding:0!important;background:transparent;border-radius:0;overflow:visible!important}
+ .cs-demo-header .cs-appnav a{grid-column:span 3;min-width:0;min-height:82px;padding:10px 4px!important;display:flex;flex-direction:column;justify-content:center;gap:7px;border:1px solid #b3c2ae;border-radius:15px;background:#fffdf7;color:#193c32;font-size:13px;line-height:1.25;text-align:center;white-space:normal}
+ .cs-demo-header .cs-appnav a:nth-child(n+5){grid-column:span 4}
+ .cs-demo-header .cs-appnav a[aria-current=page]{background:#d8ed89;color:#193c32;border-color:#879b4c;font-weight:700}
+ .cs-demo-header .cs-nav-icon{display:block;width:23px;height:23px;flex:none}
+ .cs-demo-header .cs-nav-icon svg{display:block;width:100%;height:100%}
+ .cs-demo-header .cs-nav-label{max-width:100%}
+}
+@media(max-width:350px){.cs-demo-header{padding-inline:12px}.cs-demo-header .cs-appnav{gap:5px!important}.cs-demo-header .cs-appnav a{font-size:12.5px;min-height:80px;padding-inline:2px!important}.cs-demo-header .cs-toplinks .cs-button{padding:8px 10px}.cs-demo-header .cs-brand img{width:24px;height:24px}}

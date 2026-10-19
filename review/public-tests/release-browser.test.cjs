@@ -130,6 +130,22 @@ const pass = name => { console.log('PASS ' + name); passed++; };
     }
     pass('demo navigation and Back retain page focus/scroll without a page border; keyboard controls retain visible focus at390/1280px');
 
+    for (const width of [320,390,430]) {
+        await page.setViewportSize({width,height:900});
+        await page.goto(base + '/matching.html?demo=1');
+        await page.locator('.cs-demo-header .cs-appnav').waitFor();
+        const cells=await page.locator('.cs-appnav a').evaluateAll(links=>links.map(a=>{const r=a.getBoundingClientRect();return {x:r.x,y:Math.round(r.y),width:r.width,height:r.height,label:a.textContent.trim(),clipped:a.scrollWidth>a.clientWidth};}));
+        assert.equal(cells.length,7);
+        assert.equal(new Set(cells.map(c=>c.y)).size,2);
+        assert.equal(cells.filter(c=>c.y===cells[0].y).length,4);
+        for(const cell of cells){assert.ok(cell.width>=44 && cell.height>=44);assert.ok(cell.x>=0 && cell.x+cell.width<=width+.5);assert.equal(cell.clipped,false,cell.label);}
+        assert.equal(await page.locator('.community-menu').count(),0);
+        await page.locator('.cs-appnav [data-app-route=activities]').click();
+        await page.waitForURL('**/activities.html?demo=1');
+        assert.equal(await page.locator('.cs-appnav a[aria-current=page]').innerText(),'Events');
+        assert.match(await page.locator('.cs-preview-note').innerText(),/Fictional families/);
+    }
+    pass('mobile demo keeps seven readable destinations in a 4+3 icon grid with44px targets and explicit demo routes');
     await page.goto(base + '/activities.html');
     await page.locator('[data-action="event-detail"][data-id="e1"]').click();
     await page.locator('#community-dialog').waitFor({ state: 'visible' });
