@@ -1,3 +1,4 @@
+function eventDestination(search){const id=new URLSearchParams(search||'').get('event');return '/events.html'+(id&&/^[A-Za-z0-9_-]{8,64}$/.test(id)?'?event='+encodeURIComponent(id):'');}
 // Adult authentication only. No profile, interest, reviewer, or child data access.
 export function bindPublicAccount(d, service, navigate = path => d.defaultView.location.replace(path)) {
     const get = id => d.getElementById(id);
@@ -25,6 +26,8 @@ export function bindPublicAccount(d, service, navigate = path => d.defaultView.l
     };
     const error = e => {
         const messages = {
+            'member/events-hosted':'Cancel and delete your hosted gatherings in Events before deleting your account.',
+            'member/event-rsvps':'Leave and delete your household RSVPs in Events before deleting your account.',
             'member/introductions-exist':'Delete your introductions before deleting your account. Open Introductions to manage both inboxes.',
             'member/blocks-exist':'Clear your blocked-adult list in Introductions before deleting your account.',
             'member/contributions-exist': 'Delete your contributions before deleting your account. Open My contributions to manage them.',
@@ -77,7 +80,7 @@ export function bindPublicAccount(d, service, navigate = path => d.defaultView.l
     get('mode').addEventListener('change', updateMode);
     service.observe(user => {
         signedIn = Boolean(user);
-        if (signedIn && d.body.dataset.memberRedirect === 'true') navigate(new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='contributions'?'/contributions.html':new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='introductions'?'/introductions.html':'/member.html');
+        if (signedIn && d.body.dataset.memberRedirect === 'true') navigate(new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='contributions'?'/contributions.html':new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='introductions'?'/introductions.html':new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='events'?eventDestination(d.defaultView?.location.search):'/member.html');
         get('signed-out').hidden = signedIn;
         get('signed-in').hidden = !signedIn;
         get('identity').textContent = user?.email || 'your account';
