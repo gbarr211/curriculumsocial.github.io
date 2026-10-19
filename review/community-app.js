@@ -1,4 +1,4 @@
-import { communityHeader } from '../js/community-shell.js?v=copy-20261017';
+import { communityHeader } from '../js/community-shell.js?v=menu-20261019';
 import { iconSvg, validIcon, iconPickerMarkup, bindIconPicker } from '../js/community-icons.js';
 
 // Product preview only. All community records and changes are synthetic,

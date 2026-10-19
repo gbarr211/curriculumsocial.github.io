@@ -57,9 +57,8 @@ const pass = name => { console.log('PASS ' + name); passed++; };
     assert.equal(await page.locator('#interest-role').inputValue(), 'educator');
     assert.match(await page.locator('.form-note').textContent(), /nothing is sent/i);
     await page.locator('#request-dialog .close').click();
-    await page.locator('[data-general]').click();
-    assert.equal(await page.locator('#interest-role').inputValue(), 'general');
-    await page.locator('#request-dialog .close').click();
+    assert.equal(await page.locator('#navigation a[href="/contributions.html"]').textContent().then(s=>s.trim()), 'Get involved');
+    assert.equal(await page.locator('#navigation [data-general]').count(), 0);
     pass('landing interest previews retain role defaults and explicit no-submission notice');
 
     for (const width of [390, 1280]) {
