@@ -52,3 +52,14 @@ a:hover .cs-entry-cue,a:focus-visible .cs-entry-cue{opacity:1}
 /* Native pod/class selection keeps its desktop layout; the helper sits below
    a full-width selector on phones. No custom select or altered options. */
 @media(max-width:760px){.cs-vote-toolbar{grid-template-columns:minmax(0,1fr)!important;align-items:start;gap:12px}.cs-vote-toolbar .cs-field{min-width:0;width:100%}.cs-vote-toolbar select{min-width:0;width:100%;min-height:46px;padding-right:32px;font-size:16px}.cs-vote-toolbar .cs-quiet{margin:0}}
+
+/* Action controls always have a complete surface or outline, never an underline
+   alone. Reference links in reading copy retain normal link semantics. */
+button{text-decoration:none}
+.public-home .nav-links{gap:10px}
+.public-home .nav-links>a:not(.button),.cs-toplinks>a:not(.cs-button),.account-header>a:not(.brand),.account-header>nav>a,.site-header>nav>a:not(.brand){display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border:1px solid #b3c2ae;border-radius:12px;background:#fffdf7;color:#193c32;line-height:1.4;text-decoration:none}
+.public-home .nav-links>a:not(.button):hover,.cs-toplinks>a:not(.cs-button):hover,.account-header>a:not(.brand):hover,.account-header>nav>a:hover,.site-header>nav>a:not(.brand):hover{background:#edf5cb;border-color:#193c32;text-decoration:none}
+.cs-toplinks>a[aria-current=page]{background:#d8ed89;border-color:#879b4c;text-decoration:none}
+.account-footer>a,.account #signed-in>p>a,.editorial-closing p:last-child>a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 14px;border:1px solid #9cac94;border-radius:12px;background:#fffdf7;color:#193c32;line-height:1.4;text-decoration:none}
+.account-footer>a:hover,.account #signed-in>p>a:hover,.editorial-closing p:last-child>a:hover{background:#edf5cb;border-color:#193c32}
+@media(max-width:760px){.cs-header .cs-toplinks>a:first-child{display:none}.public-home .nav-links>a:not(.button){width:100%;justify-content:flex-start}.editorial-link{white-space:normal;text-align:center}}

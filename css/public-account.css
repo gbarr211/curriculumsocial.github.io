@@ -28,8 +28,8 @@ button:hover { background: #2b5448; }
 .actions > button { flex: 1 1 180px; }
 button:disabled { cursor: wait; opacity: .6; }
 fieldset:disabled button { cursor: wait; opacity: .6; }
-.text-button { background: transparent; color: var(--ink); border: 0; text-decoration: underline; padding: 12px 0; }
-.text-button:hover { background: transparent; }
+.text-button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; background: var(--white); color: var(--ink); border: 1px solid #9cac94; border-radius: 12px; text-decoration: none; padding: 10px 16px; line-height: 1.4; }
+.text-button:hover { background: #edf5cb; border-color: var(--ink); }
 #account-status { padding: 14px 16px; background: #e6ebdc; border-radius: 9px; }
 #account-feedback, #account-status.is-error { color: #942d24; background: #fff0ec; border: 1px solid #c7786d; border-radius: 9px; padding: 12px 14px; font-weight: 600; }
 #account-feedback::before { content: '✕ '; }
