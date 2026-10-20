@@ -4,6 +4,7 @@ export function bindEvents(d) {
   const el = id => d.getElementById(id);
   let state = exampleEvents(), actor = 'rivera', filter = 'all', pending, trigger;
   const node = (tag, text, cls) => {const n = d.createElement(tag); if (text) n.textContent = text; if (cls) n.className = cls; return n;};
+  const places=count=>count+' place'+(count===1?'':'s');
   const message = (text, error = false) => {el('event-status').textContent = text; el('event-status').classList.toggle('error', error);};
   function button(label, action, id, cls = '') {const b = node('button', label, cls); b.type = 'button'; b.dataset.eventAction = action; b.dataset.eventId = id; return b;}
   function render() {
@@ -15,7 +16,7 @@ export function bindEvents(d) {
       const card = node('article', '', 'event-card' + (event.status === 'cancelled' ? ' cancelled' : '')); card.dataset.event = event.id;
       const art = node('div', '', 'event-art ' + event.id); art.append(node('span', event.category === 'social' ? 'Time together' : 'Learning together', 'event-kind'));
       const copy = node('div', '', 'event-copy'); copy.append(node('h3', event.title), node('p', event.when, 'event-meta'), node('p', event.area, 'event-meta'), node('p', 'Organized by ' + event.hostName, 'event-meta'), node('p', event.description, 'description'), node('p', event.cost, 'event-meta'));
-      copy.append(node('p', event.status === 'cancelled' ? 'Cancelled in this example' : event.remaining === 0 ? 'All places reserved' : event.remaining + ' places available · Adults included', 'places'));
+      copy.append(node('p', event.status === 'cancelled' ? 'Cancelled in this example' : event.remaining === 0 ? 'All places reserved' : places(event.remaining) + ' available · Adults included', 'places'));
       if (event.mine) copy.append(node('p', 'Your sample plan · ' + event.mine + (event.mine === 1 ? ' person' : ' people'), 'plan-state'));
       const actions = node('div', '', 'card-actions');
       if (event.status === 'open') {
@@ -39,7 +40,7 @@ export function bindEvents(d) {
     el('confirm-event').textContent = action === 'cancel-rsvp' ? 'Release sample places' : action === 'cancel-event' ? 'Cancel sample gathering' : event.mine ? 'Update sample places' : 'Reserve sample places';
     el('confirm-event').disabled = rsvp && available === 0;
     if (rsvp) {
-      for (const text of [event.when + ' · Samui time', event.area, event.cost, 'Organized by ' + event.hostName, 'Bring: ' + event.bring, event.note, available ? available + ' places available for your household, including any you already reserved.' : 'All sample places are reserved. Try another gathering or release places from another sample family.']) el('event-details').append(node('p', text));
+      for (const text of [event.when + ' · Samui time', event.area, event.cost, 'Organized by ' + event.hostName, 'Bring: ' + event.bring, event.note, available ? places(available) + ' available for your household, including any you already reserved.' : 'All sample places are reserved. Try another gathering or release places from another sample family.']) el('event-details').append(node('p', text));
     }
     el('event-dialog').showModal(); el('close-event').focus();
   }
