@@ -51,15 +51,24 @@ const pass = name => { console.log('PASS ' + name); passed++; };
         }
         pass('homepage and account entry points at ' + width + 'px');
     }
-    await page.locator('[data-role="educator"]').click();
-    await page.locator('[data-request]:not([data-general])').click();
-    assert.equal(await page.locator('#request-dialog').isVisible(), true);
-    assert.equal(await page.locator('#interest-role').inputValue(), 'educator');
-    assert.match(await page.locator('.form-note').textContent(), /nothing is sent/i);
-    await page.locator('#request-dialog .close').click();
+    for (const width of [320,390,1280]) {
+        await page.setViewportSize({width,height:900});
+        for (const [role,href] of [['family','/signup.html'],['educator','/contributions.html'],['supporter','/contributions.html']]) {
+            await page.locator('[data-role="'+role+'"]').click();
+            const action=page.locator('#participate-action');
+            assert.equal(await action.getAttribute('href'),href);
+            assert.equal(await page.locator('#request-dialog').count(),0);
+            assert.equal((await page.request.get(base+href)).status(),200);
+            assert.doesNotMatch(await page.locator('.role-panel').innerText(),/demo|draft|nothing is sent/i);
+            const surface=await action.evaluate(e=>{const r=e.getBoundingClientRect(),s=getComputedStyle(e);return {tag:e.tagName,height:r.height,width:r.width,decoration:s.textDecorationLine};});
+            assert.equal(surface.tag,'A');assert.ok(surface.height>=44&&surface.width>=44);assert.equal(surface.decoration.includes('underline'),false);
+            assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+            if(process.env.CS_SCREENSHOT_DIR)await page.locator('#participate').screenshot({path:path.join(process.env.CS_SCREENSHOT_DIR,'participation-'+role+'-'+width+'.png')});
+        }
+    }
     assert.equal(await page.locator('#navigation a[href="/contributions.html"]').textContent().then(s=>s.trim()), 'Get involved');
     assert.equal(await page.locator('#navigation [data-general]').count(), 0);
-    pass('landing interest previews retain role defaults and explicit no-submission notice');
+    pass('landing participation links reach existing real tools with readable targets; obsolete unsent modal is absent');
 
     for (const width of [390, 1280]) {
         await page.setViewportSize({width, height:900});
@@ -179,9 +188,13 @@ const pass = name => { console.log('PASS ' + name); passed++; };
     for (const file of ['interest.html', 'admin.html', 'admin-reports.html', 'admin-venues.html', 'venue-management.html', 'report-incident.html', 'portfolio.html']) {
         await page.goto(base + '/' + file);
         assert.equal(await page.locator('form, input, textarea, script:not([src*="appearance.js"])').count(), 0, file);
-        assert.equal(await page.locator('a[href="/signup.html"]').count(), 1);
+        const destination=['interest.html','admin.html','admin-venues.html','venue-management.html'].includes(file)?'/contributions.html':'/signup.html';
+        assert.equal(await page.locator('a[href="'+destination+'"]').count(), 1);
+        if(file==='report-incident.html')assert.match(await page.locator('main').innerText(),/does not receive incident reports/);
     }
-    pass('deferred collection/reviewer pages have no forms or backend code');
+    await page.goto(base+'/review/movement.html');await page.waitForURL(base+'/');
+    assert.equal(await page.locator('#request-dialog').count(),0);
+    pass('legacy pages keep unavailable boundaries or point to existing tools; obsolete landing preview resolves to the current homepage');
 
     signedInForDemo = true;
     for (const [key,file] of [['contribution','apply.html'],['community','pods.html'],['learning','student.html'],['continuity','matching.html']]) {
