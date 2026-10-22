@@ -1,6 +1,28 @@
 function eventDestination(search){const id=new URLSearchParams(search||'').get('event');return '/events.html'+(id&&/^[A-Za-z0-9_-]{8,64}$/.test(id)?'?event='+encodeURIComponent(id):'');}
+function prepareAccountNavigation(d) {
+    const location = d.defaultView?.location;
+    if (!location || d.body?.dataset.memberRedirect !== 'true') return '/member.html';
+    const params = new URLSearchParams(location.search), kind = params.get('continue');
+    const destinations = {events: eventDestination(location.search), contributions: '/contributions.html', introductions: '/introductions.html'};
+    const destination = Object.hasOwn(destinations, kind) ? destinations[kind] : '/member.html';
+    const recovery = new URLSearchParams();
+    if (Object.hasOwn(destinations, kind)) recovery.set('continue', kind);
+    if (kind === 'events' && destination.includes('?')) recovery.set('event', new URLSearchParams(destination.split('?')[1]).get('event'));
+    const reload = d.querySelector('#reload-account a');
+    // Prepare before the SDK loads: a failed startup must retain the invitation.
+    // Only known in-app destinations survive; arbitrary redirect URLs do not.
+    if (reload) reload.setAttribute('href', location.pathname + (recovery.size ? '?' + recovery.toString() : ''));
+    if (Object.hasOwn(destinations, kind)) {
+        let context = d.getElementById('account-destination');
+        if (!context) { context = d.createElement('p'); context.id = 'account-destination'; context.className = 'fine-print'; d.getElementById('account-status')?.before(context); }
+        context.textContent = kind === 'events' ? (destination.includes('?') ? 'After sign-in, return to this gathering.' : 'After sign-in, explore Events.') : kind === 'contributions' ? 'After sign-in, explore Contributions.' : 'After sign-in, return to Introductions.';
+    }
+    return destination;
+}
+if (typeof document !== 'undefined') prepareAccountNavigation(document);
 // Adult authentication only. No profile, interest, reviewer, or child data access.
 export function bindPublicAccount(d, service, navigate = path => d.defaultView.location.replace(path)) {
+    const destination = prepareAccountNavigation(d);
     const get = id => d.getElementById(id);
     let ready = false;
     let busy = false;
@@ -85,7 +107,7 @@ export function bindPublicAccount(d, service, navigate = path => d.defaultView.l
             const intro = get('account-intro');
             if (intro) intro.textContent = signedIn ? 'Your name and sign-in details.' : 'Sign in to manage your name and sign-in details.';
         }
-        if (signedIn && d.body.dataset.memberRedirect === 'true') navigate(new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='contributions'?'/contributions.html':new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='introductions'?'/introductions.html':new URLSearchParams(d.defaultView?.location.search||'').get('continue')==='events'?eventDestination(d.defaultView?.location.search):'/member.html');
+        if (signedIn && d.body.dataset.memberRedirect === 'true') navigate(destination);
         get('signed-out').hidden = signedIn;
         get('signed-in').hidden = !signedIn;
         get('identity').textContent = user?.email || 'your account';
