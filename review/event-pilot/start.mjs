@@ -1,4 +1,4 @@
-import {bindEvents} from './ui.mjs';
+import {bindEvents} from './ui.mjs?v=event-tools-20261023';
 let expired=false,timer;
 try{
  const preview=document.body.dataset.events==='preview',emulator=['localhost','127.0.0.1'].includes(location.hostname)&&new URLSearchParams(location.search).get('emulator')==='1';
