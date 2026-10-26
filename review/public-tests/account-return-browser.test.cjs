@@ -32,7 +32,7 @@ let browser,passed=0;const errors=[],pass=name=>{passed++;console.log('PASS '+na
   assert.equal(await page.locator('#reload-account a').getAttribute('href'),route+'?'+continuation);
   assert.equal(await page.locator('#submit-account').isDisabled(),true);
   assert.match(await page.locator('#account-destination').innerText(),/After sign-in/);
-  blocked=false;await page.locator('#reload-account a').click();await page.waitForFunction(()=>!document.getElementById('account-controls').disabled);
+  blocked=false;await page.locator('#reload-account a').click();await page.waitForFunction(()=>document.getElementById('account-controls')?.disabled===false);
   assert.equal(new URL(page.url()).search,'?'+continuation);
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await page.locator('#email').fill('adult@example.invalid');await page.locator('#password').fill('synthetic-password');await page.locator('#consent').check();
@@ -46,7 +46,7 @@ let browser,passed=0;const errors=[],pass=name=>{passed++;console.log('PASS '+na
  }
  pass('unknown/prototype destinations, malformed event IDs and arbitrary return URLs are discarded');
  const context=await browser.newContext();await context.route('https://www.gstatic.com/**',r=>r.fulfill({contentType:'text/javascript',body:r.request().url().includes('firebase-app.js')?firebaseApp:r.request().url().includes('firebase-firestore.js')?firebaseFirestore:auth}));
- const page=await context.newPage();for(const width of [320,390,1280]){await page.setViewportSize({width,height:900});await page.goto(base+'/signup.html?continue=events&event=Gathering_123');await page.waitForFunction(()=>!document.getElementById('account-controls').disabled);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.ok(await page.locator('#submit-account').evaluate(e=>e.getBoundingClientRect().height>=44));assert.equal(await page.locator('#account-destination').count(),1);if(process.env.CS_RETURN_SCREENSHOTS){fs.mkdirSync(process.env.CS_RETURN_SCREENSHOTS,{recursive:true});await page.screenshot({path:path.join(process.env.CS_RETURN_SCREENSHOTS,'gathering-signup-'+width+'.png'),fullPage:true})}}
+ const page=await context.newPage();for(const width of [320,390,1280]){await page.setViewportSize({width,height:900});await page.goto(base+'/signup.html?continue=events&event=Gathering_123');await page.waitForFunction(()=>document.getElementById('account-controls')?.disabled===false);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.ok(await page.locator('#submit-account').evaluate(e=>e.getBoundingClientRect().height>=44));assert.equal(await page.locator('#account-destination').count(),1);if(process.env.CS_RETURN_SCREENSHOTS){fs.mkdirSync(process.env.CS_RETURN_SCREENSHOTS,{recursive:true});await page.screenshot({path:path.join(process.env.CS_RETURN_SCREENSHOTS,'gathering-signup-'+width+'.png'),fullPage:true})}}
  await context.close();pass('gathering context stays readable at 320/390/1280px with usable submit targets');
  assert.deepEqual(errors,[]);console.log(passed+' account-return browser groups passed; mocked transport and destination fixtures only.');
 })().catch(e=>{console.error(e);process.exitCode=1}).finally(async()=>{await browser?.close();await new Promise(r=>server.close(r))});
