@@ -1,11 +1,11 @@
-import {createMemberService} from './member-service.js?v=family-1';
+import {createMemberService} from './member-service.js?v=family-invites-20261028';
 import {getAuth,updateProfile} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import {getFirestore,doc,getDocFromServer} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import {getFirestore,doc,collection,query,where,limit,getDocsFromServer,getDocFromServer} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 export function createAccountService(){
  const service=createMemberService();
  return {...service,
  async setName(name){const auth=getAuth(),user=auth.currentUser;if(!user||user.isAnonymous)throw Error('Sign in first');if(typeof name!=='string'||name.length>80||/[\u0000-\u001f\u007f]/.test(name))throw Error('Check your name');await updateProfile(user,{displayName:name.trim()||null});if(auth.currentUser!==user)throw Error('Session changed');},
- async remove(){const auth=getAuth(),user=auth.currentUser;if(!user)throw Error('Sign in first');const result=await service.load(user.uid);if(result.data)throw Object.assign(Error('Delete your profile first.'),{code:'member/profile-exists'});
+ async remove(){const auth=getAuth(),user=auth.currentUser;if(!user)throw Error('Sign in first');const memberships=await getDocsFromServer(query(collection(getFirestore(),'family_links'),where('members','array-contains',user.uid),limit(1)));if(auth.currentUser!==user)throw Error('Session changed');if(memberships.docs.length)throw Object.assign(Error('Manage your family memberships before deleting your account.'),{code:'member/family-memberships'});const result=await service.load(user.uid);if(result.data)throw Object.assign(Error('Delete your profile first.'),{code:'member/profile-exists'});
  const removeEvents=async()=>{if(auth.currentUser!==user)throw Error('Session changed');const {liveEnabled}=await import('/review/event-pilot/config.mjs');if(liveEnabled){const {guardAccountRemoval}=await import('/review/event-pilot/account-guard-firebase.mjs');return guardAccountRemoval(user,()=>service.remove());}return service.remove();};
  const finish=async()=>{if(auth.currentUser!==user)throw Error('Session changed');const {liveEnabled}=await import('/review/introductions/config.mjs');if(liveEnabled){const {guardAccountRemoval}=await import('/review/introductions/account-guard-firebase.mjs');return guardAccountRemoval(user,removeEvents);}return removeEvents();};
  const {liveEnabled}=await import('/review/contributions/config.mjs');

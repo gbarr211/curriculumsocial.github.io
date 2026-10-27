@@ -22,18 +22,19 @@ let browser,passed=0;const errors=[],pass=name=>{passed++;console.log('PASS '+na
   ['/account/login.html','continue=events&event=Gathering_123','/events.html?event=Gathering_123'],
   ['/account/signup.html','continue=events&event=Gathering_123','/events.html?event=Gathering_123'],
   ['/login.html','continue=contributions','/contributions.html'],
-  ['/signup.html','continue=introductions','/introductions.html']
+  ['/signup.html','continue=introductions','/introductions.html'],
+  ...['/login.html','/signup.html','/account/login.html','/account/signup.html'].map(route=>[route,'continue=family#family=sample-parent&invite='+ 'A'.repeat(32),'/invitations.html#family=sample-parent&invite='+ 'A'.repeat(32)])
  ]){
   const context=await browser.newContext({viewport:{width:390,height:844}});let blocked=true;
   await context.route('https://www.gstatic.com/**',r=>blocked?r.abort():r.fulfill({contentType:'text/javascript',body:r.request().url().includes('firebase-app.js')?firebaseApp:r.request().url().includes('firebase-firestore.js')?firebaseFirestore:auth}));
-  await context.route('**/*',r=>{const u=new URL(r.request().url());if(u.origin===base&&['/events.html','/contributions.html','/introductions.html','/member.html'].includes(u.pathname))return r.fulfill({contentType:'text/html',body:'<!doctype html><h1>Routing destination fixture</h1>'});return r.fallback()});
+  await context.route('**/*',r=>{const u=new URL(r.request().url());if(u.origin===base&&['/events.html','/contributions.html','/introductions.html','/invitations.html','/member.html'].includes(u.pathname))return r.fulfill({contentType:'text/html',body:'<!doctype html><h1>Routing destination fixture</h1>'});return r.fallback()});
   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+route+'?'+continuation);await page.locator('#reload-account').waitFor({state:'visible'});
   assert.equal(await page.locator('#reload-account a').getAttribute('href'),route+'?'+continuation);
   assert.equal(await page.locator('#submit-account').isDisabled(),true);
   assert.match(await page.locator('#account-destination').innerText(),/After sign-in/);
   blocked=false;await page.locator('#reload-account a').click();await page.waitForFunction(()=>document.getElementById('account-controls')?.disabled===false);
-  assert.equal(new URL(page.url()).search,'?'+continuation);
+  assert.equal(new URL(page.url()).search+new URL(page.url()).hash,'?'+continuation);
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await page.locator('#email').fill('adult@example.invalid');await page.locator('#password').fill('synthetic-password');await page.locator('#consent').check();
   await page.locator('#submit-account').click();await page.waitForURL(base+target);

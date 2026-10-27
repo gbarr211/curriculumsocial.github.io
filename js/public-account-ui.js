@@ -1,9 +1,10 @@
 function eventDestination(search){const id=new URLSearchParams(search||'').get('event');return '/events.html'+(id&&/^[A-Za-z0-9_-]{8,64}$/.test(id)?'?event='+encodeURIComponent(id):'');}
+function familyDestination(hash){const p=new URLSearchParams((hash||'').replace(/^#/,'')),owner=p.get('family'),token=p.get('invite');return '/invitations.html'+(/^[A-Za-z0-9_-]{1,128}$/.test(owner||'')&&/^[A-Za-z0-9_-]{32}$/.test(token||'')?'#'+new URLSearchParams({family:owner,invite:token}):'');}
 function prepareAccountNavigation(d) {
     const location = d.defaultView?.location;
     if (!location || d.body?.dataset.memberRedirect !== 'true') return '/member.html';
     const params = new URLSearchParams(location.search), kind = params.get('continue');
-    const destinations = {events: eventDestination(location.search), contributions: '/contributions.html', introductions: '/introductions.html'};
+    const destinations = {events: eventDestination(location.search), contributions: '/contributions.html', introductions: '/introductions.html', family: familyDestination(location.hash)};
     const destination = Object.hasOwn(destinations, kind) ? destinations[kind] : '/member.html';
     const recovery = new URLSearchParams();
     if (Object.hasOwn(destinations, kind)) recovery.set('continue', kind);
@@ -11,11 +12,21 @@ function prepareAccountNavigation(d) {
     const reload = d.querySelector('#reload-account a');
     // Prepare before the SDK loads: a failed startup must retain the invitation.
     // Only known in-app destinations survive; arbitrary redirect URLs do not.
-    if (reload) reload.setAttribute('href', location.pathname + (recovery.size ? '?' + recovery.toString() : ''));
+    if (reload) reload.setAttribute('href', location.pathname + (recovery.size ? '?' + recovery.toString() : '') + (kind==='family'&&destination.includes('#')?'#'+destination.split('#')[1]:''));
+    if (reload) reload.onclick = event => {
+        const target = new URL(reload.getAttribute('href'), location.href);
+        // A fragment-only link does not reload a failed SDK. Preserve the
+        // canonical private invitation fragment, then explicitly retry startup.
+        if (target.pathname === location.pathname && target.search === location.search) {
+            event.preventDefault();
+            d.defaultView.history.replaceState(null, '', target.pathname + target.search + target.hash);
+            location.reload();
+        }
+    };
     if (Object.hasOwn(destinations, kind)) {
         let context = d.getElementById('account-destination');
         if (!context) { context = d.createElement('p'); context.id = 'account-destination'; context.className = 'fine-print'; d.getElementById('account-status')?.before(context); }
-        context.textContent = kind === 'events' ? (destination.includes('?') ? 'After sign-in, return to this gathering.' : 'After sign-in, explore Events.') : kind === 'contributions' ? 'After sign-in, explore Contributions.' : 'After sign-in, return to Introductions.';
+        context.textContent = kind === 'family' ? 'After sign-in, return to Invitations.' : kind === 'events' ? (destination.includes('?') ? 'After sign-in, return to this gathering.' : 'After sign-in, explore Events.') : kind === 'contributions' ? 'After sign-in, explore Contributions.' : 'After sign-in, return to Introductions.';
     }
     return destination;
 }
@@ -48,6 +59,7 @@ export function bindPublicAccount(d, service, navigate = path => d.defaultView.l
     };
     const error = e => {
         const messages = {
+            'member/family-memberships':'Leave your shared families or close the family access you manage before deleting your account. Open Invitations to manage membership.',
             'member/events-hosted':'Cancel and delete your hosted gatherings in Events before deleting your account.',
             'member/event-rsvps':'Leave and delete your household RSVPs in Events before deleting your account.',
             'member/introductions-exist':'Delete your introductions before deleting your account. Open Introductions to manage both inboxes.',
