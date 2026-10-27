@@ -25,11 +25,11 @@ service cloud.firestore {
    : !existsAfter(/databases/$(database)/documents/family_directory/$(uid));}
   function directoryMatches(uid,d){let p=getAfter(/databases/$(database)/documents/adult_profiles/$(uid)).data;return p.discoverable==true && d==card(p);}
   match /adult_profiles/{uid}{
-   allow get: if owner(uid);
+   allow get: if owner(uid) || familyMember(uid);
    allow list: if false;
    allow create: if owner(uid) && valid(request.resource.data) && request.resource.data.createdAt==request.time && paired(uid,request.resource.data);
    allow update: if owner(uid) && valid(request.resource.data) && request.resource.data.createdAt==resource.data.createdAt && paired(uid,request.resource.data);
-   allow delete: if owner(uid) && !existsAfter(/databases/$(database)/documents/family_directory/$(uid));
+   allow delete: if owner(uid) && !existsAfter(/databases/$(database)/documents/family_directory/$(uid)) && !existsAfter(/databases/$(database)/documents/family_links/$(uid));
   }
   match /family_directory/{uid}{
    allow get: if request.auth != null;
@@ -249,6 +249,93 @@ service cloud.firestore {
    allow create: if eventAdult() && eventId(id) && owner(get(/databases/$(database)/documents/events/$(id)).data.hostId) && get(/databases/$(database)/documents/events/$(id)).data.status=='cancelled' && !existsAfter(/databases/$(database)/documents/events/$(id))
     && request.resource.data.keys().hasAll(['retiredAt']) && request.resource.data.keys().hasOnly(['retiredAt']) && request.resource.data.retiredAt==request.time;
    allow read,update,delete: if false;
+  }
+
+  // Adult family access pilot. No learner/guardian or cross-adult message rights.
+  // family_links/{owner}: immutable ownerId, members(unique UID list <=6),
+  // names/consents maps keyed exactly by members, inviteIds(unique SHA256 list<=5),
+  // lastInviteId/lastMemberId mutation witnesses, revision, consentVersion,
+  // immutable createdAt and updatedAt=request.time. Only first parent manages.
+  // invites/{sha256}: ownerId, recipientEmail, familyName/inviterName, status,
+  // createdAt/updatedAt/expiresAt and consentVersion. Token never stored.
+  // Acceptance consumes the invite and atomically records membership/consent.
+  function familyActor(){return request.auth!=null && request.auth.token.firebase.sign_in_provider!='anonymous';}
+  function familyVerified(){return familyActor() && request.auth.token.email_verified==true;}
+  function familyName(v){return text(v,80) && v.matches('.*[^\\s].*') && !v.matches('(?s).*[\\x00-\\x1F\\x7F].*');}
+  function familyRecipient(d){return familyVerified() && request.auth.token.get('email','') is string && request.auth.token.get('email','').lower()==d.recipientEmail;}
+  function familyMember(id){return familyActor() && exists(/databases/$(database)/documents/family_links/$(id)) && request.auth.uid in get(/databases/$(database)/documents/family_links/$(id)).data.members;}
+  function validFamilyLink(d,id){return d.keys().hasAll(['ownerId','members','names','consents','inviteIds','lastInviteId','lastMemberId','revision','consentVersion','createdAt','updatedAt'])
+   && d.keys().hasOnly(['ownerId','members','names','consents','inviteIds','lastInviteId','lastMemberId','revision','consentVersion','createdAt','updatedAt'])
+   && d.ownerId==id && d.members is list && d.members.size()>=1 && d.members.size()<=6 && d.members.toSet().size()==d.members.size() && id in d.members
+   && d.names is map && d.names.keys().hasAll(d.members) && d.names.keys().hasOnly(d.members)
+   && d.consents is map && d.consents.keys().hasAll(d.members) && d.consents.keys().hasOnly(d.members) && d.consents.values().hasOnly(['family-membership-2026-10-28'])
+   && d.inviteIds is list && d.inviteIds.size()<=5 && d.inviteIds.toSet().size()==d.inviteIds.size()
+   && d.lastInviteId is string && d.lastInviteId.matches('^[a-f0-9]{64}$') && text(d.lastMemberId,128)
+   && d.revision is int && d.revision>=1 && d.revision<=1000000 && d.consentVersion=='family-membership-2026-10-28'
+   && d.createdAt is timestamp && d.updatedAt==request.time;
+  }
+  function validFamilyInvite(d,id){return d.keys().hasAll(['ownerId','recipientEmail','familyName','inviterName','status','createdAt','updatedAt','expiresAt','consentVersion'])
+   && d.keys().hasOnly(['ownerId','recipientEmail','familyName','inviterName','status','createdAt','updatedAt','expiresAt','consentVersion'])
+   && d.ownerId==id && text(d.recipientEmail,254) && d.recipientEmail.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$') && d.recipientEmail==d.recipientEmail.lower()
+   && familyName(d.familyName) && familyName(d.inviterName) && d.status in ['pending','revoked']
+   && d.createdAt is timestamp && d.updatedAt==request.time && d.expiresAt is timestamp && d.expiresAt>d.createdAt && d.expiresAt<=d.createdAt+duration.value(48,'h')
+   && d.consentVersion=='family-membership-2026-10-28';
+  }
+  function familyLinkCreate(id){let d=request.resource.data;let i=getAfter(/databases/$(database)/documents/family_links/$(id)/invites/$(d.lastInviteId)).data;
+   return familyVerified() && owner(id) && validFamilyLink(d,id) && d.members==[id] && familyName(d.names[id]) && d.inviteIds==[d.lastInviteId]
+    && d.lastMemberId=='' && d.revision==1 && d.createdAt==request.time && i.ownerId==id && i.status=='pending' && i.createdAt==request.time
+    && existsAfter(/databases/$(database)/documents/adult_profiles/$(id));
+  }
+  function familyAddInvite(id,b,d){return familyVerified() && owner(id)
+   && d.diff(b).affectedKeys().hasOnly(['inviteIds','lastInviteId','revision','updatedAt'])
+   && d.inviteIds.size()==b.inviteIds.size()+1 && d.inviteIds.hasAll(b.inviteIds) && d.lastInviteId in d.inviteIds && !(d.lastInviteId in b.inviteIds)
+   && !exists(/databases/$(database)/documents/family_links/$(id)/invites/$(d.lastInviteId))
+   && getAfter(/databases/$(database)/documents/family_links/$(id)/invites/$(d.lastInviteId)).data.createdAt==request.time;
+  }
+  function familyAccept(id,b,d){let uid=request.auth.uid;let path=/databases/$(database)/documents/family_links/$(id)/invites/$(d.lastInviteId);let i=get(path).data;
+   return familyVerified() && uid!=id && !(uid in b.members) && d.members.hasAll(b.members) && d.members.size()==b.members.size()+1 && uid in d.members
+    && d.diff(b).affectedKeys().hasOnly(['members','names','consents','inviteIds','lastInviteId','revision','updatedAt'])
+    && d.names.diff(b.names).affectedKeys().hasOnly([uid]) && familyName(d.names[uid]) && d.consents.diff(b.consents).affectedKeys().hasOnly([uid])
+    && d.lastInviteId in b.inviteIds && !(d.lastInviteId in d.inviteIds) && b.inviteIds.hasAll(d.inviteIds) && d.inviteIds.size()==b.inviteIds.size()-1
+    && i.ownerId==id && i.status=='pending' && i.expiresAt>request.time && familyRecipient(i) && !existsAfter(path);
+  }
+  function familyRemove(id,b,d){let uid=d.lastMemberId;return familyActor() && uid!=id && uid in b.members && !(uid in d.members) && b.members.hasAll(d.members) && d.members.size()==b.members.size()-1
+   && (owner(id)||request.auth.uid==uid) && d.names.diff(b.names).affectedKeys().hasOnly([uid]) && d.consents.diff(b.consents).affectedKeys().hasOnly([uid])
+   && d.diff(b).affectedKeys().hasOnly(['members','names','consents','lastMemberId','revision','updatedAt']);
+  }
+  function familyEraseInvite(id,b,d){return familyActor() && owner(id) && d.diff(b).affectedKeys().hasOnly(['inviteIds','lastInviteId','revision','updatedAt'])
+   && d.lastInviteId in b.inviteIds && !(d.lastInviteId in d.inviteIds) && b.inviteIds.hasAll(d.inviteIds) && d.inviteIds.size()==b.inviteIds.size()-1
+   && !existsAfter(/databases/$(database)/documents/family_links/$(id)/invites/$(d.lastInviteId));}
+  function familyLinkUpdate(id){let b=resource.data;let d=request.resource.data;return familyActor() && validFamilyLink(d,id) && d.createdAt==b.createdAt && d.revision==b.revision+1
+   && (familyAddInvite(id,b,d)||familyAccept(id,b,d)||familyRemove(id,b,d)||familyEraseInvite(id,b,d));}
+  function familyInvitesGone(id,ids){return (ids.size()<1 || !existsAfter(/databases/$(database)/documents/family_links/$(id)/invites/$(ids[0])))
+   && (ids.size()<2 || !existsAfter(/databases/$(database)/documents/family_links/$(id)/invites/$(ids[1])))
+   && (ids.size()<3 || !existsAfter(/databases/$(database)/documents/family_links/$(id)/invites/$(ids[2])))
+   && (ids.size()<4 || !existsAfter(/databases/$(database)/documents/family_links/$(id)/invites/$(ids[3])))
+   && (ids.size()<5 || !existsAfter(/databases/$(database)/documents/family_links/$(id)/invites/$(ids[4])));}
+  match /family_links/{id}{
+   allow get: if familyActor() && (owner(id)||request.auth.uid in resource.data.members);
+   allow list: if familyActor() && request.auth.uid in resource.data.members && request.query.limit!=null && request.query.limit<=20;
+   allow create: if familyLinkCreate(id);
+   allow update: if familyLinkUpdate(id);
+   allow delete: if familyActor() && owner(id) && resource.data.members==[id] && familyInvitesGone(id,resource.data.inviteIds);
+   match /invites/{inviteId}{
+    allow get: if familyActor() && (owner(id)||familyRecipient(resource.data));
+    allow list: if familyActor() && owner(id) && request.query.limit!=null && request.query.limit<=5;
+    allow create: if familyVerified() && owner(id) && inviteId.matches('^[a-f0-9]{64}$') && validFamilyInvite(request.resource.data,id)
+     && request.resource.data.status=='pending' && request.resource.data.createdAt==request.time && request.resource.data.recipientEmail!=request.auth.token.email.lower()
+     && request.resource.data.familyName==getAfter(/databases/$(database)/documents/adult_profiles/$(id)).data.displayName
+     && inviteId in getAfter(/databases/$(database)/documents/family_links/$(id)).data.inviteIds;
+    allow update: if familyActor() && owner(id) && validFamilyInvite(request.resource.data,id) && resource.data.status=='pending' && request.resource.data.status=='revoked'
+     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt']);
+    allow delete: if familyActor() && (
+     (owner(id) && (!existsAfter(/databases/$(database)/documents/family_links/$(id)) || !(inviteId in getAfter(/databases/$(database)/documents/family_links/$(id)).data.inviteIds)))
+     || (familyRecipient(resource.data) && resource.data.status=='pending' && resource.data.expiresAt>request.time
+      && request.auth.uid in getAfter(/databases/$(database)/documents/family_links/$(id)).data.members
+      && getAfter(/databases/$(database)/documents/family_links/$(id)).data.consents[request.auth.uid]=='family-membership-2026-10-28'
+      && !(inviteId in getAfter(/databases/$(database)/documents/family_links/$(id)).data.inviteIds))
+    );
+   }
   }
 
   match /{document=**}{allow read,write: if false;}

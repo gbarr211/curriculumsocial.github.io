@@ -7,6 +7,6 @@
   "name": "curriculumsocial-rules-checks",
   "private": true,
   "scripts": {
-    "test": "firebase emulators:exec --config ../firebase.rules-test.json --only firestore --project demo-cs-contributions \"node family.test.mjs && node contributions.test.cjs && node directory.test.cjs && node introductions.test.cjs\""
+    "test": "firebase emulators:exec --config ../firebase.rules-test.json --only firestore --project demo-cs-contributions \"node family-links.test.mjs && node events.test.cjs && node family.test.mjs && node contributions.test.cjs && node directory.test.cjs && node introductions.test.cjs\""
   }
 }
