@@ -1,0 +1,10 @@
+// Fictional browser/private-preview transport. No Firebase, mail or persistence.
+export function createMatchingPreview(){
+ const profile=(displayName,philosophy='montessori',interest='nature')=>({displayName,area:'samui-north',languages:'English',about:'A fictional family exploring learning together.',photo:'',philosophies:[philosophy],interests:[interest],contribution:'exploring',availability:'flexible',discoverable:false,consentVersion:'family-profile-2026-10-17'});
+ const households={'sample-morgan':profile('Morgan family'),'sample-lee':profile('Lee family','waldorf','music')},callbacks=new Set(),calls={save:0,erase:0};let actor,owned,ids,faults=new Set(),hold=false,finish;
+ const clone=value=>value?structuredClone(value):null;
+ function scenario(key){owned=key==='owned'?profile('Your family','waldorf','music'):null;ids=key==='multiple'||key==='owned'?Object.keys(households):['sample-morgan'];faults.clear();actor=key==='guest'?null:{uid:'sample-adult',email:'adult@example.invalid'};callbacks.forEach(fn=>fn(actor));}
+ scenario('single');
+ const service={ready:async()=>{},observe(fn){callbacks.add(fn);fn(actor);return()=>callbacks.delete(fn)},logout:async()=>scenario('guest'),load:async()=>({data:clone(owned),version:owned?'sample-v1':null}),memberships:async()=>{if(hold){hold=false;await new Promise(resolve=>finish=resolve);}return ids.map(ownerId=>({ownerId}))},familyProfile:async(uid,id)=>{if(faults.has(id))throw Object.assign(Error('Fictional access changed'),{code:'permission-denied'});return clone(households[id])},families:async()=>[{id:'sample-coastal',...profile('Coastal makers')},{id:'sample-rhythms',...profile('Island rhythms','waldorf','music')},...Object.entries(households).map(([id,p])=>({id,...clone(p)}))],save:async(uid,data)=>{calls.save++;owned={...clone(data),consentVersion:'family-profile-2026-10-17'};return {data:clone(owned),version:'sample-v2'}},erase:async()=>{calls.erase++;owned=null}};
+ return {service,scenario,calls,revoke(id){if(households[id])faults.add(id)},hold(){hold=true},complete(){finish?.()},rename(id,name){households[id].displayName=name}};
+}
