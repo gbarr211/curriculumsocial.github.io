@@ -64,6 +64,18 @@ const pass = message => { console.log('PASS ' + message); passed++; };
         assert.equal(await page.locator('#mode').inputValue(), route.endsWith('signup.html') ? 'signup' : 'login');
         pass('account route loads: ' + route);
     }
+    for (const [mode, notice] of [['login', '#login-notice'], ['signup', '#consent-row']]) {
+        await page.goto(base + '/member-login.html');
+        await page.waitForFunction(() => !document.getElementById('account-controls').disabled);
+        await page.locator('#mode').selectOption(mode);
+        assert.equal(await page.locator('#consent').isChecked(), false);
+        const link = page.locator(notice).getByRole('link', { name: 'account notice' });
+        assert.equal(await link.getAttribute('href'), '/account-notice.html');
+        await link.click();
+        await page.waitForURL(base + '/account-notice.html');
+        assert.equal(await page.locator('h1').textContent(), 'Adult account notice');
+        pass('legacy member ' + mode + ' opens the adult account notice');
+    }
     await page.goto(base + '/account/profile.html');
     await page.waitForFunction(() => !document.getElementById('account-controls').disabled);
     await page.locator('#mode').selectOption('signup');
