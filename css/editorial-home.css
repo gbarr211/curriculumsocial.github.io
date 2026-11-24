@@ -109,16 +109,17 @@
   transform:none;
   object-position:center calc(50% + var(--photo-offset,0px));
 }
-.public-home .editorial-human{padding-bottom:44px}
-.public-home .editorial-experience{padding-top:34px}
+.public-home .editorial-human{border-bottom:0;padding-bottom:16px}
+.public-home .editorial-experience{padding-top:14px}
+.public-home #experience .editorial-demo{padding-top:8px}
 @media(max-width:700px){
   .public-home .hero-photo-window{aspect-ratio:4/3}
   .public-home .hero-photo-window img{
     object-position:center 50%;
     transform:translate3d(0,var(--photo-offset,0px),0) scale(var(--hero-photo-scale,1));
   }
-  .public-home .editorial-human{padding-bottom:24px}
-  .public-home .editorial-experience{padding-top:22px}
+  .public-home .editorial-human{padding-bottom:12px}
+  .public-home .editorial-experience{padding-top:10px}
 }
 @media(prefers-reduced-motion:reduce){
   .public-home .hero-photo-window img{object-position:center 50%;transform:none!important}
