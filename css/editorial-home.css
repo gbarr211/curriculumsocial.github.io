@@ -100,3 +100,26 @@
   text-decoration-thickness:.12em;
   text-underline-offset:.1em;
 }
+/* Keep the original hero window and caption geometry while letting the photo track scroll. */
+.public-home .hero-photo-window{height:auto;aspect-ratio:2.05/1}
+.public-home .hero-photo-window::after{content:none}
+.public-home .hero-photo-window img{
+  inset:0;
+  height:100%;
+  transform:none;
+  object-position:center calc(50% + var(--photo-offset,0px));
+}
+.public-home .editorial-human{padding-bottom:44px}
+.public-home .editorial-experience{padding-top:34px}
+@media(max-width:700px){
+  .public-home .hero-photo-window{aspect-ratio:4/3}
+  .public-home .hero-photo-window img{
+    object-position:center 50%;
+    transform:translate3d(0,var(--photo-offset,0px),0) scale(var(--hero-photo-scale,1));
+  }
+  .public-home .editorial-human{padding-bottom:24px}
+  .public-home .editorial-experience{padding-top:22px}
+}
+@media(prefers-reduced-motion:reduce){
+  .public-home .hero-photo-window img{object-position:center 50%;transform:none!important}
+}
