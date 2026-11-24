@@ -90,3 +90,13 @@
 @media(max-width:700px){.public-home .nav{width:calc(100% - 32px)}.public-home .brand{font-size:clamp(16px,4.7vw,21px);gap:6px}.public-home .brand img{width:27px;height:27px}.public-home .brand>span{display:none}.public-home .nav-links{max-height:calc(100dvh - 90px);padding:12px}}
 
 @media(max-width:1240px){.public-home .nav-links .cs-account-actions>a{align-self:stretch}}
+/* Give the shared-moment chapter a quiet visual accent without changing type scale. */
+.public-home main > .editorial-shared-moment,
+.editorial-shared-moment .photo-reveal figcaption{background:#edf1e8}
+.editorial-shared-moment figcaption{padding-bottom:18px}
+.editorial-shared-moment .editorial-accent{
+  text-decoration-line:underline;
+  text-decoration-color:#c9db81;
+  text-decoration-thickness:.12em;
+  text-underline-offset:.1em;
+}
