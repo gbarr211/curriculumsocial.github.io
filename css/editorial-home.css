@@ -124,3 +124,15 @@
 @media(prefers-reduced-motion:reduce){
   .public-home .hero-photo-window img{object-position:center 50%;transform:none!important}
 }
+/* Halve only the six marked spaces in the narrow homepage layout. */
+@media(max-width:700px){
+  .public-home .editorial-learning{padding-top:32.5px}
+  .public-home .editorial-learning .activity-panel{padding-bottom:4px}
+  .public-home .editorial-learning .activity-meta{margin-top:10px;padding-block:6px}
+  .public-home .editorial-learning>.photo-reveal{margin-top:23px}
+  .public-home .editorial-human{margin-top:25px;padding-top:27px}
+  .public-home #experience{padding-bottom:20px}
+  .public-home #experience+.editorial-neighborhood{margin-top:10px}
+  .public-home #participate{padding-top:32.5px}
+  .public-home #questions{padding-bottom:22.5px}
+}
